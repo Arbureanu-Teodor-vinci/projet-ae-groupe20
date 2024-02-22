@@ -1,5 +1,8 @@
 package be.vinci.pae.domain;
 
+/**
+ * Interface de l'Utilisateur avec les setters et getters
+ */
 public interface UtilisateurDTO {
 
   int getId();
@@ -18,17 +21,17 @@ public interface UtilisateurDTO {
 
   void setEmail(String email);
 
-  int getNum_telephone();
+  int getNumTelephone();
 
-  void setNum_telephone(int num_telephone);
+  void setNumTelephone(int numTelephone);
 
   String getRole();
 
   void setRole(String role);
 
-  String getMot_de_passe();
+  String getMotDePasse();
 
-  void setMot_de_passe(String mot_de_passe);
+  void setMotDePasse(String motDePasse);
 
   String hashMDP(String mdp);
 

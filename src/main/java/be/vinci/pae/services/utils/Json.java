@@ -13,10 +13,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe qui permet de transferer du Java vers Json
+ *
+ * @param <T> -> l'objet à transformer en Json
+ */
 public class Json<T> {
 
   private static final String BD_FICHIER_CHEMIN = Config.getProperty("cheminFichierBaseDeDonnees");
-  private final static ObjectMapper jsonMapper = new ObjectMapper();
+  private static final ObjectMapper jsonMapper = new ObjectMapper();
   private static Path cheminVersBD = Paths.get(BD_FICHIER_CHEMIN);
   private Class<T> type;
 
@@ -27,6 +32,10 @@ public class Json<T> {
   }
 
 
+  /**
+   * @param items          -> la DB
+   * @param collectionName -> nom de l'objet à ajouter/modifier/supprimer de la DB
+   */
   public void serialize(List<T> items, String collectionName) {
     try {
       // if no DB file, write a new collection to a new db file
@@ -44,7 +53,8 @@ public class Json<T> {
       if (allCollections.has(collectionName)) {
         ((ObjectNode) allCollections).remove(collectionName); //e.g. it leaves { users:[...]}
       }
-      // Prepare a JSON array from the list of POJOs for the collection to be updated, e.g. [{"film1",...}, ...]
+      // Prepare a JSON array from the list of POJOs for the collection to be updated,
+      // e.g. [{"film1",...}, ...]
       ArrayNode updatedCollection = jsonMapper.valueToTree(items);
       // Add the JSON array in allCollections, e.g. : { users:[...], items:[...]}
       ((ObjectNode) allCollections).putArray(collectionName).addAll(updatedCollection);
@@ -55,6 +65,10 @@ public class Json<T> {
     }
   }
 
+  /**
+   * @param collectionName -> nom des objets
+   * @return List des objets
+   */
   public List<T> parse(String collectionName) {
     try {
       // get allCollections
@@ -62,8 +76,7 @@ public class Json<T> {
       // accessing value of the specified field of an object node,
       // e.g. the JSON array within "items" field of { users:[...], items:[...]}
       JsonNode collection = node.get(collectionName);
-      if (collection == null) // Send an empty list if there is not the requested collection
-      {
+      if (collection == null) { // Send an empty list if there is not the requested collection
         return (List<T>) new ArrayList<T>();
       }
       // convert the JsonNode to a List of POJOs & return it

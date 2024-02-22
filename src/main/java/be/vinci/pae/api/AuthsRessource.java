@@ -13,7 +13,14 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+
 @Singleton
+/**
+ *
+ *
+ * Cette classe représente une ressource pour l'authentification et l'enregistrement des utilisateurs.
+ * Elle fournit des méthodes pour permettre aux utilisateurs de se connecter et s'enregistrer.
+ */
 @Path("/auths")
 public class AuthsRessource {
 
@@ -21,6 +28,14 @@ public class AuthsRessource {
   UtilisateurDataService maUtilisateurDataService;
 
   @POST
+  /**
+   *Permet à un utilisateur de se connecter en fournissant un email et un mot de passe.
+   * @param json Un objet JSON contenant les informations d'authentification de l'utilisateur,
+   *             comprenant son email et son mot de passe.
+   * @return Un objet JSON représentant les informations de l'utilisateur connecté.
+   * @throws WebApplicationException Si l'email ou le mot de passe est manquant ou incorrect,
+   *                                 une exception est levée avec le statut correspondant.
+   */
   @Path("seConnecter")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
@@ -33,12 +48,12 @@ public class AuthsRessource {
     String mdp = json.get("mot_de_passe").asText();
 
     // Essayer se connecter
-    ObjectNode lUtilisateur = maUtilisateurDataService.seConnecter(email, mdp);
-    if (lUtilisateur == null) {
+    ObjectNode leUtilisateur = maUtilisateurDataService.seConnecter(email, mdp);
+    if (leUtilisateur == null) {
       throw new WebApplicationException("Email ou mot de passe incorrect",
           Response.Status.UNAUTHORIZED);
     }
-    return lUtilisateur;
+    return leUtilisateur;
 
   }
 }

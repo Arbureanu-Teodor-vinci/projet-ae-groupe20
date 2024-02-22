@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation des services utilisateur
+ */
 public class UtilisateurDataServiceImpl implements UtilisateurDataService {
 
   private static final String NOM_COLLECTION = "utilisateurs";

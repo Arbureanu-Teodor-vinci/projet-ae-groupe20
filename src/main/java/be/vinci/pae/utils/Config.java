@@ -8,10 +8,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Configuration depuis le fichier properties
+ */
 public class Config {
 
   private static Properties props;
 
+  /**
+   * Chargement du fichier
+   *
+   * @param file -> le fichier à charger
+   */
   public static void load(String file) {
     props = new Properties();
     try (InputStream input = new FileInputStream(file)) {

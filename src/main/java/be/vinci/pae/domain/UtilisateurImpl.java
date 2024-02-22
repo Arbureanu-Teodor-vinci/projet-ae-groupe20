@@ -2,6 +2,9 @@ package be.vinci.pae.domain;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * Implementation de Utilisateur et UtilisateurDTO
+ */
 public class UtilisateurImpl implements Utilisateur {
 
   private static final String[] ROLES_POSSIBLES = {"étudiant", "professeur", "administratif"};
@@ -9,9 +12,9 @@ public class UtilisateurImpl implements Utilisateur {
   private String nom;
   private String prenom;
   private String email;
-  private int num_telephone;
+  private int numTelephone;
   private String role;
-  private String mot_de_passe;
+  private String motDePasse;
 
   @Override
   public int getId() {
@@ -54,13 +57,13 @@ public class UtilisateurImpl implements Utilisateur {
   }
 
   @Override
-  public int getNum_telephone() {
-    return num_telephone;
+  public int getNumTelephone() {
+    return numTelephone;
   }
 
   @Override
-  public void setNum_telephone(int num_telephone) {
-    this.num_telephone = num_telephone;
+  public void setNumTelephone(int numTelephone) {
+    this.numTelephone = numTelephone;
   }
 
   @Override
@@ -70,17 +73,20 @@ public class UtilisateurImpl implements Utilisateur {
 
   @Override
   public void setRole(String role) {
-    this.role = role;
+    if (role.equals(ROLES_POSSIBLES[0]) || role.equals(ROLES_POSSIBLES[1]) || role.equals(
+        ROLES_POSSIBLES[2])) {
+      this.role = role;
+    }
   }
 
   @Override
-  public String getMot_de_passe() {
-    return mot_de_passe;
+  public String getMotDePasse() {
+    return motDePasse;
   }
 
   @Override
-  public void setMot_de_passe(String mot_de_passe) {
-    this.mot_de_passe = mot_de_passe;
+  public void setMotDePasse(String motDePasse) {
+    this.motDePasse = motDePasse;
   }
 
   @Override
@@ -107,19 +113,19 @@ public class UtilisateurImpl implements Utilisateur {
 
   @Override
   public String toString() {
-    return "UserDTO{" +
-        "id_utilisateur=" + id +
-        ", nom='" + nom + '\'' +
-        ", prenom='" + prenom + '\'' +
-        ", email='" + email + '\'' +
-        ", num_telephone=" + num_telephone +
-        ", role='" + role + '\'' +
-        ", mot_de_passe='" + mot_de_passe + '\'' +
-        '}';
+    return "UserDTO{"
+        + "id_utilisateur=" + id
+        + ", nom='" + nom + '\''
+        + ", prenom='" + prenom + '\''
+        + ", email='" + email + '\''
+        + ", num_telephone=" + numTelephone
+        + ", role='" + role + '\''
+        + ", mot_de_passe='" + motDePasse + '\''
+        + '}';
   }
 
   @Override
   public boolean checkMDP(String mdp) {
-    return BCrypt.checkpw(mdp, this.mot_de_passe);
+    return BCrypt.checkpw(mdp, this.motDePasse);
   }
 }
