@@ -25,8 +25,11 @@ public class Json<T> {
   private static Path cheminVersBD = Paths.get(BD_FICHIER_CHEMIN);
   private Class<T> type;
 
-  // Java generics are mostly compile time, this means that the type information is lost at runtime.
-  // To get the type information at runtime you have to add it as an argument of the constructor.
+  /**
+   * Constructeur.
+   *
+   * @param type -> type de la classe
+   */
   public Json(Class<T> type) {
     this.type = type;
   }
