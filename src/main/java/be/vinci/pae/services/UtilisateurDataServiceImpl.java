@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 
 /**
- * Implementation des services utilisateur
+ * Implementation des services utilisateur.
  */
 public class UtilisateurDataServiceImpl implements UtilisateurDataService {
 

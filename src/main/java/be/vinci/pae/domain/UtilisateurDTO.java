@@ -1,7 +1,7 @@
 package be.vinci.pae.domain;
 
 /**
- * Interface de l'Utilisateur avec les setters et getters
+ * Interface de l'Utilisateur avec les setters et getters.
  */
 public interface UtilisateurDTO {
 

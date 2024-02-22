@@ -9,7 +9,7 @@ import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 /**
- * Classe qui permet de créer une seule instance à injecter
+ * Classe qui permet de créer une seule instance à injecter.
  */
 @Provider
 public class ApplicationBinder extends AbstractBinder {

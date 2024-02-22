@@ -4,7 +4,7 @@ import be.vinci.pae.domain.Utilisateur;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Services pour l'utilisateur
+ * Services pour l'utilisateur.
  */
 public interface UtilisateurDataService {
 

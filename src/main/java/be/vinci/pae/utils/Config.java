@@ -9,14 +9,14 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Configuration depuis le fichier properties
+ * Configuration depuis le fichier properties.
  */
 public class Config {
 
   private static Properties props;
 
   /**
-   * Chargement du fichier
+   * Chargement du fichier.
    *
    * @param file -> le fichier à charger
    */

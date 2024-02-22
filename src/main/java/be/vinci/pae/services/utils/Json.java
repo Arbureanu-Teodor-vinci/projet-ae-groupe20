@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe qui permet de transferer du Java vers Json
+ * Classe qui permet de transferer du Java vers Json.
  *
  * @param <T> -> l'objet à transformer en Json
  */
@@ -33,7 +33,9 @@ public class Json<T> {
 
 
   /**
-   * @param items          -> la DB
+   * Methode qui ajoute/supprime/modifie dans la DB.
+   *
+   * @param items          -> objet java à modifier dans la DB
    * @param collectionName -> nom de l'objet à ajouter/modifier/supprimer de la DB
    */
   public void serialize(List<T> items, String collectionName) {
@@ -66,6 +68,8 @@ public class Json<T> {
   }
 
   /**
+   * Methode qui reprend les objets de la DB.
+   *
    * @param collectionName -> nom des objets
    * @return List des objets
    */

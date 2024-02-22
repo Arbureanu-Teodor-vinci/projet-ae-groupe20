@@ -3,7 +3,7 @@ package be.vinci.pae.domain;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * Implementation de Utilisateur et UtilisateurDTO
+ * Implementation de Utilisateur et UtilisateurDTO.
  */
 public class UtilisateurImpl implements Utilisateur {
 
