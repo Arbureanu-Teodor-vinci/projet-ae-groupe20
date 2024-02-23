@@ -1,12 +1,11 @@
 package be.vinci.pae.services;
 
 import be.vinci.pae.domain.Utilisateur;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Services pour l'utilisateur.
  */
-public interface UtilisateurDataService {
+public interface UtilisateurDAO {
 
   /**
    * Get un utilisateur de la DB par ID.
@@ -23,13 +22,4 @@ public interface UtilisateurDataService {
    * @return utilisateur
    */
   Utilisateur getUnUtilisateur(String email);
-
-  /**
-   * Methode pour se connecter.
-   *
-   * @param email String
-   * @param mdp   String
-   * @return ObjectNode
-   */
-  ObjectNode seConnecter(String email, String mdp);
 }

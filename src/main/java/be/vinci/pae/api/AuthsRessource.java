@@ -1,7 +1,12 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.services.UtilisateurDataService;
+import be.vinci.pae.domain.UtilisateurDTO;
+import be.vinci.pae.domain.UtilisateurUCCImpl;
+import be.vinci.pae.utils.Config;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -22,8 +27,10 @@ import jakarta.ws.rs.core.Response;
 @Path("/auths")
 public class AuthsRessource {
 
+  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
+  private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
-  UtilisateurDataService maUtilisateurDataService;
+  UtilisateurUCCImpl utilisateurControler;
 
   /**
    * Permet à un utilisateur de se connecter en fournissant un email et un mot de passe.
@@ -47,12 +54,25 @@ public class AuthsRessource {
     String mdp = json.get("mot_de_passe").asText();
 
     // Essayer se connecter
-    ObjectNode leUtilisateur = maUtilisateurDataService.seConnecter(email, mdp);
-    if (leUtilisateur == null) {
+    UtilisateurDTO utilisateur = utilisateurControler.seConnecter(email, mdp);
+
+    if (utilisateur == null) {
       throw new WebApplicationException("Email ou mot de passe incorrect",
           Response.Status.UNAUTHORIZED);
     }
-    return leUtilisateur;
+    String token;
+    try {
+      token = JWT.create().withIssuer("auth0")
+          .withClaim("utilisateurs", utilisateur.getId()).sign(this.jwtAlgorithm);
+      ObjectNode publicUtilisateur = jsonMapper.createObjectNode()
+          .put("token", token)
+          .put("id", utilisateur.getId())
+          .put("email", utilisateur.getEmail());
+      return publicUtilisateur;
 
+    } catch (Exception e) {
+      System.out.println("Impossible de créer un token");
+      return null;
+    }
   }
 }
