@@ -1,7 +1,7 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.domain.UtilisateurDTO;
-import be.vinci.pae.domain.UtilisateurUCCImpl;
+import be.vinci.pae.domain.UtilisateurUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -29,8 +29,9 @@ public class AuthsRessource {
 
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
+
   @Inject
-  UtilisateurUCCImpl utilisateurControler;
+  UtilisateurUCC utilisateurControleur;
 
   /**
    * Permet à un utilisateur de se connecter en fournissant un email et un mot de passe.
@@ -42,19 +43,19 @@ public class AuthsRessource {
    *                                 exception est levée avec le statut correspondant.
    */
   @POST
-  @Path("seConnecter")
+  @Path("seconnecter")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode seConnecter(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("mot_de_passe")) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("motDePasse")) {
       throw new WebApplicationException("email ou mot de passe nécessaire",
           Response.Status.BAD_REQUEST);
     }
     String email = json.get("email").asText();
-    String mdp = json.get("mot_de_passe").asText();
+    String mdp = json.get("motDePasse").asText();
 
     // Essayer se connecter
-    UtilisateurDTO utilisateur = utilisateurControler.seConnecter(email, mdp);
+    UtilisateurDTO utilisateur = utilisateurControleur.seConnecter(email, mdp);
 
     if (utilisateur == null) {
       throw new WebApplicationException("Email ou mot de passe incorrect",

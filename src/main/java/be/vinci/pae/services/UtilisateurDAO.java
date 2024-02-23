@@ -1,6 +1,6 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.domain.Utilisateur;
+import be.vinci.pae.domain.UtilisateurDTO;
 
 /**
  * Services pour l'utilisateur.
@@ -13,7 +13,7 @@ public interface UtilisateurDAO {
    * @param id integer
    * @return utilisateur
    */
-  Utilisateur getUnUtilisateur(int id);
+  UtilisateurDTO getUnUtilisateur(int id);
 
   /**
    * Get un utilisateur de la DB par email.
@@ -21,5 +21,5 @@ public interface UtilisateurDAO {
    * @param email String
    * @return utilisateur
    */
-  Utilisateur getUnUtilisateur(String email);
+  UtilisateurDTO getUnUtilisateurParEmail(String email);
 }
