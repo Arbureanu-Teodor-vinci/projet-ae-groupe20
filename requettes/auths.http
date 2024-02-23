@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:8080
+
+
+### Se connecter avec utilisateur par défaut
+POST {{baseUrl}}/auths/seConnecter
+Content-Type: application/json
+
+{
+  "email":"admin",
+  "mot_de_passe":"admin"
+}
