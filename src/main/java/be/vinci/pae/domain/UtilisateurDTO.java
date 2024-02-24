@@ -1,8 +1,11 @@
 package be.vinci.pae.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Interface de l'Utilisateur avec les setters et getters.
  */
+@JsonDeserialize(as = UtilisateurImpl.class)
 public interface UtilisateurDTO {
 
   /**

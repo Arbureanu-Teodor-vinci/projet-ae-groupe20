@@ -1,10 +1,7 @@
 package be.vinci.pae.services;
 
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.DomainFactoryImpl;
-import be.vinci.pae.domain.Utilisateur;
+import be.vinci.pae.domain.UtilisateurDTO;
 import be.vinci.pae.services.utils.Json;
-import jakarta.inject.Inject;
 
 /**
  * Implementation des services utilisateur.
@@ -12,23 +9,25 @@ import jakarta.inject.Inject;
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
   private static final String NOM_COLLECTION = "utilisateurs";
-  @Inject
-  private static DomainFactory monUserDTO = (DomainFactory) new DomainFactoryImpl().getUser();
-  private static Json<Utilisateur> jsonDB = new Json<>(Utilisateur.class);
+  // @Inject
+  // private static DomainFactory monUserDTO;
+  private static Json<UtilisateurDTO> jsonDB = new Json<>(UtilisateurDTO.class);
 
 
   @Override
-  public Utilisateur getUnUtilisateur(int id) {
+  public UtilisateurDTO getUnUtilisateur(int id) {
     var lesUtilisateurs = jsonDB.parse(NOM_COLLECTION);
     return lesUtilisateurs.stream().filter(utilisateur -> utilisateur.getId() == id).findAny()
         .orElse(null);
   }
 
   @Override
-  public Utilisateur getUnUtilisateur(String email) {
+  public UtilisateurDTO getUnUtilisateurParEmail(String email) {
     var lesUtilisateurs = jsonDB.parse(NOM_COLLECTION);
-    return lesUtilisateurs.stream().filter(utilisateur -> utilisateur.getEmail().equals(email))
+    return lesUtilisateurs.stream()
+        .filter(utilisateur -> utilisateur.getEmail().equals(email))
         .findAny().orElse(null);
+
   }
 
 

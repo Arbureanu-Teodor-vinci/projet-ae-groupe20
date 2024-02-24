@@ -1,1 +1,1 @@
-{"utilisateurs":[{"id":1,"nom": "admin","prenom": "admin","email": "admin","num_telephone": "0455555","role": "administratif","mot_de_passe": "$2a$10$WYp2AihAECclbAeBQ9nwVu.8kw2yltBdJEwQTXKMI6qwOumku3bVy"}]}
+{"utilisateurs":[{"id":1,"nom": "admin","prenom": "admin","email": "admin","numTelephone": "0455555","role": "administratif","motDePasse": "$2a$10$WYp2AihAECclbAeBQ9nwVu.8kw2yltBdJEwQTXKMI6qwOumku3bVy"}]}

@@ -2,10 +2,10 @@
 
 
 ### Se connecter avec utilisateur par défaut
-POST {{baseUrl}}/auths/seConnecter
+POST {{baseUrl}}/auths/seconnecter
 Content-Type: application/json
 
 {
   "email":"admin",
-  "mot_de_passe":"admin"
+  "motDePasse":"admin"
 }
