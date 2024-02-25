@@ -1,11 +1,11 @@
 @baseUrl = http://localhost:8080
 
 
-### Se connecter avec utilisateur par défaut
-POST {{baseUrl}}/auths/seconnecter
+### Login with default user
+POST {{baseUrl}}/auths/login
 Content-Type: application/json
 
 {
   "email":"admin",
-  "motDePasse":"admin"
+  "password":"admin"
 }

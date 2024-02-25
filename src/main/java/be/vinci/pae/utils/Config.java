@@ -9,16 +9,16 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Configuration depuis le fichier properties.
+ * Configuration of dev.properties.
  */
 public class Config {
 
   private static Properties props;
 
   /**
-   * Chargement du fichier.
+   * Load the properties file.
    *
-   * @param file -> le fichier à charger
+   * @param file -> the file
    */
   public static void load(String file) {
     props = new Properties();

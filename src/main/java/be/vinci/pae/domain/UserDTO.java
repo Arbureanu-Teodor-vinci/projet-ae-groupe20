@@ -3,10 +3,10 @@ package be.vinci.pae.domain;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
- * Interface de l'Utilisateur avec les setters et getters.
+ * Interface of user with setters and getters.
  */
-@JsonDeserialize(as = UtilisateurImpl.class)
-public interface UtilisateurDTO {
+@JsonDeserialize(as = UserImpl.class)
+public interface UserDTO {
 
   /**
    * Get ID.
@@ -23,32 +23,32 @@ public interface UtilisateurDTO {
   void setId(int id);
 
   /**
-   * Get nom.
+   * Get last name.
    *
    * @return String
    */
-  String getNom();
+  String getLastName();
 
   /**
-   * Set nom.
+   * Set name.
    *
-   * @param nom String
+   * @param lastName String
    */
-  void setNom(String nom);
+  void setLastName(String lastName);
 
   /**
-   * Get prenom.
+   * Get first name.
    *
    * @return String
    */
-  String getPrenom();
+  String getFirstName();
 
   /**
-   * Set prenom.
+   * Set first name.
    *
-   * @param prenom String
+   * @param firstName String
    */
-  void setPrenom(String prenom);
+  void setFistName(String firstName);
 
   /**
    * Get email.
@@ -58,25 +58,25 @@ public interface UtilisateurDTO {
   String getEmail();
 
   /**
-   * Set eamil.
+   * Set email.
    *
    * @param email String
    */
   void setEmail(String email);
 
   /**
-   * Get numero de telephone.
+   * Get telephone number.
    *
    * @return integer
    */
-  int getNumTelephone();
+  int getTelephoneNumber();
 
   /**
-   * Set numero de telephone.
+   * Set telephone number.
    *
-   * @param numTelephone integer
+   * @param telephoneNbr integer
    */
-  void setNumTelephone(int numTelephone);
+  void setTelephoneNumber(int telephoneNbr);
 
   /**
    * Get role.
@@ -93,26 +93,26 @@ public interface UtilisateurDTO {
   void setRole(String role);
 
   /**
-   * Get mot de passe.
+   * Get password.
    *
    * @return String
    */
-  String getMotDePasse();
+  String getPassword();
 
   /**
-   * Set mot de passe.
+   * Set password.
    *
-   * @param motDePasse String
+   * @param password String
    */
-  void setMotDePasse(String motDePasse);
+  void setPassword(String password);
 
   /**
-   * Crypter un mot de passe.
+   * Hash password.
    *
-   * @param mdp String
+   * @param password String
    * @return String
    */
-  String hashMDP(String mdp);
+  String hashPassword(String password);
 
   @Override
   boolean equals(Object o);

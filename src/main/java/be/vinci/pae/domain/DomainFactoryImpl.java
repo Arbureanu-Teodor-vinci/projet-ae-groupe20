@@ -1,17 +1,13 @@
 package be.vinci.pae.domain;
 
 /**
- * Implementation de la factory des UCC
+ * Implementation of factory for each UCC.
  */
 public class DomainFactoryImpl implements DomainFactory {
 
-  /**
-   * Creation d'un nouveau UtilisateurDTO.
-   *
-   * @return UtilisateurDTO
-   */
-  public UtilisateurDTO getUser() {
-    return new UtilisateurImpl();
+  @Override
+  public UserDTO getUserDTO() {
+    return new UserImpl();
   }
 
 }

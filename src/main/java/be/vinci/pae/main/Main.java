@@ -40,7 +40,7 @@ public class Main {
    * Main method.
    *
    * @param args -> arguments
-   * @throws IOException -> exception si erreur du serveur
+   * @throws IOException -> exception if error from server
    */
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
