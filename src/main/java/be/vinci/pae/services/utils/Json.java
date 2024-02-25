@@ -14,21 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe qui permet de transferer du Java vers Json.
+ * Transforms java to Json.
  *
- * @param <T> -> l'objet à transformer en Json
+ * @param <T> -> object which is transformed to json.
  */
 public class Json<T> {
 
-  private static final String BD_FICHIER_CHEMIN = Config.getProperty("cheminFichierBaseDeDonnees");
+  private static final String DB_FILE_PATH = Config.getProperty("DatabaseFilePath");
   private static final ObjectMapper jsonMapper = new ObjectMapper();
-  private static Path cheminVersBD = Paths.get(BD_FICHIER_CHEMIN);
+  private static Path pathToDb = Paths.get(DB_FILE_PATH);
   private Class<T> type;
 
   /**
-   * Constructeur.
+   * Constructor.
    *
-   * @param type -> type de la classe
+   * @param type -> type of class
    */
   public Json(Class<T> type) {
     this.type = type;
@@ -36,24 +36,24 @@ public class Json<T> {
 
 
   /**
-   * Methode qui ajoute/supprime/modifie dans la DB.
+   * Method which adds/deletes/modifies in DB.
    *
-   * @param items          -> objet java à modifier dans la DB
-   * @param collectionName -> nom de l'objet à ajouter/modifier/supprimer de la DB
+   * @param items          -> java object to modify in DB.
+   * @param collectionName -> name of object collection to add/delete/modify in DB.
    */
   public void serialize(List<T> items, String collectionName) {
     try {
       // if no DB file, write a new collection to a new db file
-      if (!Files.exists(cheminVersBD)) {
+      if (!Files.exists(pathToDb)) {
         // Create an object and add a JSON array as POJO, e.g. { items:[...]}
         ObjectNode newCollection = jsonMapper.createObjectNode().putPOJO(collectionName, items);
-        jsonMapper.writeValue(cheminVersBD.toFile(),
+        jsonMapper.writeValue(pathToDb.toFile(),
             newCollection); // write the JSON Object in the DB file
         return;
       }
       // get all collections : can be read as generic JsonNode, if it can be Object or Array;
       JsonNode allCollections = jsonMapper.readTree(
-          cheminVersBD.toFile()); // e.g. { users:[...], items:[...]}
+          pathToDb.toFile()); // e.g. { users:[...], items:[...]}
       // remove current collection, e.g. remove the array of items
       if (allCollections.has(collectionName)) {
         ((ObjectNode) allCollections).remove(collectionName); //e.g. it leaves { users:[...]}
@@ -64,22 +64,22 @@ public class Json<T> {
       // Add the JSON array in allCollections, e.g. : { users:[...], items:[...]}
       ((ObjectNode) allCollections).putArray(collectionName).addAll(updatedCollection);
       // write to the db file allCollections
-      jsonMapper.writeValue(cheminVersBD.toFile(), allCollections);
+      jsonMapper.writeValue(pathToDb.toFile(), allCollections);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Methode qui reprend les objets de la DB.
+   * Method which gets the objects from collection.
    *
-   * @param collectionName -> nom des objets
-   * @return List des objets
+   * @param collectionName -> name of collection objects
+   * @return List of objects
    */
   public List<T> parse(String collectionName) {
     try {
       // get allCollections
-      JsonNode node = jsonMapper.readTree(cheminVersBD.toFile());
+      JsonNode node = jsonMapper.readTree(pathToDb.toFile());
       // accessing value of the specified field of an object node,
       // e.g. the JSON array within "items" field of { users:[...], items:[...]}
       JsonNode collection = node.get(collectionName);

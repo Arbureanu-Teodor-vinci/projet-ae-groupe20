@@ -6,7 +6,7 @@ import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
 /**
- * Traiter les messages d'erreurs des services envoyés aux clients dans un ExceptionMapper.
+ * Process service error messages sent to clients in an ExceptionMapper.
  */
 @Provider
 public class WebExceptionMapper implements ExceptionMapper<Throwable> {

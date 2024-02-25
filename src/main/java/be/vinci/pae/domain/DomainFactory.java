@@ -1,15 +1,15 @@
 package be.vinci.pae.domain;
 
 /**
- * Interface factory pour chaque UCC.
+ * Interface factory for each UCC.
  */
 public interface DomainFactory {
 
   /**
-   * Methode qui renvoie un nouvel utilisateur.
+   * Method returning a new user.
    *
-   * @return UtilisateurDTO
+   * @return UserDTO
    */
-  UtilisateurDTO getUser();
+  UserDTO getUserDTO();
 
 }
