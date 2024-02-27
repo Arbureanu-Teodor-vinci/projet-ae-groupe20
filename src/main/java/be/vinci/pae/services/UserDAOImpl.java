@@ -2,7 +2,6 @@ package be.vinci.pae.services;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.services.utils.Json;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,12 +11,6 @@ import java.sql.SQLException;
  * Implementation of user services.
  */
 public class UserDAOImpl implements UserDAO {
-
-  private static final String COLLECTION_NAME = "users";
-
-  // @Inject
-  // private static DomainFactory myUserDTO;
-  private static Json<UserDTO> jsonDB = new Json<>(UserDTO.class);
 
   //using a domain factory to create object from the domain
   @Inject
