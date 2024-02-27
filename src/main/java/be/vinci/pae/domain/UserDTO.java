@@ -69,14 +69,14 @@ public interface UserDTO {
    *
    * @return integer
    */
-  int getTelephoneNumber();
+  String getTelephoneNumber();
 
   /**
    * Set telephone number.
    *
    * @param telephoneNbr integer
    */
-  void setTelephoneNumber(int telephoneNbr);
+  void setTelephoneNumber(String telephoneNbr);
 
   /**
    * Get role.

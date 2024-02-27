@@ -12,7 +12,7 @@ public class UserImpl implements User {
   private String lastName;
   private String firstName;
   private String email;
-  private int telephoneNumber;
+  private String telephoneNumber;
   private String role;
   private String password;
 
@@ -57,12 +57,12 @@ public class UserImpl implements User {
   }
 
   @Override
-  public int getTelephoneNumber() {
+  public String getTelephoneNumber() {
     return telephoneNumber;
   }
 
   @Override
-  public void setTelephoneNumber(int telephoneNumber) {
+  public void setTelephoneNumber(String telephoneNumber) {
     this.telephoneNumber = telephoneNumber;
   }
 
