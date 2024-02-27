@@ -1,4 +1,4 @@
-import { removePathPrefix } from '../../utils/path-prefix';
+// import { removePathPrefix, usePathPrefix } from '../../utils/path-prefix';
 import routes from './routes';
 
 const Router = () => {
@@ -26,7 +26,7 @@ function onNavBarClick() {
 
 function onHistoryChange() {
   window.addEventListener('popstate', () => {
-    const uri = removePathPrefix(window.location.pathname);
+    const uri = window.location.pathname;
     const componentToRender = routes[uri];
     componentToRender();
   });
@@ -34,7 +34,7 @@ function onHistoryChange() {
 
 function onFrontendLoad() {
   window.addEventListener('load', () => {
-    const uri = removePathPrefix(window.location.pathname);
+    const uri = window.location.pathname;
     const componentToRender = routes[uri];
     if (!componentToRender) throw Error(`The ${uri} ressource does not exist.`);
 
