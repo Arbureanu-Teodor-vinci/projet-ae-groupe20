@@ -73,6 +73,21 @@ async function renderRegisterPage() {
 
                                 <hr class="mx-n3">
 
+                                <div class="row align-items-center py-3">
+                                    <div class="col-md-3 ps-5">
+                                        <h6 class="mb-0">Rôle*</h6>
+                                    </div>
+                                    <div class="col-md-9 pe-5">
+                                        <select id="role" name="choice">
+                                            <option value="">Choisir le rôle</option>
+                                            <option value="option1">Professeur</option>
+                                            <option value="option2">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <hr class="mx-n3">
+
                                 <div class="mx-5">
                                     <a href="" id="toLogin"> Déjà un compte ? Connectez-vous ici</a>
                                 </div>
