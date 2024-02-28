@@ -1,6 +1,15 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+
+const DEVELOPMENT_PATH_PREFIX = '/'; // normally not to be changed, your assets should be provided directly within /dist/ (and not /dist/mymovies/ e.g.)
+const PRODUCTION_PATH_PREFIX = '/'; // e.g. '/mymovies/' if you deploy to GitHub Pages as a Project site : mymovies would be the repo name
+
+const buildMode = process.argv[process.argv.indexOf('--mode') + 1];
+const isProductionBuild = buildMode === 'production';
+
+const PATH_PREFIX = isProductionBuild ? PRODUCTION_PATH_PREFIX : DEVELOPMENT_PATH_PREFIX;
 
 module.exports = {
   mode: 'none',
@@ -87,5 +96,9 @@ module.exports = {
       template: './src/index.html',
     }),
     new ESLintPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.BUILD_MODE': JSON.stringify(buildMode),
+      'process.env.PATH_PREFIX': JSON.stringify(PATH_PREFIX),
+    }),
   ],
 };
