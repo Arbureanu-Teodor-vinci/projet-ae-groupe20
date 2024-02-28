@@ -1,9 +1,9 @@
-import { clearPage, hideFooter } from '../../utils/render';
+import { clearPage } from '../../utils/render';
+import Navigate from '../Router/Navigate';
 
 const LoginPage = async () => {
     clearPage();
     await renderLoginPage();
-    hideFooter();
 };
 
 async function renderLoginPage() {
@@ -22,11 +22,11 @@ async function renderLoginPage() {
                             <div class="row align-items-center pt-4 pb-3">
                                 <div class="col-md-3 ps-5">
     
-                                    <h6 class="mb-0">Nom d'utilisateur</h6>
+                                    <h6 class="mb-0">Adresse e-mail</h6>
     
                                 </div>
                                 <div class="col-md-9 pe-5">
-                                <input type="text" class="form-control form-control-lg" id="username" required>
+                                <input type="text" class="form-control form-control-lg" id="emailInput" required>
                                 </div>
                             </div>
     
@@ -47,7 +47,7 @@ async function renderLoginPage() {
     
                             <hr class="mx-n3">
                             <div class="mx-5">
-                                <a href="" id = "toInscription">Pas encore inscrit ? Inscrivez-vous ici</a>  
+                                <a href="" id = "toRegister">Pas encore inscrit ? Inscrivez-vous ici</a>  
                             </div>
 
                             <div class="px-5 py-4">
@@ -64,7 +64,13 @@ async function renderLoginPage() {
 
         
     </section>
-    `
+    `;
+
+    const link = document.querySelector('#toRegister');
+    link.addEventListener('click', (e) => {
+    e.preventDefault();
+    Navigate('/register')
+})
 }
 
 
