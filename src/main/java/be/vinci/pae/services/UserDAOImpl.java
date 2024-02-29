@@ -30,9 +30,9 @@ public class UserDAOImpl implements UserDAO {
       as the parameter
        */
       PreparedStatement ps = dalConn.getPS(
-          "SELECT id,lastname,"
-              + "firstname, email, telephonenumber,"
-              + "_role, _password FROM project.users WHERE id = ?"
+          "SELECT id_user,lastname_user,"
+              + "firstname_user, email, phone_number,"
+              + "role_user, password_user FROM InternshipManagement.users WHERE id = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -67,9 +67,9 @@ public class UserDAOImpl implements UserDAO {
     UserDTO user = domainFactory.getUserDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT id,lastname,"
-              + "firstname, email, telephonenumber, "
-              + "_role, _password FROM project.users WHERE email = ?");
+          "SELECT id_user,lastname_user,"
+              + "firstname_user, email, phone_number, "
+              + "role_user, password_user FROM InternshipManagement.users WHERE email = ?");
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
