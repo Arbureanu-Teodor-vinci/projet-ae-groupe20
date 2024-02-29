@@ -29,21 +29,24 @@ public class UserDAOImpl implements UserDAO {
       Creating a preparedstatement using the DALService method, passing the sql querry
       as the parameter
        */
-      PreparedStatement preparedStatement = dalConn.getPS(
-          "SELECT id_user, lastname_user, firstname_user, email, phone_number"
-              + "role_user FROM InternshipManagement.users WHERE id_user = ?"
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT id,lastname,"
+              + "firstname, email, telephonenumber,"
+              + "role, password FROM project.users WHERE id = ?"
       );
+      ps.setInt(1, id);
       // executing the query
-      try (ResultSet resultSet = preparedStatement.executeQuery()) {
+      try (ResultSet resultSet = ps.executeQuery()) {
         // checking for a result
         if (resultSet.next()) {
           // if result -> seting the userDTO attribut with the given result
-          user.setId(resultSet.getInt("id_user"));
-          user.setLastName(resultSet.getString("lastname_user"));
-          user.setFistName(resultSet.getString("firstname_user"));
-          user.setEmail(resultSet.getString("email"));
-          user.setTelephoneNumber(resultSet.getString("phone_number"));
-          user.setRole(resultSet.getString("role_user"));
+          user.setId(resultSet.getInt(1));
+          user.setLastName(resultSet.getString(2));
+          user.setFistName(resultSet.getString(3));
+          user.setEmail(resultSet.getString(4));
+          user.setTelephoneNumber(resultSet.getString(5));
+          user.setRole(resultSet.getString(6));
+          user.setPassword(resultSet.getString(7));
         } else {
           // if no result -> user is null
           user = null;
@@ -64,18 +67,20 @@ public class UserDAOImpl implements UserDAO {
     UserDTO user = domainFactory.getUserDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT id_user,lastname_user,"
-              + "firstname_user, email, phone_number, "
-              + "role_user FROM InternshipManagement.users WHERE email = ?");
+          "SELECT id,lastname,"
+              + "firstname, email, telephonenumber, "
+              + "role, password FROM project.users WHERE email = ?");
+      ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
 
-          user.setId(rs.getInt("id_user"));
-          user.setLastName(rs.getString("lastname_user"));
-          user.setFistName(rs.getString("firstname_user"));
-          user.setEmail(rs.getString("email"));
-          user.setTelephoneNumber(rs.getString(""));
-          user.setRole(rs.getString("role_user"));
+          user.setId(rs.getInt(1));
+          user.setLastName(rs.getString(2));
+          user.setFistName(rs.getString(3));
+          user.setEmail(rs.getString(4));
+          user.setTelephoneNumber(rs.getString(5));
+          user.setRole(rs.getString(6));
+          user.setPassword(rs.getString(7));
 
         } else {
           user = null;
