@@ -1,13 +1,15 @@
 import { clearPage} from '../../utils/render';
-import { isAuthenticated, getAuthenticatedUser } from '../../utils/auths'
+import { isAuthenticated, getAuthenticatedUser, clearAuthenticatedUser } from '../../utils/auths'
 import Navigate from '../Router/Navigate';
 
 const HomePage = () => {
-  if(!isAuthenticated){
-    Navigate('/login')
-  }
+  if(!getAuthenticatedUser()){
+    Navigate('/login');
+  }else{
     clearPage();
     renderHomePage();
+  }
+    
 };
 
 function renderHomePage() {
@@ -22,9 +24,18 @@ function renderHomePage() {
     </div>
   `;
 
-  if(isAuthenticated){
+  if(isAuthenticated()){
     const userAuth = document.querySelector('.userAuth');
-    userAuth.innerText = `${getAuthenticatedUser()}`
+    userAuth.innerText = `${getAuthenticatedUser().email}`;
+
+    main.innerHTML += ` <button id="logoutButton">Se déconnecter</button>`
+    const logoutButton = document.getElementById('logoutButton');
+    logoutButton.addEventListener('click', () => {
+      clearAuthenticatedUser();
+      Navigate('/login');
+    });
+  }else{
+    Navigate('/login');
   }
 }
 export default HomePage;
