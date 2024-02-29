@@ -69,7 +69,7 @@ async function renderLoginPage() {
     const link = document.querySelector('#toRegister');
     link.addEventListener('click', (e) => {
     e.preventDefault();
-    Navigate('/register')
+    Navigate('/choice')
 })
 }
 
