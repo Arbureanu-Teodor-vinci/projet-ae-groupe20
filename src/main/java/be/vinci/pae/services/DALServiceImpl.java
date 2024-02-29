@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.utils.Config;
 import jakarta.inject.Singleton;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,11 +9,14 @@ import java.sql.SQLException;
 
 public class DALServiceImpl implements DALService {
 
+  String url = Config.getProperty("DatabaseFilePath");
+  String dataBaseUser = Config.getProperty("DatabaseUser");
+  String dataBasePassword = Config.getProperty("DatabasePassword");
   private Connection conn;
 
   @Singleton
   public DALServiceImpl() {
-    String url = "jdbc:postgresql://coursinfo.vinci.be:5432/dbmatteo_erismann?user=matteo_erismann";
+
     try {
       Class.forName("org.postgresql.Driver");
     } catch (ClassNotFoundException e) {
@@ -20,7 +24,7 @@ public class DALServiceImpl implements DALService {
       System.exit(1);
     }
     try {
-      conn = DriverManager.getConnection(url, "matteoerismann", "Bada!dan4751");
+      conn = DriverManager.getConnection(url, dataBaseUser, dataBasePassword);
     } catch (SQLException e) {
       e.printStackTrace();
       System.exit(1);
