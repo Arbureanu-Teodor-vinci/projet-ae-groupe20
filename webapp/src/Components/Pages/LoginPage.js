@@ -70,7 +70,7 @@ async function renderLoginPage() {
     link.addEventListener('click', (e) => {
     e.preventDefault();
     Navigate('/choice')
-})
+});
 }
 
 
