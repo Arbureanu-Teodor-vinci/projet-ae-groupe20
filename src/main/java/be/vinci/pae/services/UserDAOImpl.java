@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT id,lastname,"
               + "firstname, email, telephonenumber,"
-              + "role, password FROM project.users WHERE id = ?"
+              + "_role, _password FROM project.users WHERE id = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -69,7 +69,7 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT id,lastname,"
               + "firstname, email, telephonenumber, "
-              + "role, password FROM project.users WHERE email = ?");
+              + "_role, _password FROM project.users WHERE email = ?");
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
