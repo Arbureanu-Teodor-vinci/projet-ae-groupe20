@@ -1,9 +1,12 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
+import { setAuthenticatedUser } from '../../utils/auths';
 
 const LoginPage = async () => {
     clearPage();
     await renderLoginPage();
+    const form = document.querySelector('form');
+    form.addEventListener('submit', login);
 };
 
 async function renderLoginPage() {
@@ -44,6 +47,7 @@ async function renderLoginPage() {
     
                                 </div>
                             </div>
+                            <p class = "noLogin errorMessage"><p>
     
                             <hr class="mx-n3">
                             <div class="mx-5">
@@ -70,8 +74,41 @@ async function renderLoginPage() {
     link.addEventListener('click', (e) => {
     e.preventDefault();
     Navigate('/register')
+
 })
-}
+};
+
+async function login (e) {
+    e.preventDefault();
+
+    const email = document.querySelector('#emailInput').value;
+    const password = document.querySelector('#pwd').value;
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers : {
+        'Content-Type': 'application/json',
+      },
+    };
+    
+    const response = await fetch(`/api/auths/login`, options);
+
+    if(!response.ok) {
+      const erreur = document.querySelector('.noLogin');
+      erreur.innerText = "Nom d'utilisateur ou mot de passe incorrect";
+    }else{
+      const authenticatedUser = await response.json();
+      setAuthenticatedUser(authenticatedUser);
+      Navigate('/');
+    };
+
+    return null;
+  
+  };
 
 
 
