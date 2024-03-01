@@ -9,3 +9,7 @@ Content-Type: application/json
   "email":"admin",
   "password":"group20"
 }
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}

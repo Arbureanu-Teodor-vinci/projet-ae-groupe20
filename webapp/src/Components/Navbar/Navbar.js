@@ -36,8 +36,7 @@ function renderNavbar() {
         </div>
 
         <div class="nav nav-underline pe-5">
-        <a class="nav-link" style="font-size: 20px" href="#" data-uri="/login">Se connecter</a>
-          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/choice">S'inscrire</a>
+       
         </div>
       </div>
     </nav>
