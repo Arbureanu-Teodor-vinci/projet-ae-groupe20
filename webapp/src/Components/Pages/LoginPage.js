@@ -47,6 +47,16 @@ async function renderLoginPage() {
     
                                 </div>
                             </div>
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+                                    <h6 class="mb-0">se souvenir de moi</h6>
+                                </div>
+                                <div class="col-md-9 pe-5">
+                                    <input type="checkbox" id="rememberMe" class="form-check-input">
+                                </div>
+                            </div>
+
                             <p class = "noLogin errorMessage"><p>
     
                             <hr class="mx-n3">
@@ -72,10 +82,9 @@ async function renderLoginPage() {
 
     const link = document.querySelector('#toRegister');
     link.addEventListener('click', (e) => {
-    e.preventDefault();
-    Navigate('/register')
-
-})
+        e.preventDefault();
+        Navigate('/register')
+    })
 };
 
 async function login (e) {
@@ -83,6 +92,7 @@ async function login (e) {
 
     const email = document.querySelector('#emailInput').value;
     const password = document.querySelector('#pwd').value;
+//  const rememberMe = document.querySelector('#rememberMe').checked;
 
     const options = {
       method: 'POST',
