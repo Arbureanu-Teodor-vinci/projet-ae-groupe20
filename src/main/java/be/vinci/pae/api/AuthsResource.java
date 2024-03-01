@@ -64,7 +64,10 @@ public class AuthsResource {
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", user.getId())
-          .put("email", user.getEmail());
+          .put("role", user.getRole())
+          .put("email", user.getEmail())
+          .put("firstName", user.getFirstName())
+          .put("lastName", user.getLastName());
       return publicUser;
 
     } catch (Exception e) {
