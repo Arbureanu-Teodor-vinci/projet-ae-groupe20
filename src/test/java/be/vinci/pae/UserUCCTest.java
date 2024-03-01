@@ -28,7 +28,6 @@ public class UserUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
   private UserUCC userUCC = locator.getService(UserUCC.class);
-  ;
   private UserDAO userDAO = locator.getService(UserDAO.class);
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
   private UserDTO userDTO = domainFactory.getUserDTO();

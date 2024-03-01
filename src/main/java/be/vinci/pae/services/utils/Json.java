@@ -99,6 +99,13 @@ public class Json<T> {
     }
   }
 
+  /**
+   * Method which gets the object from collection.
+   *
+   * @param list list of objects
+   * @param <T>
+   * @return list of objects
+   */
   public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
     try {
       JavaType type = jsonMapper.getTypeFactory().constructCollectionType(List.class, this.type);
@@ -117,6 +124,13 @@ public class Json<T> {
 
   }
 
+  /**
+   * Method which gets the object from collection.
+   *
+   * @param item object
+   * @param <T>
+   * @return object
+   */
   public <T> T filterPublicJsonView(T item) {
     try {
       // serialize using JSON Views : public view (all fields not required in the

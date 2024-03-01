@@ -1,4 +1,4 @@
-package be.vinci.api.pae.filters;
+package be.vinci.pae.api.filters;
 
 import be.vinci.api.filters.Authorize;
 import be.vinci.pae.domain.UserDTO;
@@ -18,6 +18,9 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.Provider;
 import java.io.IOException;
 
+/**
+ * Filter to check if the user is authorized to access the resource.
+ */
 @Singleton
 @Provider
 @Authorize
