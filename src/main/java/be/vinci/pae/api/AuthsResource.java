@@ -17,6 +17,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.Date;
 
 /**
  * Represents the authentication route for the user to register and login.
@@ -59,8 +60,11 @@ public class AuthsResource {
     }
     String token;
     try {
+      Date expirationToken = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3); // 3 hours
       token = JWT.create().withIssuer("auth0")
-          .withClaim("user", user.getId()).sign(this.jwtAlgorithm);
+          .withClaim("user", user.getId())
+          .withExpiresAt(expirationToken)
+          .sign(this.jwtAlgorithm);
       ObjectNode publicUser = jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", user.getId())
