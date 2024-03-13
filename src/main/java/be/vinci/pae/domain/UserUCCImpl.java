@@ -13,6 +13,9 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO login(String email, String password) {
+    if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+      return null;
+    }
 
     UserDTO userDTO = userDS.getOneUserByEmail(email);
     User user = (User) userDTO;
