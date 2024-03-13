@@ -7,6 +7,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * The Class DALServiceImpl.
+ */
 public class DALServiceImpl implements DALService {
 
   String url = Config.getProperty("DatabaseFilePath");

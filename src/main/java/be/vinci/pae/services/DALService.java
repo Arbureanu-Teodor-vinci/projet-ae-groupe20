@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public interface DALService {
 
   /**
-   * create a prepared statement using the query recieved as a parameter
+   * create a prepared statement using the query recieved as a parameter.
    *
    * @param request String
    * @return a prepared statement
