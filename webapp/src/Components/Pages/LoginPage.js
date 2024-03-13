@@ -1,6 +1,6 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
-import { setAuthenticatedUser } from '../../utils/auths';
+import { setAuthenticatedUser, setRememberMe } from '../../utils/auths';
 
 const LoginPage = async () => {
     clearPage();
@@ -93,7 +93,7 @@ async function login (e) {
 
     const email = document.querySelector('#emailInput').value;
     const password = document.querySelector('#pwd').value;
-//  const rememberMe = document.querySelector('#rememberMe').checked;
+    const rememberMe = document.querySelector('#rememberMe').checked;
 
     const options = {
       method: 'POST',
@@ -113,7 +113,10 @@ async function login (e) {
       erreur.innerText = "Nom d'utilisateur ou mot de passe incorrect";
     }else{
       const authenticatedUser = await response.json();
-      setAuthenticatedUser(authenticatedUser.token);
+      setAuthenticatedUser(authenticatedUser);
+      if  (rememberMe) {
+        setRememberMe(rememberMe);
+      }
       Navigate('/');
     };
 
