@@ -14,7 +14,7 @@ const getAuthenticatedUser = () => {
 const setAuthenticatedUser = (authenticatedUser) => {
   const serializedUser = JSON.stringify(authenticatedUser);
   localStorage.setItem(STORE_NAME, serializedUser);
-
+  
   currentUser = authenticatedUser;
 };
 

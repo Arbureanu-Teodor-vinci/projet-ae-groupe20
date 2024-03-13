@@ -87,6 +87,7 @@ async function renderLoginPage() {
     })
 };
 
+
 async function login (e) {
     e.preventDefault();
 
@@ -112,7 +113,7 @@ async function login (e) {
       erreur.innerText = "Nom d'utilisateur ou mot de passe incorrect";
     }else{
       const authenticatedUser = await response.json();
-      setAuthenticatedUser(authenticatedUser);
+      setAuthenticatedUser(authenticatedUser.token);
       Navigate('/');
     };
 
