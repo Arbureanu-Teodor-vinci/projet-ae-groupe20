@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT id_user,lastname_user,"
               + "firstname_user, email, phone_number,"
-              + "role_user, password_user FROM InternshipManagement.users WHERE id = ?"
+              + "role_user, password_user FROM InternshipManagement.users WHERE id_user = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -42,7 +42,7 @@ public class UserDAOImpl implements UserDAO {
           /* if result -> calling the gerResultSet method
           to set the attributes of the user with the given results
            */
-          getResultSet(resultSet);
+          user = getResultSet(resultSet);
         }
       }
       // closing the prepared statement
