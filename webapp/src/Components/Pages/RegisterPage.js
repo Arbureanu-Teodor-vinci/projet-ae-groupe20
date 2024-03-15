@@ -1,7 +1,12 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 const RegisterPage = async () => {
+    if (getAuthenticatedUser()) {
+        Navigate('/');
+        return;
+      };
     clearPage();
     await renderRegisterPage();
 }
