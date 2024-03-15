@@ -114,10 +114,10 @@ async function login (e) {
       erreur.innerText = "Nom d'utilisateur ou mot de passe incorrect";
     }else{
       const authenticatedUser = await response.json();
-      setAuthenticatedUser(authenticatedUser);
       if  (rememberMe) {
         setRememberMe(rememberMe);
       }
+      setAuthenticatedUser(authenticatedUser);
       Navigate('/');
       Navbar();
     };

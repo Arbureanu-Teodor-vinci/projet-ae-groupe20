@@ -1,5 +1,5 @@
 import { clearPage} from '../../utils/render';
-import { isAuthenticated, getAuthenticatedUser, clearAuthenticatedUser } from '../../utils/auths'
+import {  getAuthenticatedUser, clearAuthenticatedUser } from '../../utils/auths'
 import Navigate from '../Router/Navigate';
 
 const HomePage = () => {
@@ -12,10 +12,10 @@ const HomePage = () => {
     
 };
 
-function renderHomePage() {
+async function renderHomePage() {
   
     const main = document.querySelector('main');
-  main.innerHTML = `<div class="container">
+    main.innerHTML = `<div class="container">
     <div class="row">
         <div class="col-md-12">
         <h1 class="text-primary text-decoration-underline mb-4 mt-3">Accueil</h1>
@@ -23,8 +23,16 @@ function renderHomePage() {
         <p class="userAuth"><p>
     </div>
   `;
+  const options = {
+    method: 'GET',
+    headers : {
+      'Content-Type': 'application/json',
+      'Authorization': `${getAuthenticatedUser().token}`
+    },
+  };
+  const response = await fetch('/api/auths', options);
 
-  if(isAuthenticated()){
+  if(response.ok){
     const userAuth = document.querySelector('.userAuth');
     userAuth.innerText = `${getAuthenticatedUser().email}`;
 
@@ -35,6 +43,7 @@ function renderHomePage() {
       Navigate('/login');
     });
   }else{
+    clearAuthenticatedUser();
     Navigate('/login');
   }
 }
