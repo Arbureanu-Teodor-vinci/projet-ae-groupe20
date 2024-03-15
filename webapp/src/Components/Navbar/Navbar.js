@@ -5,6 +5,7 @@ import { getAuthenticatedUser } from "../../utils/auths";
 
 const Navbar = () => {
     renderNavbar();
+
 };
 
 function renderNavbar() {
@@ -17,7 +18,7 @@ function renderNavbar() {
       <div class="d-flex justify-content-between w-100 pt-3">
          <div class="nav nav-underline ps-5">
           <a class="nav-link" style="font-size: 20px" href="#" data-uri="/login">Accueil</a> 
-        </div>
+          </div>
 
         <div class="nav nav-underline pe-5">
         <a class="nav-link" style="font-size: 20px" href="#" data-uri="/login">Se connecter</a>
@@ -33,11 +34,11 @@ function renderNavbar() {
       <div class="d-flex justify-content-between w-100 pt-3">
          <div class="nav nav-underline ps-5">
           <a class="nav-link" style="font-size: 20px" href="#" data-uri="/">Accueil</a> 
-        </div>
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/profil">Mon profil</a>
+          </div>
 
         <div class="nav nav-underline pe-5">
-        <a class="nav-link" style="font-size: 20px" href="#" data-uri="/login">Se connecter</a>
-          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/choice">S'inscrire</a>
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/logout">Se déconnecter</a>
         </div>
       </div>
     </nav>

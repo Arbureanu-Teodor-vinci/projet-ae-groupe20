@@ -1,6 +1,7 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { setAuthenticatedUser, setRememberMe } from '../../utils/auths';
+import Navbar from '../Navbar/Navbar';
 
 const LoginPage = async () => {
     clearPage();
@@ -118,6 +119,7 @@ async function login (e) {
       }
       setAuthenticatedUser(authenticatedUser);
       Navigate('/');
+      Navbar();
     };
 
     return null;
