@@ -13,11 +13,8 @@ function onNavBarClick() {
   navbarWrapper.addEventListener('click', (e) => {
     e.preventDefault();
     const navBarItemClicked = e.target;
-    let uri = navBarItemClicked?.dataset?.uri;
+    const uri = navBarItemClicked?.dataset?.uri;
     if (uri) {
-      if(uri === '/logout'){
-        uri = '/login';
-      };
       const componentToRender = routes[uri];
       if (!componentToRender) throw Error(`The ${uri} ressource does not exist.`);
 
