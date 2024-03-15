@@ -13,3 +13,8 @@ Content-Type: application/json
 > {%
   client.global.set("adminToken", response.body.token);
 %}
+
+### Get user loged in
+GET {{baseUrl}}/auths
+Content-Type: application/json
+Authorization: {{adminToken}}
