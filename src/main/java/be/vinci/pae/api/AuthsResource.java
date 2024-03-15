@@ -1,5 +1,6 @@
 package be.vinci.pae.api;
 
+import be.vinci.api.filters.Authorize;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -11,12 +12,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.Date;
 
 /**
  * Represents the authentication route for the user to register and login.
@@ -25,9 +28,9 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/auths")
 public class AuthsResource {
 
+  private static ObjectNode publicUser;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
-
   @Inject
   private UserUCC userController;
 
@@ -59,12 +62,18 @@ public class AuthsResource {
     }
     String token;
     try {
+      Date expirationToken = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3); // 3 heures
       token = JWT.create().withIssuer("auth0")
-          .withClaim("user", user.getId()).sign(this.jwtAlgorithm);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
+          .withClaim("user", user.getId())
+          .withExpiresAt(expirationToken)
+          .sign(this.jwtAlgorithm);
+      publicUser = jsonMapper.createObjectNode()
           .put("token", token)
           .put("id", user.getId())
-          .put("email", user.getEmail());
+          .put("role", user.getRole())
+          .put("email", user.getEmail())
+          .put("firstName", user.getFirstName())
+          .put("lastName", user.getLastName());
       return publicUser;
 
     } catch (Exception e) {
@@ -72,4 +81,12 @@ public class AuthsResource {
       return null;
     }
   }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode getUser() {
+    return publicUser;
+  }
+
 }
