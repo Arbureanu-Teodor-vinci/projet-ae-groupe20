@@ -1,6 +1,7 @@
 package be.vinci.pae.api;
 
-import be.vinci.api.filters.Authorize;
+import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -56,18 +57,17 @@ public class AuthsResource {
     // Try to login
     UserDTO user = userController.login(email, password);
 
-    if (user == null) {
-      throw new WebApplicationException("Email or password are incorrect",
-          Status.UNAUTHORIZED);
-    }
     String token;
     try {
-      Date expirationToken = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3); // 3 heures
-      token = JWT.create().withIssuer("auth0")
+      Date expirationToken = new Date(
+          System.currentTimeMillis() + 1000 * 60 * 60 * 3); // 3 hours token expiration
+
+      token = JWT.create().withIssuer("auth0") // Create a token for the user
           .withClaim("user", user.getId())
           .withExpiresAt(expirationToken)
           .sign(this.jwtAlgorithm);
-      publicUser = jsonMapper.createObjectNode()
+
+      publicUser = jsonMapper.createObjectNode() // Create a JSON object with user infos
           .put("token", token)
           .put("id", user.getId())
           .put("role", user.getRole())
@@ -76,7 +76,7 @@ public class AuthsResource {
           .put("lastName", user.getLastName());
       return publicUser;
 
-    } catch (Exception e) {
+    } catch (FatalException e) {
       System.out.println("Can't create token");
       return null;
     }
