@@ -70,8 +70,6 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-        } else {
-          user = null;
         }
       }
       ps.close();

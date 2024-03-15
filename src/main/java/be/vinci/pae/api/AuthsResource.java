@@ -40,14 +40,15 @@ public class AuthsResource {
    *
    * @param json A JSON object which contains the email and the password to login.
    * @return JSON object containing user infos.
-   * @throws WebApplicationException If email or password combination are wrong or null.
+   * @throws WebApplicationException If email or password are null or empty.
    */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("password") || json.get("email").asText()
+        .isEmpty() || json.get("password").asText().isEmpty()) {
       throw new WebApplicationException("You must enter an email and a password.",
           Status.BAD_REQUEST);
     }

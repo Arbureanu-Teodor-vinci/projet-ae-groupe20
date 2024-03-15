@@ -4,7 +4,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 /**
- * BiznessException for business logic exceptions.
+ * BiznessException for business logic exceptions -> status 412.
  */
 public class BiznessException extends WebApplicationException {
 

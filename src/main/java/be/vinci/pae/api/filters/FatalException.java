@@ -5,7 +5,7 @@ import jakarta.ws.rs.core.Response;
 
 
 /**
- * FatalException for SQLexceptions and token creation problem.
+ * FatalException for SQLexceptions and token creation problems -> status 500.
  */
 public class FatalException extends WebApplicationException {
 
