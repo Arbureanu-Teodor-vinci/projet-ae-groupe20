@@ -9,11 +9,19 @@ import jakarta.ws.rs.core.Response;
  */
 public class FatalException extends WebApplicationException {
 
+  /**
+   * Constructor.
+   */
   public FatalException() {
     super(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .build());
   }
 
+  /**
+   * Constructor with message.
+   *
+   * @param message -> the message
+   */
   public FatalException(String message) {
     super(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(message)
@@ -21,6 +29,11 @@ public class FatalException extends WebApplicationException {
         .build());
   }
 
+  /**
+   * Constructor with thrown exception cause.
+   *
+   * @param cause -> the cause
+   */
   public FatalException(Throwable cause) {
     super(Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(cause.getMessage())

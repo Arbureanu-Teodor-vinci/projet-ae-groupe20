@@ -18,6 +18,9 @@ public class DALServiceImpl implements DALService {
   String dataBasePassword = Config.getProperty("DatabasePassword");
   private Connection conn;
 
+  /**
+   * Instantiates a new DAL service impl and connect to the database.
+   */
   @Singleton
   public DALServiceImpl() {
 

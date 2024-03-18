@@ -83,6 +83,11 @@ public class AuthsResource {
     }
   }
 
+  /**
+   * Get logged user infos and token.
+   *
+   * @return JSON object containing user infos.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize

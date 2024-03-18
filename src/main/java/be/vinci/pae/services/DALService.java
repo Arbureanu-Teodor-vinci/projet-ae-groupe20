@@ -13,6 +13,7 @@ public interface DALService {
    *
    * @param request String
    * @return a prepared statement
+   * @throws SQLException if the query is not correct
    */
   PreparedStatement getPS(String request) throws SQLException;
 }
