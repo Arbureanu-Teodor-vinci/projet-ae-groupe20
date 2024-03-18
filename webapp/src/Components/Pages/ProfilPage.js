@@ -1,7 +1,13 @@
 import { clearPage } from '../../utils/render';
+import Navigate from '../Router/Navigate';
 import { getAuthenticatedUser } from '../../utils/auths';
 
 const ProfilPage = async () => {
+    if (!getAuthenticatedUser()) {
+        Navigate('/login');
+        return;
+      };
+
     clearPage();
     await renderProfilPage();
 };
@@ -21,7 +27,7 @@ async function renderProfilPage() {
             <div class="row">
                 <div class="col-12 d-flex justify-content-between align-items-center">
                     <h3>Mes données personnelles</h3>
-                    <button class="btn btn-primary">Modifier</button>
+                    <button id="editButton" class="btn btn-primary" >Modifier</button>
                 </div>
                 <div class="col-12 mt-3">
                     <table class="table table-bordered">
@@ -48,6 +54,12 @@ async function renderProfilPage() {
             </div>
         </div>
     </section>`;
+
+    const link = document.querySelector('#editButton');
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        Navigate('/modification');
+    });
 }
 
 async function getUser() {
