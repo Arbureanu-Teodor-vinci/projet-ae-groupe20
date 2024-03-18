@@ -1,8 +1,13 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
-import { setAuthenticatedUser, setRememberMe } from '../../utils/auths';
+import { setAuthenticatedUser, setRememberMe, getAuthenticatedUser } from '../../utils/auths';
+import Navbar from '../Navbar/Navbar';
 
 const LoginPage = async () => {
+    if (getAuthenticatedUser()) {
+        Navigate('/');
+        return;
+      };
     clearPage();
     await renderLoginPage();
     const form = document.querySelector('form');
@@ -84,7 +89,7 @@ async function renderLoginPage() {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/register')
-    })
+    });
 };
 
 
@@ -118,6 +123,7 @@ async function login (e) {
       }
       setAuthenticatedUser(authenticatedUser);
       Navigate('/');
+      Navbar();
     };
 
     return null;
