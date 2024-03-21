@@ -85,6 +85,11 @@
 			<groupId>org.mockito</groupId>
 			<version>4.8.0</version>
 		</dependency>
+		<dependency>
+			<artifactId>commons-dbcp2</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<version>2.12.0</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
