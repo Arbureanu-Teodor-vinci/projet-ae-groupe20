@@ -3,7 +3,7 @@ package be.vinci.pae.services;
 import java.sql.PreparedStatement;
 
 /**
- * Services to manage the connexion to the database a single time.
+ * Services of database connection to send SQL transactions.
  */
 public interface DALTransactionServices {
 

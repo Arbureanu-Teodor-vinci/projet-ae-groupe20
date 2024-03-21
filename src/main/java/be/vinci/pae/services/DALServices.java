@@ -3,6 +3,9 @@ package be.vinci.pae.services;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Services of database connection to send single SQL queries.
+ */
 public interface DALServices {
 
   /**
@@ -17,5 +20,5 @@ public interface DALServices {
   /**
    * Close the connection to the database.
    */
-  public void closeConnection();
+  void closeConnection();
 }

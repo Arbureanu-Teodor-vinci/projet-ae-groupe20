@@ -103,7 +103,7 @@ public class Json<T> {
    * Method which gets the object from collection.
    *
    * @param list list of objects
-   * @param <T>
+   * @param <T>  type of object
    * @return list of objects
    */
   public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
@@ -128,7 +128,7 @@ public class Json<T> {
    * Method which gets the object from collection.
    *
    * @param item object
-   * @param <T>
+   * @param <T>  type of object
    * @return object
    */
   public <T> T filterPublicJsonView(T item) {
