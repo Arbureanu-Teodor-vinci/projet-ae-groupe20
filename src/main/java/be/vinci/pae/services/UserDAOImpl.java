@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import jakarta.inject.Inject;
@@ -50,7 +51,7 @@ public class UserDAOImpl implements UserDAO {
       // catching exeptions
     } catch (SQLException e) {
       e.printStackTrace();
-      System.exit(1);
+      throw new FatalException(e);
     }
     // returning the result, either a userDTO with information or null if no result set
     return user;
@@ -69,14 +70,12 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-        } else {
-          user = null;
         }
       }
       ps.close();
     } catch (SQLException e) {
       e.printStackTrace();
-      System.exit(1);
+      throw new FatalException(e);
     }
     return user;
   }

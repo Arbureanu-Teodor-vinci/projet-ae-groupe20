@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Singleton;
 import java.sql.Connection;
@@ -17,6 +18,9 @@ public class DALServiceImpl implements DALService {
   String dataBasePassword = Config.getProperty("DatabasePassword");
   private Connection conn;
 
+  /**
+   * Instantiates a new DAL service impl and connect to the database.
+   */
   @Singleton
   public DALServiceImpl() {
 
@@ -30,7 +34,7 @@ public class DALServiceImpl implements DALService {
       conn = DriverManager.getConnection(url, dataBaseUser, dataBasePassword);
     } catch (SQLException e) {
       e.printStackTrace();
-      System.exit(1);
+      throw new FatalException(e);
     }
   }
 
