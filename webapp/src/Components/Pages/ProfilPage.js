@@ -13,6 +13,8 @@ const ProfilPage = async () => {
 };
 
 async function renderProfilPage() {
+    const user = await getUser();
+
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
@@ -32,19 +34,19 @@ async function renderProfilPage() {
                         <tbody>
                             <tr>
                                 <th>Nom</th>
-                                <td><!-- Ici, vous pouvez ajouter le nom de l'utilisateur --></td>
+                                <td>${user.lastName}</td>
                             </tr>
                             <tr>
                                 <th>Prénom</th>
-                                <td><!-- Ici, vous pouvez ajouter le prénom de l'utilisateur --></td>
+                                <td>${user && user.firstName}</td>
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td><!-- Ici, vous pouvez ajouter l'email de l'utilisateur --></td>
+                                <td>${user && user.email}</td>
                             </tr>
                             <tr>
                                 <th>Tel</th>
-                                <td><!-- Ici, vous peux ajouter le numéro de téléphone de l'utilisateur --></td>
+                                <td>${user && user.phone_number}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -58,6 +60,19 @@ async function renderProfilPage() {
         e.preventDefault();
         Navigate('/modification');
     });
+}
+
+async function getUser() {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `${getAuthenticatedUser().token}`
+        },
+    };
+
+    const response = await fetch(`/api/auths`, options);
+    return response.json();
 }
 
 export default ProfilPage;
