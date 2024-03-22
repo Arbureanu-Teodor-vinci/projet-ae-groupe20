@@ -52,6 +52,61 @@ async function renderProfilPage() {
                     </table>
                 </div>
             </div>
+            <div class="row mt-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h3>Mon Stage</h3>
+            </div>
+            <div class="col-12 mt-3">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Entreprise</th>
+                            <td>${user && user.internship && user.internship.company}</td>
+                        </tr>
+                        <tr>
+                            <th>Responsable de stage</th>
+                            <td>${user && user.internship && user.internship.supervisor}</td>
+                        </tr>
+                        <tr>
+                            <th>Sujet du stage</th>
+                            <td>${user && user.internship && user.internship.topic} <button id="editInternshipButton" class="btn btn-primary">Modifier</button></td>
+                        </tr>
+                        <tr>
+                            <th>Date de signature du stage</th>
+                            <td>${user && user.internship && user.internship.signature_date}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row mt-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h3>Contacts</h3>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Entreprise</th>
+                                <th>Moyen de contact</th>
+                                <th>Outil de contact</th>
+                                <th>Etat du contact</th>
+                                <th>Raison du refus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
         </div>
     </section>`;
 
