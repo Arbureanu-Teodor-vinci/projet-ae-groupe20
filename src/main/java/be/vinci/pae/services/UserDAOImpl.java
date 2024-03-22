@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import jakarta.inject.Inject;
@@ -15,9 +16,9 @@ public class UserDAOImpl implements UserDAO {
   //using a domain factory to create object from the domain
   @Inject
   private DomainFactory domainFactory;
-  //using the DALService to establish a connection to the data base
+  //using the DALService to establish a connection to the database
   @Inject
-  private DALService dalConn;
+  private DALServices dalConn;
 
 
   @Override
@@ -32,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT id_user,lastname_user,"
               + "firstname_user, email, phone_number,"
-              + "role_user, password_user FROM InternshipManagement.users WHERE id = ?"
+              + "role_user, password_user FROM InternshipManagement.users WHERE id_user = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -42,15 +43,16 @@ public class UserDAOImpl implements UserDAO {
           /* if result -> calling the gerResultSet method
           to set the attributes of the user with the given results
            */
-          getResultSet(resultSet);
+          user = getResultSet(resultSet);
         }
       }
       // closing the prepared statement
       ps.close();
+      dalConn.closeConnection();
       // catching exeptions
     } catch (SQLException e) {
       e.printStackTrace();
-      System.exit(1);
+      throw new FatalException(e);
     }
     // returning the result, either a userDTO with information or null if no result set
     return user;
@@ -69,14 +71,13 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-        } else {
-          user = null;
         }
       }
       ps.close();
+      dalConn.closeConnection();
     } catch (SQLException e) {
       e.printStackTrace();
-      System.exit(1);
+      throw new FatalException(e);
     }
     return user;
   }

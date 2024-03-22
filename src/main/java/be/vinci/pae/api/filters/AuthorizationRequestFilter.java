@@ -1,6 +1,5 @@
 package be.vinci.pae.api.filters;
 
-import be.vinci.api.filters.Authorize;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.services.UserDAO;
 import be.vinci.pae.utils.Config;

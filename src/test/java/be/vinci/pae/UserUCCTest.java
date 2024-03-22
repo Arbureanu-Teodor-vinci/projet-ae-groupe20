@@ -1,11 +1,11 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserUCC;
@@ -50,32 +50,49 @@ public class UserUCCTest {
   @Test
   @DisplayName("Login with invalid password")
   void testLogin2() {
-    UserDTO result = userUCC.login("admin", "test");
-    assertAll(
-        () -> assertFalse(BCrypt.checkpw("test", userDTO.getPassword())),
-        () -> assertNull(result)
-    );
+    assertThrows(BiznessException.class, () -> {
+      userUCC.login("admin", "test");
+    });
   }
 
   @Test
   @DisplayName("Login with user email not found")
   void testLogin3() {
-    UserDTO result = userUCC.login("nonexistent@example.com", "password");
-    assertNull(result);
+    assertThrows(NullPointerException.class, () -> {
+      userUCC.login("nonexistent@example.com", "test");
+    });
   }
 
   @Test
-  @DisplayName("Login with null email and password")
+  @DisplayName("Login with null email")
   void testLogin4() {
-    UserDTO result = userUCC.login(null, null);
-    assertNull(result);
+    assertThrows(NullPointerException.class, () -> {
+      userUCC.login(null, "admin");
+    });
   }
 
   @Test
-  @DisplayName("Login with empty email and password")
+  @DisplayName("Login with null password")
   void testLogin5() {
-    UserDTO result = userUCC.login("", "");
-    assertNull(result);
+    assertThrows(BiznessException.class, () -> {
+      userUCC.login("admin", null);
+    });
+  }
+
+  @Test
+  @DisplayName("Login with empty email")
+  void testLogin6() {
+    assertThrows(NullPointerException.class, () -> {
+      userUCC.login("", "admin");
+    });
+  }
+
+  @Test
+  @DisplayName("Login with empty password")
+  void testLogin7() {
+    assertThrows(BiznessException.class, () -> {
+      userUCC.login("admin", "");
+    });
   }
 
 }

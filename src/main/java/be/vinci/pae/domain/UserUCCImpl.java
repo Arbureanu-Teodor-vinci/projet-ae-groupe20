@@ -1,5 +1,6 @@
 package be.vinci.pae.domain;
 
+import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.UserDAO;
 import jakarta.inject.Inject;
 
@@ -13,14 +14,14 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO login(String email, String password) {
-    if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-      return null;
-    }
 
     UserDTO userDTO = userDS.getOneUserByEmail(email);
     User user = (User) userDTO;
-    if (user == null || !user.checkPassword(password)) {
-      return null;
+    if (user == null) {
+      throw new NullPointerException("Not found");
+    }
+    if (!user.checkPassword(password)) {
+      throw new BiznessException("Password is incorrect.");
     }
     return userDTO;
   }

@@ -1,5 +1,7 @@
 package be.vinci.pae.api;
 
+import be.vinci.pae.api.filters.Authorize;
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -11,12 +13,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.Date;
 
 /**
  * Represents the authentication route for the user to register and login.
@@ -25,9 +29,9 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/auths")
 public class AuthsResource {
 
+  private static ObjectNode publicUser;
   private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
-
   @Inject
   private UserUCC userController;
 
@@ -36,14 +40,15 @@ public class AuthsResource {
    *
    * @param json A JSON object which contains the email and the password to login.
    * @return JSON object containing user infos.
-   * @throws WebApplicationException If email or password combination are wrong or null.
+   * @throws WebApplicationException If email or password are null or empty.
    */
   @POST
   @Path("login")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
-    if (!json.hasNonNull("email") || !json.hasNonNull("password")) {
+    if (!json.hasNonNull("email") || !json.hasNonNull("password") || json.get("email").asText()
+        .isEmpty() || json.get("password").asText().isEmpty()) {
       throw new WebApplicationException("You must enter an email and a password.",
           Status.BAD_REQUEST);
     }
@@ -53,15 +58,17 @@ public class AuthsResource {
     // Try to login
     UserDTO user = userController.login(email, password);
 
-    if (user == null) {
-      throw new WebApplicationException("Email or password are incorrect",
-          Status.UNAUTHORIZED);
-    }
     String token;
     try {
-      token = JWT.create().withIssuer("auth0")
-          .withClaim("user", user.getId()).sign(this.jwtAlgorithm);
-      ObjectNode publicUser = jsonMapper.createObjectNode()
+      Date expirationToken = new Date(
+          System.currentTimeMillis() + 1000 * 60 * 60 * 3); // 3 hours token expiration
+
+      token = JWT.create().withIssuer("auth0") // Create a token for the user
+          .withClaim("user", user.getId())
+          .withExpiresAt(expirationToken)
+          .sign(this.jwtAlgorithm);
+
+      publicUser = jsonMapper.createObjectNode() // Create a JSON object with user infos
           .put("token", token)
           .put("id", user.getId())
           .put("role", user.getRole())
@@ -70,9 +77,22 @@ public class AuthsResource {
           .put("lastName", user.getLastName());
       return publicUser;
 
-    } catch (Exception e) {
+    } catch (FatalException e) {
       System.out.println("Can't create token");
       return null;
     }
   }
+
+  /**
+   * Get logged user infos and token.
+   *
+   * @return JSON object containing user infos.
+   */
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode getUser() {
+    return publicUser;
+  }
+
 }
