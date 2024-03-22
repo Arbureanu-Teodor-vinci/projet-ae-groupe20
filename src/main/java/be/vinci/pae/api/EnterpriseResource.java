@@ -34,6 +34,13 @@ public class EnterpriseResource {
   @Inject
   private EnterpriseUCC enterpriseUCC;
 
+  /**
+   * Get 1 enterprises.
+   *
+   * @param id The id of the enterprise to get.
+   * @return JSON object containing all enterprises.
+   * @throws WebApplicationException If id is null or the token is invalid.
+   */
   @GET
   @Path("getOne:{id}")
   @Consumes(MediaType.APPLICATION_JSON)

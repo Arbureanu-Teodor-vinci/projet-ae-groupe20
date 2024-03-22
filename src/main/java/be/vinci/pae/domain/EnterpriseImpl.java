@@ -2,6 +2,9 @@ package be.vinci.pae.domain;
 
 import java.util.Objects;
 
+/**
+ * Implementation of Enterprise and enterpriseDTO.
+ */
 public class EnterpriseImpl implements EnterpriseDTO {
 
   private int id;
@@ -112,15 +115,15 @@ public class EnterpriseImpl implements EnterpriseDTO {
 
   @Override
   public String toString() {
-    return "Enterprise{" +
-        "id=" + id +
-        ", tradeName='" + tradeName + '\'' +
-        ", designation='" + designation + '\'' +
-        ", adresse='" + adresse + '\'' +
-        ", phoneNumber='" + phoneNumber + '\'' +
-        ", email='" + email + '\'' +
-        ", blackListed=" + blackListed +
-        ", blackListMotivation='" + blackListMotivation + '\'' +
-        '}';
+    return "Enterprise{"
+        + "id=" + id
+        + ", tradeName='" + tradeName + '\''
+        + ", designation='" + designation + '\''
+        + ", adresse='" + adresse + '\''
+        + ", phoneNumber='" + phoneNumber + '\''
+        + ", email='" + email + '\''
+        + ", blackListed=" + blackListed
+        + ", blackListMotivation='" + blackListMotivation + '\''
+        + '}';
   }
 }
