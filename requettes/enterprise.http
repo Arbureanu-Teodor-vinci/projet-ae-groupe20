@@ -1,0 +1,7 @@
+@baseUrl = http://localhost:3000
+@authToken ={{adminToken}}
+
+### Get enterprise wich id is 1
+GET {{baseUrl}}/enterprises/getOne:1
+Content-Type: application/json
+Authorization: {{adminToken}}
