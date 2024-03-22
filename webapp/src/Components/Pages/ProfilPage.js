@@ -24,8 +24,10 @@ async function renderProfilPage() {
                 <h1>Mon Profil</h1>
             </div>
         </div>
-        <h3>Mes données personnelles</h3>
-        <button id="editButton" class="btn btn-primary" >Modifier</button>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Mes données personnelles</h3>
+            <button id="editButton" class="btn btn-primary">Modifier</button>
+        </div>
         <div class="col-12 mt-3">
             <table class="table table-bordered">
                 <tbody>
@@ -74,6 +76,10 @@ async function renderProfilPage() {
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div></div>
+                <button id="editInternshipButton" class="btn btn-primary">Modifier</button>
             </div>
         </div>
         <div class="row mt-5">

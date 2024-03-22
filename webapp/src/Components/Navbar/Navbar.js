@@ -1,7 +1,6 @@
-// import Navigate from '../Router/Navigate';
-// import { clearAuthenticatedUser, getAuthenticatedUser } from '../../utils/auths.js';
-
-import { getAuthenticatedUser } from "../../utils/auths";
+import Navigate from '../Router/Navigate';
+// eslint-disable-next-line import/extensions
+import { clearAuthenticatedUser, getAuthenticatedUser } from '../../utils/auths.js';
 
 const Navbar = () => {
     renderNavbar();
@@ -27,6 +26,7 @@ function renderNavbar() {
       </div>
     </nav>
   `
+  
   }else{
     navbarWrapper.innerHTML = `
     <nav class="navbar navbar-expand-sm navbar-light" id="UpPage">
@@ -38,13 +38,24 @@ function renderNavbar() {
           </div>
 
         <div class="nav nav-underline pe-5">
-          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/logout">Se déconnecter</a>
+        <a class="nav-link" style="font-size: 20px" id="logout">
+          <button type="button" class="btn btn-primary">Se déconnecter</button>
+        </a>
         </div>
       </div>
     </nav>
   `
-  }
-    
+  };
+  
+  const logoutButton = document.querySelector('#logout');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', () => {
+        clearAuthenticatedUser();
+      Navbar();
+      Navigate('/login');
+      });
+    };
 };
+
 
 export default Navbar;
