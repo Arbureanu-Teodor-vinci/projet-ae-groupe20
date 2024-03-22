@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import java.util.List;
+
 /**
  * User controller.
  */
@@ -13,4 +15,11 @@ public interface UserUCC {
    * @return ObjectNode
    */
   UserDTO login(String email, String password);
+
+  /**
+   * Get all users.
+   *
+   * @return List<UserDTO>
+   */
+  List<UserDTO> getAll();
 }

@@ -18,3 +18,9 @@ Content-Type: application/json
 GET {{baseUrl}}/auths
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+
+### Get all users
+GET {{baseUrl}}/auths/users
+Content-Type: application/json
+Authorization: {{adminToken}}

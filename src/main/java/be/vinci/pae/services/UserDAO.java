@@ -1,6 +1,7 @@
 package be.vinci.pae.services;
 
 import be.vinci.pae.domain.UserDTO;
+import java.util.List;
 
 /**
  * Services of user.
@@ -22,4 +23,11 @@ public interface UserDAO {
    * @return userDTO
    */
   UserDTO getOneUserByEmail(String email);
+
+  /**
+   * Get all users from DB.
+   *
+   * @return List<UserDTO>
+   */
+  List<UserDTO> getAllUsers();
 }

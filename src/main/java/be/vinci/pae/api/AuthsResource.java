@@ -2,6 +2,7 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
+import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.UserDTO;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.utils.Config;
@@ -20,7 +21,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents the authentication route for the user to register and login.
@@ -34,6 +37,9 @@ public class AuthsResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private UserUCC userController;
+
+  private DomainFactory domainFactory;
+
 
   /**
    * Login with user email and password.
@@ -91,8 +97,38 @@ public class AuthsResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
-  public ObjectNode getUser() {
+  public ObjectNode getLoggedUser() {
     return publicUser;
+  }
+
+  /**
+   * Get all users. If the logged user is a student, it will throw a WebApplicationException.
+   *
+   * @return the list of all users.
+   */
+  @GET
+  @Path("users")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public List<ObjectNode> getAllUsers() {
+    if (getLoggedUser().findValue("role").asText().equals("étudiant")) {
+      throw new WebApplicationException("You must be an admin or professor to access this route.",
+          Status.FORBIDDEN);
+    }
+    List<UserDTO> users = userController.getAll();
+    List<ObjectNode> usersJson = new ArrayList<>();
+    for (UserDTO user : users) {
+      ObjectNode userJson = jsonMapper.createObjectNode()
+          .put("id", user.getId())
+          .put("role", user.getRole())
+          .put("email", user.getEmail())
+          .put("firstName", user.getFirstName())
+          .put("lastName", user.getLastName())
+          .put("telephoneNumber", user.getTelephoneNumber())
+          .put("registrationDate", user.getRegistrationDate().toString());
+      usersJson.add(userJson);
+    }
+    return usersJson;
   }
 
 }

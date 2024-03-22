@@ -51,7 +51,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   public PreparedStatement commitTransaction() {
     checkConnection();
     try {
-      return conn.get().prepareStatement("COMMIT TRANSACTION");
+      return conn.get().prepareStatement("COMMIT TRANSACTION");//changer auto commit
     } catch (SQLException e) {
       throw new FatalException(e);
     }
@@ -72,6 +72,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
     checkConnection();
     try {
       conn.get().close();
+      // conn.remove();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
