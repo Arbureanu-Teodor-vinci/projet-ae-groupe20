@@ -3,13 +3,17 @@ import RegisterPage from '../Pages/RegisterPage';
 import HomePage from '../Pages/HomePage';
 import ProfilPage from '../Pages/ProfilPage';
 import ModificationPage from '../Pages/ModificationPage';
+import CreationContactPage from '../Pages/CreationContactPage';
+import CreationCompanyPage from '../Pages/CreationCompanyPage';
 
 const routes = {
     '/': HomePage, // Default route, equivalent to '
     '/login': LoginPage,
     '/register': RegisterPage,
     '/profil': ProfilPage,
-    '/modification': ModificationPage
+    '/modification': ModificationPage,
+    '/creationContact': CreationContactPage,
+    '/creationCompany': CreationCompanyPage,
 };
 
 export default routes;

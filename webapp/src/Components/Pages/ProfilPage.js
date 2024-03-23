@@ -52,8 +52,9 @@ async function renderProfilPage() {
         </div>
         ${user && user.role === 'étudiant' ? `
         <div class="row mt-5">
-            <div class="col-12 d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>
+                <button id="editButton" class="btn btn-primary">Modifier mon sujet de stage</button>
             </div>
             <div class="col-12 mt-3">
                 <table class="table table-bordered">
@@ -77,14 +78,11 @@ async function renderProfilPage() {
                     </tbody>
                 </table>
             </div>
-            <div class="col-12 d-flex justify-content-between align-items-center">
-                <div></div>
-                <button id="editInternshipButton" class="btn btn-primary">Modifier</button>
-            </div>
         </div>
         <div class="row mt-5">
-            <div class="col-12 d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-center">
                 <h3>Contacts</h3>
+                <button id="creationContact" class="btn btn-primary">Ajouter un nouveau contact</button>
             </div>
             <div class="col-12 mt-3">
                 <div class="table-responsive">
@@ -119,6 +117,12 @@ async function renderProfilPage() {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/modification');
+    });
+
+    const linkContact = document.querySelector('#creationContact');
+    linkContact.addEventListener('click', (e) => {
+        e.preventDefault();
+        Navigate('/creationContact');
     });
 }
 
