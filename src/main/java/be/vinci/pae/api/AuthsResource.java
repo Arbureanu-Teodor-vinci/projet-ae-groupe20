@@ -74,13 +74,7 @@ public class AuthsResource {
           .withExpiresAt(expirationToken)
           .sign(this.jwtAlgorithm);
 
-      publicUser = jsonMapper.createObjectNode() // Create a JSON object with user infos
-          .put("token", token)
-          .put("id", user.getId())
-          .put("role", user.getRole())
-          .put("email", user.getEmail())
-          .put("firstName", user.getFirstName())
-          .put("lastName", user.getLastName());
+      publicUser = toJson(user).put("token", token);
       return publicUser;
 
     } catch (FatalException e) {
@@ -111,24 +105,29 @@ public class AuthsResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public List<ObjectNode> getAllUsers() {
-    if (getLoggedUser().findValue("role").asText().equals("étudiant")) {
+    if (publicUser.findValue("role").asText().equals("étudiant")) {
       throw new WebApplicationException("You must be an admin or professor to access this route.",
           Status.FORBIDDEN);
     }
-    List<UserDTO> users = userController.getAll();
-    List<ObjectNode> usersJson = new ArrayList<>();
+    List<UserDTO> users = userController.getAll(); // Get all users
+    List<ObjectNode> usersJsonList = new ArrayList<>(); // Create a list of JSON objects to return
+    //Convert all users to JSON
     for (UserDTO user : users) {
-      ObjectNode userJson = jsonMapper.createObjectNode()
-          .put("id", user.getId())
-          .put("role", user.getRole())
-          .put("email", user.getEmail())
-          .put("firstName", user.getFirstName())
-          .put("lastName", user.getLastName())
-          .put("telephoneNumber", user.getTelephoneNumber())
-          .put("registrationDate", user.getRegistrationDate().toString());
-      usersJson.add(userJson);
+      ObjectNode userJson = toJson(user);
+      usersJsonList.add(userJson);
     }
-    return usersJson;
+    return usersJsonList;
+  }
+
+  private ObjectNode toJson(UserDTO user) {
+    return jsonMapper.createObjectNode()
+        .put("id", user.getId())
+        .put("role", user.getRole())
+        .put("email", user.getEmail())
+        .put("firstName", user.getFirstName())
+        .put("lastName", user.getLastName())
+        .put("telephoneNumber", user.getTelephoneNumber())
+        .put("registrationDate", user.getRegistrationDate().toString());
   }
 
 }

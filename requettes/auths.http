@@ -1,12 +1,38 @@
 @baseUrl = http://localhost:3000
 
 
-### Login with default user
+### LOGIN WITH ADMIN USER
 POST {{baseUrl}}/auths/login
 Content-Type: application/json
 
 {
   "email":"admin",
+  "password":"group20"
+}
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
+### LOGIN WITH STUDENT USER
+POST {{baseUrl}}/auths/login
+Content-Type: application/json
+
+{
+  "email":"matteo@student.vinci.be",
+  "password":"group20"
+}
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
+### LOGIN WITH TEACHER USER
+POST {{baseUrl}}/auths/login
+Content-Type: application/json
+
+{
+  "email":"teodor@vinci.be",
   "password":"group20"
 }
 

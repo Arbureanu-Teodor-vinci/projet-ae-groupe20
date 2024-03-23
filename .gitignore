@@ -4,7 +4,7 @@
 
 ### IntelliJ ###
 .idea/
-*.properties
+dev.properties
 
 
 ### Eclipse ###
