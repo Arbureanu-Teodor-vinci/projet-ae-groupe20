@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementation of enterprise services.
+ */
 public class EnterpriseDAOImpl implements EnterpriseDAO {
 
   @Inject

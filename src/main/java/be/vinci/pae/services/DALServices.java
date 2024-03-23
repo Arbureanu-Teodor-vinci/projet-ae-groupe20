@@ -27,7 +27,6 @@ public interface DALServices {
    * Get the connection to the database.
    *
    * @return the connection
-   * @throws SQLException if the connection is not correct
    */
   Connection getConnection();
 }
