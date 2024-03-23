@@ -18,42 +18,102 @@ async function renderProfilPage() {
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
-        <div class="container h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 text-center">
-                    <h1>Mon Profil</h1>
-                </div>
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 text-center">
+                <h1>Mon Profil</h1>
             </div>
-            <div class="row">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h3>Mes données personnelles</h3>
-                    <button id="editButton" class="btn btn-primary" >Modifier</button>
-                </div>
-                <div class="col-12 mt-3">
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Mes données personnelles</h3>
+            <button id="editButton" class="btn btn-primary">Modifier</button>
+        </div>
+        <div class="col-12 mt-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Nom</th>
+                        <td>${user.lastName}</td>
+                    </tr>
+                    <tr>
+                        <th>Prénom</th>
+                        <td>${user && user.firstName}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>${user && user.email}</td>
+                    </tr>
+                    <tr>
+                        <th>Tel</th>
+                        <td>${user && user.telephoneNumber}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        ${user && user.role === 'étudiant' ? `
+        <div class="row mt-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h3>Mon Stage</h3>
+            </div>
+            <div class="col-12 mt-3">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Entreprise</th>
+                            <td>${user && user.internship && user.internship.company}</td>
+                        </tr>
+                        <tr>
+                            <th>Responsable de stage</th>
+                            <td>${user && user.internship && user.internship.internshipManager}</td>
+                        </tr>
+                        <tr>
+                            <th>Sujet du stage</th>
+                            <td>${user && user.internship && user.internship.internshipSubject}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de signature du stage</th>
+                            <td>${user && user.internship && user.internship.internshipSignatureDate}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div></div>
+                <button id="editInternshipButton" class="btn btn-primary">Modifier</button>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h3>Contacts</h3>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="table-responsive">
                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Entreprise</th>
+                                <th>Moyen de contact</th>
+                                <th>Outil de contact</th>
+                                <th>Etat du contact</th>
+                                <th>Raison du refus</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
-                                <th>Nom</th>
-                                <td>${user.lastName}</td>
-                            </tr>
-                            <tr>
-                                <th>Prénom</th>
-                                <td>${user && user.firstName}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>${user && user.email}</td>
-                            </tr>
-                            <tr>
-                                <th>Tel</th>
-                                <td>${user && user.phone_number}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </section>`;
+        ` : ''}
+    </div>
+</section>`
 
     const link = document.querySelector('#editButton');
     link.addEventListener('click', (e) => {

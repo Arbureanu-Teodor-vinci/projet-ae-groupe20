@@ -12,4 +12,5 @@ public interface DomainFactory {
    */
   UserDTO getUserDTO();
 
+  EnterpriseDTO getEnterpriseDTO();
 }
