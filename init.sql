@@ -63,7 +63,7 @@ CREATE TABLE InternshipManagement.internship(
                                                 academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year)
 );
 
-INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Erismann','Matteo','matteo@student.vinci.be','+320470000001',CURRENT_DATE,'étudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Erismann','Matteo',' "','+320470000001',CURRENT_DATE,'étudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
 INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Arbureanu','Teodor','teodor@vinci.be','+320470000002',CURRENT_DATE,'professeur','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
 INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Admin', 'Admin','admin','+32470000000',CURRENT_DATE,'administrator','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
 
