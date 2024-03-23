@@ -1,5 +1,6 @@
 package be.vinci.pae.services;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -21,4 +22,11 @@ public interface DALServices {
    * Close the connection to the database.
    */
   void closeConnection();
+
+  /**
+   * Get the connection to the database.
+   *
+   * @return the connection
+   */
+  Connection getConnection();
 }

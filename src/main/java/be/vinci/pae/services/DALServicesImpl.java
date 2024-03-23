@@ -4,19 +4,17 @@ import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.utils.Config;
 import jakarta.inject.Singleton;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * The Class DALServiceImpl.
  */
 public class DALServicesImpl implements DALTransactionServices, DALServices {
 
-  private final ThreadLocal<Connection> conn = new ThreadLocal<Connection>();
-  String url = Config.getProperty("DatabaseFilePath");
-  String dataBaseUser = Config.getProperty("DatabaseUser");
-  String dataBasePassword = Config.getProperty("DatabasePassword");
+  private static final BasicDataSource dataSourcePool = new BasicDataSource();
+  private static final ThreadLocal<Connection> threadConnection = new ThreadLocal<Connection>();
 
   /**
    * Instantiates a new DAL service impl and connect to the database.
@@ -29,63 +27,84 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
       System.out.println("Driver PostgreSQL manquant !");
       System.exit(1);
     }
+
+    dataSourcePool.setDriverClassName("org.postgresql.Driver");
+    dataSourcePool.setUrl(Config.getProperty("DatabaseFilePath"));
+    dataSourcePool.setUsername(Config.getProperty("DatabaseUser"));
+    dataSourcePool.setPassword(Config.getProperty("DatabasePassword"));
+    dataSourcePool.setInitialSize(5);
+    dataSourcePool.setMaxTotal(5);
   }
 
   @Override
   public PreparedStatement getPS(String request) throws SQLException {
-    checkConnection();
-    return conn.get().prepareStatement(request);
+    return getConnection().prepareStatement(request);
   }
 
   @Override
-  public PreparedStatement startTransaction() {
-    checkConnection();
+  public Connection getConnection() {
+    Connection connection = threadConnection.get();
     try {
-      return conn.get().prepareStatement("BEGIN TRANSACTION");
+      if (connection == null || connection.isClosed()) {
+        connection = dataSourcePool.getConnection();
+        threadConnection.set(connection);
+      }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-  }
-
-  @Override
-  public PreparedStatement commitTransaction() {
-    checkConnection();
-    try {
-      return conn.get().prepareStatement("COMMIT TRANSACTION");//changer auto commit
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-  }
-
-  @Override
-  public PreparedStatement rollbackTransaction() {
-    checkConnection();
-    try {
-      return conn.get().prepareStatement("ROLLBACK TRANSACTION");
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
+    return connection;
   }
 
   @Override
   public void closeConnection() {
-    checkConnection();
+    Connection connection = threadConnection.get();
     try {
-      conn.get().close();
-      // conn.remove();
+      if (connection != null && !connection.isClosed()) {
+        connection.close();
+      }
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
+    }
+    threadConnection.remove();
+  }
+
+  @Override
+  public void startTransaction() {
+    Connection connection = getConnection();
+    try {
+      connection.setAutoCommit(false);
+    } catch (SQLException e) {
+      throw new FatalException(e);
     }
   }
 
-  private void checkConnection() {
-    if (conn.get() == null) {
+  @Override
+  public void commitTransaction() {
+    Connection connection = getConnection();
+    try {
+      connection.commit();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    try {
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
+    closeConnection();
+  }
+
+  @Override
+  public void rollbackTransaction() {
+    Connection connection = threadConnection.get();
+    if (connection != null) {
       try {
-        conn.set(DriverManager.getConnection(url, dataBaseUser, dataBasePassword));
+        connection.rollback();
+        connection.setAutoCommit(true);
       } catch (SQLException e) {
-        e.printStackTrace();
         throw new FatalException(e);
       }
     }
+    closeConnection();
   }
 }

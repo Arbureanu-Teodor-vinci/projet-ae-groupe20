@@ -2,8 +2,11 @@ package be.vinci.pae;
 
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.DomainFactoryImpl;
+import be.vinci.pae.domain.EnterpriseUCC;
+import be.vinci.pae.domain.EnterpriseUCCImpl;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.domain.UserUCCImpl;
+import be.vinci.pae.services.EnterpriseDAO;
 import be.vinci.pae.services.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
@@ -21,5 +24,7 @@ public class TestsApplicationBinder extends AbstractBinder {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
     bind(Mockito.mock(UserDAO.class)).to(UserDAO.class);
+    bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
+    bind(Mockito.mock(EnterpriseDAO.class)).to(EnterpriseDAO.class);
   }
 }

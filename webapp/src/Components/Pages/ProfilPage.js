@@ -18,41 +18,40 @@ async function renderProfilPage() {
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
-        <div class="container h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 text-center">
-                    <h1>Mon Profil</h1>
-                </div>
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 text-center">
+                <h1>Mon Profil</h1>
             </div>
-            <div class="row">
-                <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h3>Mes données personnelles</h3>
-                    <button id="editButton" class="btn btn-primary" >Modifier</button>
-                </div>
-                <div class="col-12 mt-3">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th>Nom</th>
-                                <td>${user.lastName}</td>
-                            </tr>
-                            <tr>
-                                <th>Prénom</th>
-                                <td>${user && user.firstName}</td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td>${user && user.email}</td>
-                            </tr>
-                            <tr>
-                                <th>Tel</th>
-                                <td>${user && user.phone_number}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row mt-5">
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Mes données personnelles</h3>
+            <button id="editButton" class="btn btn-primary">Modifier</button>
+        </div>
+        <div class="col-12 mt-3">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Nom</th>
+                        <td>${user.lastName}</td>
+                    </tr>
+                    <tr>
+                        <th>Prénom</th>
+                        <td>${user && user.firstName}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>${user && user.email}</td>
+                    </tr>
+                    <tr>
+                        <th>Tel</th>
+                        <td>${user && user.telephoneNumber}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        ${user && user.role === 'étudiant' ? `
+        <div class="row mt-5">
             <div class="col-12 d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>
             </div>
@@ -65,20 +64,25 @@ async function renderProfilPage() {
                         </tr>
                         <tr>
                             <th>Responsable de stage</th>
-                            <td>${user && user.internship && user.internship.supervisor}</td>
+                            <td>${user && user.internship && user.internship.internshipManager}</td>
                         </tr>
                         <tr>
                             <th>Sujet du stage</th>
-                            <td>${user && user.internship && user.internship.topic} <button id="editInternshipButton" class="btn btn-primary">Modifier</button></td>
+                            <td>${user && user.internship && user.internship.internshipSubject}</td>
                         </tr>
                         <tr>
                             <th>Date de signature du stage</th>
-                            <td>${user && user.internship && user.internship.signature_date}</td>
+                            <td>${user && user.internship && user.internship.internshipSignatureDate}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="row mt-5">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div></div>
+                <button id="editInternshipButton" class="btn btn-primary">Modifier</button>
+            </div>
+        </div>
+        <div class="row mt-5">
             <div class="col-12 d-flex justify-content-between align-items-center">
                 <h3>Contacts</h3>
             </div>
@@ -95,20 +99,21 @@ async function renderProfilPage() {
                             </tr>
                         </thead>
                         <tbody>
-                                <tr>
-                                    <td</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            </div>
         </div>
-    </section>`;
+        ` : ''}
+    </div>
+</section>`
 
     const link = document.querySelector('#editButton');
     link.addEventListener('click', (e) => {
