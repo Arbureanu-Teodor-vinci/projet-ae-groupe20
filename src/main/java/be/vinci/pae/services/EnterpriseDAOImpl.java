@@ -13,7 +13,8 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   private DomainFactory domainFactory;
 
   @Inject
-  private DALService dalConn;
+  private DALServices dalConn;
+
 
   @Override
   public EnterpriseDTO getOneEnterpriseByid(int id) {

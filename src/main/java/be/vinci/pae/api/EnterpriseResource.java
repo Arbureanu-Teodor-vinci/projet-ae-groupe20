@@ -74,6 +74,7 @@ public class EnterpriseResource {
     }
 
     try {
+      // Create a JSON object with the enterprise infos
       ObjectNode enterpriseNode = jsonMapper.createObjectNode()
           .put("id", enterprise.getId())
           .put("tradeName", enterprise.getTradeName())
