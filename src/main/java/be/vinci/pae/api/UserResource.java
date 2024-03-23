@@ -126,7 +126,7 @@ public class UserResource {
         .put("email", user.getEmail())
         .put("firstName", user.getFirstName())
         .put("lastName", user.getLastName())
-        .put("telephoneNumber", user.getTelephoneNumber())
+        .put("phoneNumber", user.getTelephoneNumber())
         .put("registrationDate", user.getRegistrationDate().toString());
   }
 

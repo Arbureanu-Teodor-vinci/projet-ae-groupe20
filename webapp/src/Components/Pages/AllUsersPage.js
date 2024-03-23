@@ -32,19 +32,36 @@ async function renderPage() {
     <div class="container">
     <div class="row">
         <div class="col-md-12">
-        <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tous les utilisateurs</h1>
-        <p>Voici la liste de tous les utilisateurs</p>
-        <ul class="list-group"> </ul>
+        <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tout les utilisateurs</h1>
+        <p>Voici la liste de tout les utilisateurs :</p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Numéro de téléphone</th>
+                    <th>Rôle</th>
+                    <th>Date de création</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
         </div>
     </div>
     `;
-    const list = document.querySelector('.list-group');
+    const usersTable = document.querySelector('.table tbody');
     users.forEach(user => {
-        list.innerHTML += `
-        <li class="list-group-item">
-            <h5>${user.email}</h5>
-            <p>${user.role}</p>
-        </li>
+        usersTable.innerHTML += `
+          <tr>
+            <td>${user.email}</td>
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${user.phoneNumber}</td>
+            <td>${user.role}</td>
+            <td>${user.registrationDate}</td>
+        </tr>
         `;
     }
     );
