@@ -58,7 +58,6 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   @Override
   public void closeConnection() {
     Connection connection = threadConnection.get();
-    threadConnection.remove();
     try {
       if (connection != null && !connection.isClosed()) {
         connection.close();
@@ -66,6 +65,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    threadConnection.remove();
   }
 
   @Override
@@ -91,6 +91,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
     } catch (SQLException e) {
       throw new FatalException(e);
     }
+    closeConnection();
   }
 
   @Override
@@ -104,5 +105,6 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
         throw new FatalException(e);
       }
     }
+    closeConnection();
   }
 }
