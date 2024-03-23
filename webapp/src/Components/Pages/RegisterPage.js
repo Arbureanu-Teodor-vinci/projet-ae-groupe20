@@ -1,7 +1,12 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
+import { getAuthenticatedUser } from '../../utils/auths';
 
 const RegisterPage = async () => {
+    if (getAuthenticatedUser()) {
+        Navigate('/');
+        return;
+      };
     clearPage();
     await renderRegisterPage();
 }
@@ -44,8 +49,14 @@ async function renderRegisterPage() {
                                     <div class="col-md-3 ps-5">
                                         <h6 class="mb-0">Adresse e-mail*</h6>
                                     </div>
-                                    <div class="col-md-9 pe-5">
+                                    <div class="col-md-6 pe-5">
                                         <input type="text" class="form-control form-control-lg" id="emailInput" required >
+                                    </div>
+                                    <div class="col-md-3 pe-5">
+                                        <select id="emailDomainSelect" class="form-select">
+                                            <option selected>@student.vinci.be</option>
+                                            <option>@vinci.be</option>
+                                        </select>
                                     </div>
                                 </div>
     
@@ -73,7 +84,7 @@ async function renderRegisterPage() {
 
                                 <hr class="mx-n3">
 
-                                <div class="row align-items-center py-3">
+                                <div class="row align-items-center py-3" id="roleRow">
                                     <div class="col-md-3 ps-5">
                                         <h6 class="mb-0">Rôle*</h6>
                                     </div>
@@ -105,6 +116,25 @@ async function renderRegisterPage() {
         </div>
     </section>
     `;
+
+    // Get the role row and email domain select elements
+    const roleRow = document.querySelector('#roleRow');
+    const emailDomainSelect = document.querySelector('#emailDomainSelect');
+
+    // Hide the role row if the initial selected email domain is '@student.vinci.be'
+    if (emailDomainSelect.value === '@student.vinci.be') {
+        roleRow.style.display = 'none';
+    }
+
+    document.querySelector('#emailDomainSelect').addEventListener('change', function handleDomainChange() {
+        const selectedDomain = this.value;
+
+        if (selectedDomain === '@student.vinci.be') {
+            roleRow.style.display = 'none'; // hide the role input
+        } else if (selectedDomain === '@vinci.be') {
+            roleRow.style.display = 'flex'; // show the role input
+        }
+    });
 
     const toConnexionButton = document.querySelector('#toLogin');
     toConnexionButton.addEventListener('click', (e) => {

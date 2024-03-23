@@ -1,6 +1,7 @@
 package be.vinci.pae.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.time.LocalDate;
 
 /**
  * Interface of user with setters and getters.
@@ -105,6 +106,25 @@ public interface UserDTO {
    * @param password String
    */
   void setPassword(String password);
+
+  /**
+   * Get registration date.
+   *
+   * @return the registration date
+   */
+  LocalDate getRegistrationDate();
+
+  /**
+   * Set registration date.
+   *
+   * @param registrationDate the registration date to set
+   */
+  void setRegistrationDate(LocalDate registrationDate);
+
+  /**
+   * Set registration date to now.
+   */
+  void setRegistrationDateToNow();
 
   /**
    * Hash password.

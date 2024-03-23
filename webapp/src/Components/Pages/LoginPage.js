@@ -1,8 +1,13 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
-import { setAuthenticatedUser } from '../../utils/auths';
+import { setAuthenticatedUser, setRememberMe, getAuthenticatedUser } from '../../utils/auths';
+import Navbar from '../Navbar/Navbar';
 
 const LoginPage = async () => {
+    if (getAuthenticatedUser()) {
+        Navigate('/');
+        return;
+      };
     clearPage();
     await renderLoginPage();
     const form = document.querySelector('form');
@@ -47,6 +52,16 @@ async function renderLoginPage() {
     
                                 </div>
                             </div>
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+                                    <h6 class="mb-0">se souvenir de moi</h6>
+                                </div>
+                                <div class="col-md-9 pe-5">
+                                    <input type="checkbox" id="rememberMe" class="form-check-input">
+                                </div>
+                            </div>
+
                             <p class = "noLogin errorMessage"><p>
     
                             <hr class="mx-n3">
@@ -72,17 +87,18 @@ async function renderLoginPage() {
 
     const link = document.querySelector('#toRegister');
     link.addEventListener('click', (e) => {
-    e.preventDefault();
-    Navigate('/register')
-
-})
+        e.preventDefault();
+        Navigate('/register')
+    });
 };
+
 
 async function login (e) {
     e.preventDefault();
 
     const email = document.querySelector('#emailInput').value;
     const password = document.querySelector('#pwd').value;
+    const rememberMe = document.querySelector('#rememberMe').checked;
 
     const options = {
       method: 'POST',
@@ -102,8 +118,12 @@ async function login (e) {
       erreur.innerText = "Nom d'utilisateur ou mot de passe incorrect";
     }else{
       const authenticatedUser = await response.json();
+      if  (rememberMe) {
+        setRememberMe(rememberMe);
+      }
       setAuthenticatedUser(authenticatedUser);
       Navigate('/');
+      Navbar();
     };
 
     return null;

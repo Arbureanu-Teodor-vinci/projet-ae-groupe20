@@ -1,6 +1,9 @@
 package be.vinci.pae.services.utils;
 
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.view.Views;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -95,5 +98,55 @@ public class Json<T> {
       return (List<T>) new ArrayList<T>();
     }
   }
+
+  /**
+   * Method which gets the object from collection.
+   *
+   * @param list list of objects
+   * @param <T>  type of object
+   * @return list of objects
+   */
+  public <T> List<T> filterPublicJsonViewAsList(List<T> list) {
+    try {
+      JavaType type = jsonMapper.getTypeFactory().constructCollectionType(List.class, this.type);
+      // serialize using JSON Views : public view (all fields not required in the
+      // views are not serialized)
+      String publicItemListAsString = jsonMapper.writerWithView(Views.Public.class)
+          .writeValueAsString(list);
+      // deserialize using JSON Views : Public View (all fields that are not serialized
+      // are set to their default values in the POJOs)
+      return jsonMapper.readerWithView(Views.Public.class).forType(type)
+          .readValue(publicItemListAsString);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+      return null;
+    }
+
+  }
+
+  /**
+   * Method which gets the object from collection.
+   *
+   * @param item object
+   * @param <T>  type of object
+   * @return object
+   */
+  public <T> T filterPublicJsonView(T item) {
+    try {
+      // serialize using JSON Views : public view (all fields not required in the
+      // views are not serialized)
+      String publicItemAsString = jsonMapper.writerWithView(Views.Public.class)
+          .writeValueAsString(item);
+      // deserialize using JSON Views : Public View (all fields that are not serialized
+      // are set to their default values in the POJO)
+      return jsonMapper.readerWithView(Views.Public.class).forType(type)
+          .readValue(publicItemAsString);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+      return null;
+    }
+
+  }
+
 
 }

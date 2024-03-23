@@ -1,10 +1,16 @@
 const STORE_NAME = 'user';
+const REMEMBER_ME = 'remembered';
+
 let currentUser;
 
 const getAuthenticatedUser = () => {
   if (currentUser !== undefined) return currentUser;
 
-  const serializedUser = localStorage.getItem(STORE_NAME);
+  const remembered = getRememberMe();
+  const serializedUser = remembered
+    ? localStorage.getItem(STORE_NAME)
+    : sessionStorage.getItem(STORE_NAME);
+
   if (!serializedUser) return undefined;
 
   currentUser = JSON.parse(serializedUser);
@@ -13,7 +19,9 @@ const getAuthenticatedUser = () => {
 
 const setAuthenticatedUser = (authenticatedUser) => {
   const serializedUser = JSON.stringify(authenticatedUser);
-  localStorage.setItem(STORE_NAME, serializedUser);
+  const remembered = getRememberMe();
+  if (remembered) localStorage.setItem(STORE_NAME, serializedUser);
+  else sessionStorage.setItem(STORE_NAME, serializedUser);
 
   currentUser = authenticatedUser;
 };
@@ -21,9 +29,27 @@ const setAuthenticatedUser = (authenticatedUser) => {
 const isAuthenticated = () => currentUser !== undefined;
 
 const clearAuthenticatedUser = () => {
-  localStorage.removeItem(STORE_NAME);
+  localStorage.clear();
+  sessionStorage.clear();
   currentUser = undefined;
 };
 
-// eslint-disable-next-line object-curly-newline
-export { getAuthenticatedUser, setAuthenticatedUser, isAuthenticated, clearAuthenticatedUser };
+function getRememberMe() {
+  const rememberedSerialized = localStorage.getItem(REMEMBER_ME);
+  const remembered = JSON.parse(rememberedSerialized);
+  return remembered;
+}
+
+function setRememberMe(remembered) {
+  const rememberedSerialized = JSON.stringify(remembered);
+  localStorage.setItem(REMEMBER_ME, rememberedSerialized);
+}
+
+export {
+  getAuthenticatedUser,
+  setAuthenticatedUser,
+  isAuthenticated,
+  clearAuthenticatedUser,
+  getRememberMe,
+  setRememberMe,
+};
