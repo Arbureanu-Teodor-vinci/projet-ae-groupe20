@@ -5,7 +5,7 @@ import Navigate from '../Router/Navigate';
 const AllUsersPage = () => {
     if(!getAuthenticatedUser()){
         Navigate('/login');
-      }else if(getAuthenticatedUser().role === 'étudiant'){
+      }else if(getAuthenticatedUser().role === 'Etudiant'){
           Navigate('/');
         }else{
             clearPage();
