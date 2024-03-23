@@ -1,5 +1,6 @@
 package be.vinci.pae.domain;
 
+import java.time.LocalDate;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -15,6 +16,7 @@ public class UserImpl implements User {
   private String telephoneNumber;
   private String role;
   private String password;
+  private LocalDate registrationDate;
 
   @Override
   public int getId() {
@@ -87,6 +89,21 @@ public class UserImpl implements User {
   @Override
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  @Override
+  public LocalDate getRegistrationDate() {
+    return registrationDate;
+  }
+
+  @Override
+  public void setRegistrationDate(LocalDate registrationDate) {
+    this.registrationDate = registrationDate;
+  }
+
+  @Override
+  public void setRegistrationDateToNow() {
+    this.registrationDate = LocalDate.now();
   }
 
   @Override
