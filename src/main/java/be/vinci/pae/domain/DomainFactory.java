@@ -12,4 +12,10 @@ public interface DomainFactory {
    */
   UserDTO getUserDTO();
 
+  /**
+   * Method returning a new enterprise.
+   *
+   * @return a new EnterpriseDTO
+   */
+  EnterpriseDTO getEnterpriseDTO();
 }

@@ -35,7 +35,7 @@ public class Config {
    * Get the property.
    *
    * @param key -> the key
-   * @return
+   * @return String property
    */
   public static String getProperty(String key) {
     return props.getProperty(key);
@@ -45,7 +45,7 @@ public class Config {
    * Get the int property.
    *
    * @param key -> the key
-   * @return
+   * @return Integer property
    */
   public static Integer getIntProperty(String key) {
     return Integer.parseInt(props.getProperty(key));
@@ -55,7 +55,7 @@ public class Config {
    * Get the boolean property.
    *
    * @param key -> the key
-   * @return
+   * @return boolean property
    */
   public static boolean getBoolProperty(String key) {
     return Boolean.parseBoolean(props.getProperty(key));

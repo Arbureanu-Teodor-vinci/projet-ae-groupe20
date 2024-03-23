@@ -10,4 +10,9 @@ public class DomainFactoryImpl implements DomainFactory {
     return new UserImpl();
   }
 
+  @Override
+  public EnterpriseDTO getEnterpriseDTO() {
+    return new EnterpriseImpl();
+  }
+
 }

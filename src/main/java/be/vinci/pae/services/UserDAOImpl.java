@@ -16,9 +16,9 @@ public class UserDAOImpl implements UserDAO {
   //using a domain factory to create object from the domain
   @Inject
   private DomainFactory domainFactory;
-  //using the DALService to establish a connection to the data base
+  //using the DALService to establish a connection to the database
   @Inject
-  private DALService dalConn;
+  private DALServices dalConn;
 
 
   @Override
@@ -48,6 +48,7 @@ public class UserDAOImpl implements UserDAO {
       }
       // closing the prepared statement
       ps.close();
+      dalConn.closeConnection();
       // catching exeptions
     } catch (SQLException e) {
       e.printStackTrace();
@@ -73,6 +74,7 @@ public class UserDAOImpl implements UserDAO {
         }
       }
       ps.close();
+      dalConn.closeConnection();
     } catch (SQLException e) {
       e.printStackTrace();
       throw new FatalException(e);
