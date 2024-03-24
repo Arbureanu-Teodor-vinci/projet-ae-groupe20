@@ -28,7 +28,7 @@ function renderNavbar() {
   `
   
   }else{ 
-    if(getAuthenticatedUser().role === 'étudiant'){
+    if(getAuthenticatedUser().role === 'Etudiant'){
     navbarWrapper.innerHTML = `
     <nav class="navbar navbar-expand-sm navbar-light" id="UpPage">
 
