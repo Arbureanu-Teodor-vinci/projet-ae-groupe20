@@ -50,7 +50,7 @@ async function renderProfilPage() {
                 </tbody>
             </table>
         </div>
-        ${user && user.role === 'étudiant' ? `
+        ${user && user.role === 'Etudiant' ? `
         <div class="row mt-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>

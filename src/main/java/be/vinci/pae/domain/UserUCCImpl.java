@@ -3,6 +3,7 @@ package be.vinci.pae.domain;
 import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.UserDAO;
 import jakarta.inject.Inject;
+import java.util.List;
 
 /**
  * Implementation of UserUCC.
@@ -10,12 +11,17 @@ import jakarta.inject.Inject;
 public class UserUCCImpl implements UserUCC {
 
   @Inject
-  UserDAO userDS;
+  UserDAO userDAO;
+
+  @Override
+  public List<UserDTO> getAll() {
+    return userDAO.getAllUsers();
+  }
 
   @Override
   public UserDTO login(String email, String password) {
 
-    UserDTO userDTO = userDS.getOneUserByEmail(email);
+    UserDTO userDTO = userDAO.getOneUserByEmail(email);
     User user = (User) userDTO;
     if (user == null) {
       throw new NullPointerException("Not found");
