@@ -18,6 +18,8 @@ public class UserImpl implements User {
   private String password;
   private LocalDate registrationDate;
 
+  private String academicYear;
+
   @Override
   public int getId() {
     return id;
@@ -104,6 +106,16 @@ public class UserImpl implements User {
   @Override
   public void setRegistrationDateToNow() {
     this.registrationDate = LocalDate.now();
+  }
+
+  @Override
+  public String getAcademicYear() {
+    return academicYear;
+  }
+
+  @Override
+  public void setAcademicYear(String academicYear) {
+    this.academicYear = academicYear;
   }
 
   @Override

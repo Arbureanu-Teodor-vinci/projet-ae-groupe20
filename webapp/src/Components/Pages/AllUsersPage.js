@@ -43,6 +43,7 @@ async function renderPage() {
                     <th>Numéro de téléphone</th>
                     <th>Rôle</th>
                     <th>Date de création</th>
+                    <th>Année académique</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,6 +62,7 @@ async function renderPage() {
             <td>${user.phoneNumber}</td>
             <td>${user.role}</td>
             <td>${user.registrationDate}</td>
+            <td>${user.academicYear}</td>
         </tr>
         `;
     }
