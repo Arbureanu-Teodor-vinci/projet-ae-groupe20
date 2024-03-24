@@ -1,6 +1,7 @@
 package be.vinci.pae.services;
 
 import be.vinci.pae.domain.EnterpriseDTO;
+import java.util.List;
 
 /**
  * Services of enterprise.
@@ -14,4 +15,11 @@ public interface EnterpriseDAO {
    * @return enterpriseDTO
    */
   EnterpriseDTO getOneEnterpriseByid(int id);
+
+  /**
+   * Get all enterprises from DB.
+   *
+   * @return List of EnterpriseDTO
+   */
+  List<EnterpriseDTO> getAllEnterprises();
 }

@@ -5,3 +5,8 @@
 GET {{baseUrl}}/enterprises/getOne:1
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### Get all enterprises
+GET {{baseUrl}}/enterprises/getAll
+Content-Type: application/json
+Authorization: {{adminToken}}
