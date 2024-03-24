@@ -1,5 +1,7 @@
 package be.vinci.pae.domain;
 
+import java.util.List;
+
 /**
  * Interface of enterpriseUCC.
  */
@@ -12,4 +14,11 @@ public interface EnterpriseUCC {
    * @return EnterpriseDTO
    */
   EnterpriseDTO getOneEnterprise(int id);
+
+  /**
+   * Get all enterprises.
+   *
+   * @return List of EnterpriseDTO
+   */
+  List<EnterpriseDTO> getAllEnterprises();
 }
