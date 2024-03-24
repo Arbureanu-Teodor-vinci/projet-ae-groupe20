@@ -105,7 +105,7 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public List<ObjectNode> getAllUsers() {
-    if (publicUser.findValue("role").asText().equals("étudiant")) {
+    if (publicUser.findValue("role").asText().equals("Etudiant")) {
       throw new WebApplicationException("You must be an admin or professor to access this route.",
           Status.FORBIDDEN);
     }
