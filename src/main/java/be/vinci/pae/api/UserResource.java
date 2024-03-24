@@ -127,7 +127,8 @@ public class UserResource {
         .put("firstName", user.getFirstName())
         .put("lastName", user.getLastName())
         .put("phoneNumber", user.getTelephoneNumber())
-        .put("registrationDate", user.getRegistrationDate().toString());
+        .put("registrationDate", user.getRegistrationDate().toString())
+        .put("academicYear", user.getAcademicYear());
   }
 
 }

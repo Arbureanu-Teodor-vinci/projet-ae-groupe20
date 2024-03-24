@@ -33,7 +33,10 @@ public class UserDAOImpl implements UserDAO {
       as the parameter
        */
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.users WHERE id_user = ?"
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " WHERE u.id_user = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -64,7 +67,10 @@ public class UserDAOImpl implements UserDAO {
     UserDTO user = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.users WHERE email = ?");
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " WHERE u.email = ?");
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -84,7 +90,10 @@ public class UserDAOImpl implements UserDAO {
   public List<UserDTO> getAllUsers() {
     List<UserDTO> users = new ArrayList<>();
     try {
-      PreparedStatement ps = dalConn.getPS("SELECT * FROM InternshipManagement.users");
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           users.add(getResultSet(rs));
@@ -118,6 +127,8 @@ public class UserDAOImpl implements UserDAO {
     user.setRegistrationDate(resultSet.getDate(6).toLocalDate());
     user.setRole(resultSet.getString(7));
     user.setPassword(resultSet.getString(8));
+    user.setAcademicYear(resultSet.getString(9));
+
     return user;
   }
 
