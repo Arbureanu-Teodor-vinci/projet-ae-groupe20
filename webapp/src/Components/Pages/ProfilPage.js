@@ -119,11 +119,13 @@ async function renderProfilPage() {
         Navigate('/modification');
     });
 
+    if (user.role === 'Etudiant') {
     const linkContact = document.querySelector('#creationContact');
     linkContact.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/creationContact');
     });
+}
 }
 
 async function getUser() {

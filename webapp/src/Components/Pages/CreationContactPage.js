@@ -52,10 +52,7 @@ async function renderCreationContactPage() {
     });
 
     const companies = [];
-    // eslint-disable-next-line no-plusplus
-    for (let i = 1; i <= 300; i++) {
-        companies.push({ value: `Entreprise ${i}`, label: `Entreprise ${i}` });
-    }
+  
 
     const companySelect = document.querySelector('#company');
     const companyFilterInput = document.querySelector('#company-filter');

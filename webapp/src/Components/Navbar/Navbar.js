@@ -54,7 +54,7 @@ function renderNavbar() {
          <div class="nav nav-underline ps-5">
           <a class="nav-link" style="font-size: 20px" href="#" data-uri="/">Accueil</a> 
           <a class="nav-link" style="font-size: 20px" href="#" data-uri="/profil">Mon profil</a>
-          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/allusers">See all users</a>
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/allUsers">See all users</a>
           </div>
 
         <div class="nav nav-underline pe-5">
