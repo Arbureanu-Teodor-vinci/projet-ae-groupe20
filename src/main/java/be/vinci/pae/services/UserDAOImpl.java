@@ -7,6 +7,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of user services.
@@ -31,9 +33,10 @@ public class UserDAOImpl implements UserDAO {
       as the parameter
        */
       PreparedStatement ps = dalConn.getPS(
-          "SELECT id_user,lastname_user,"
-              + "firstname_user, email, phone_number,"
-              + "role_user, password_user FROM InternshipManagement.users WHERE id_user = ?"
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " WHERE u.id_user = ?"
       );
       ps.setInt(1, id);
       // executing the query
@@ -64,9 +67,10 @@ public class UserDAOImpl implements UserDAO {
     UserDTO user = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT id_user,lastname_user,"
-              + "firstname_user, email, phone_number, "
-              + "role_user, password_user FROM InternshipManagement.users WHERE email = ?");
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " WHERE u.email = ?");
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -80,6 +84,28 @@ public class UserDAOImpl implements UserDAO {
       throw new FatalException(e);
     }
     return user;
+  }
+
+  @Override
+  public List<UserDTO> getAllUsers() {
+    List<UserDTO> users = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
+              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          users.add(getResultSet(rs));
+        }
+        ps.close();
+        dalConn.closeConnection();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new FatalException(e);
+    }
+    return users;
   }
 
   /**
@@ -98,8 +124,11 @@ public class UserDAOImpl implements UserDAO {
     user.setFistName(resultSet.getString(3));
     user.setEmail(resultSet.getString(4));
     user.setTelephoneNumber(resultSet.getString(5));
-    user.setRole(resultSet.getString(6));
-    user.setPassword(resultSet.getString(7));
+    user.setRegistrationDate(resultSet.getDate(6).toLocalDate());
+    user.setRole(resultSet.getString(7));
+    user.setPassword(resultSet.getString(8));
+    user.setAcademicYear(resultSet.getString(9));
+
     return user;
   }
 

@@ -27,7 +27,8 @@ function renderNavbar() {
     </nav>
   `
   
-  }else{
+  }else{ 
+    if(getAuthenticatedUser().role === 'Etudiant'){
     navbarWrapper.innerHTML = `
     <nav class="navbar navbar-expand-sm navbar-light" id="UpPage">
 
@@ -45,7 +46,26 @@ function renderNavbar() {
       </div>
     </nav>
   `
-  };
+  }else{
+    navbarWrapper.innerHTML = `
+    <nav class="navbar navbar-expand-sm navbar-light" id="UpPage">
+
+      <div class="d-flex justify-content-between w-100 pt-3">
+         <div class="nav nav-underline ps-5">
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/">Accueil</a> 
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/profil">Mon profil</a>
+          <a class="nav-link" style="font-size: 20px" href="#" data-uri="/allUsers">See all users</a>
+          </div>
+
+        <div class="nav nav-underline pe-5">
+        <a class="nav-link" style="font-size: 20px" id="logout">
+          <button type="button" class="btn btn-primary">Se déconnecter</button>
+        </a>
+        </div>
+      </div>
+    </nav>
+  `
+    };
   
   const logoutButton = document.querySelector('#logout');
     if (logoutButton) {
@@ -57,5 +77,5 @@ function renderNavbar() {
     };
 };
 
-
+}
 export default Navbar;

@@ -1,5 +1,6 @@
 package be.vinci.pae.domain;
 
+import java.time.LocalDate;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -7,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UserImpl implements User {
 
-  private static final String[] POSSIBLE_ROLES = {"étudiant", "professeur", "administratif"};
+  private static final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
   private int id;
   private String lastName;
   private String firstName;
@@ -15,6 +16,9 @@ public class UserImpl implements User {
   private String telephoneNumber;
   private String role;
   private String password;
+  private LocalDate registrationDate;
+
+  private String academicYear;
 
   @Override
   public int getId() {
@@ -87,6 +91,31 @@ public class UserImpl implements User {
   @Override
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  @Override
+  public LocalDate getRegistrationDate() {
+    return registrationDate;
+  }
+
+  @Override
+  public void setRegistrationDate(LocalDate registrationDate) {
+    this.registrationDate = registrationDate;
+  }
+
+  @Override
+  public void setRegistrationDateToNow() {
+    this.registrationDate = LocalDate.now();
+  }
+
+  @Override
+  public String getAcademicYear() {
+    return academicYear;
+  }
+
+  @Override
+  public void setAcademicYear(String academicYear) {
+    this.academicYear = academicYear;
   }
 
   @Override

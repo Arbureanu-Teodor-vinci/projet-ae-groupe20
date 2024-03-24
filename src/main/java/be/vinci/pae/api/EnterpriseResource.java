@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Ressource route for the enterprises requests.
+ * Resource route for the enterprises requests.
  */
 @Singleton
 @Path("/enterprises")
