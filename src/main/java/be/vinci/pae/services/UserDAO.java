@@ -30,4 +30,20 @@ public interface UserDAO {
    * @return list of users
    */
   List<UserDTO> getAllUsers();
+
+  /**
+   * Add user to DB.
+   *
+   * @param userDTO UserDTO
+   * @return userDTO which was added
+   */
+  UserDTO addUser(UserDTO userDTO);
+
+  /**
+   * Update user in DB.
+   *
+   * @param userDTO UserDTO
+   * @return userDTO
+   */
+  UserDTO updateUser(UserDTO userDTO);
 }

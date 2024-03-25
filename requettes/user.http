@@ -50,3 +50,18 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/auths/users
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+
+
+### REGISTER A NEW VALID USER
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+  "email": "bfggg@vinci.be",
+  "password": "group20",
+  "role": "Etudiant",
+  "firstName": "Teacher",
+  "lastName": "Vinci",
+  "phoneNumber": "0499999999"
+}

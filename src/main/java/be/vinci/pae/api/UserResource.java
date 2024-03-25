@@ -38,6 +38,7 @@ public class UserResource {
   @Inject
   private UserUCC userController;
 
+  @Inject
   private DomainFactory domainFactory;
 
 
@@ -81,6 +82,31 @@ public class UserResource {
       System.out.println("Can't create token");
       return null;
     }
+  }
+
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode register(JsonNode jsonUser) {
+    if (!jsonUser.hasNonNull("email") || !jsonUser.hasNonNull("password") || !jsonUser.hasNonNull(
+        "firstName") || !jsonUser.hasNonNull("lastName") || !jsonUser.hasNonNull("phoneNumber")) {
+      throw new WebApplicationException(
+          "You must enter an email, a password, a first name, a last name and a phone number.",
+          Status.BAD_REQUEST);
+    }
+    UserDTO encodedUser = domainFactory.getUserDTO();
+    encodedUser.setEmail(jsonUser.get("email").asText());
+    encodedUser.setPassword(jsonUser.get("password").asText());
+    encodedUser.setFirstName(jsonUser.get("firstName").asText());
+    encodedUser.setLastName(jsonUser.get("lastName").asText());
+    encodedUser.setTelephoneNumber(jsonUser.get("phoneNumber").asText());
+    encodedUser.setRole(jsonUser.get("role").asText());
+
+    // Try to register
+    UserDTO newUser = userController.register(encodedUser);
+
+    return toJson(newUser);
   }
 
   /**

@@ -17,6 +17,14 @@ public interface UserUCC {
   UserDTO login(String email, String password);
 
   /**
+   * Register method.
+   *
+   * @param user UserDTO
+   * @return new registered UserDTO
+   */
+  UserDTO register(UserDTO user);
+
+  /**
    * Get all users.
    *
    * @return list of users

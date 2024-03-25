@@ -83,10 +83,6 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
     Connection connection = getConnection();
     try {
       connection.commit();
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    }
-    try {
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);

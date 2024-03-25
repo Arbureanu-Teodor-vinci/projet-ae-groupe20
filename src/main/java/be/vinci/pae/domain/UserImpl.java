@@ -46,7 +46,7 @@ public class UserImpl implements User {
   }
 
   @Override
-  public void setFistName(String fistName) {
+  public void setFirstName(String fistName) {
     this.firstName = fistName;
   }
 
@@ -77,10 +77,7 @@ public class UserImpl implements User {
 
   @Override
   public void setRole(String role) {
-    if (role.equals(POSSIBLE_ROLES[0]) || role.equals(POSSIBLE_ROLES[1]) || role.equals(
-        POSSIBLE_ROLES[2])) {
-      this.role = role;
-    }
+    this.role = role;
   }
 
   @Override
@@ -119,8 +116,17 @@ public class UserImpl implements User {
   }
 
   @Override
-  public String hashPassword(String password) {
-    return BCrypt.hashpw(password, BCrypt.gensalt());
+  public void setRoleByEmail() {
+    if (this.email.endsWith("@student.vinci.be")) {
+      setRole(POSSIBLE_ROLES[0]);
+    } else {
+      setRole(role);
+    }
+  }
+
+  @Override
+  public void hashPassword() {
+    this.password = BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
 
   @Override
@@ -157,4 +163,25 @@ public class UserImpl implements User {
   public boolean checkPassword(String password) {
     return BCrypt.checkpw(password, this.password);
   }
+
+  @Override
+  public boolean checkVinciEmail(String email) {
+    return email.endsWith("@vinci.be") || email.endsWith("@student.vinci.be");
+  }
+
+  @Override
+  public boolean checkUniqueEmail(UserDTO userDTO) {
+    return userDTO == null;
+  }
+
+  @Override
+  public boolean checkRole(String role) {
+    for (String possibleRole : POSSIBLE_ROLES) {
+      if (role.equals(possibleRole)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

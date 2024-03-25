@@ -49,7 +49,7 @@ public interface UserDTO {
    *
    * @param firstName String
    */
-  void setFistName(String firstName);
+  void setFirstName(String firstName);
 
   /**
    * Get email.
@@ -141,12 +141,14 @@ public interface UserDTO {
   void setAcademicYear(String academicYear);
 
   /**
-   * Hash password.
-   *
-   * @param password String
-   * @return String
+   * Hash user password.
    */
-  String hashPassword(String password);
+  void hashPassword();
+
+  /**
+   * Set automatically role to student if email is @student.vinci.be.
+   */
+  void setRoleByEmail();
 
   @Override
   boolean equals(Object o);
