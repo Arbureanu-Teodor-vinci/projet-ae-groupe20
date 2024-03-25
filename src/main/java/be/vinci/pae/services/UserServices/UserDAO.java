@@ -1,6 +1,6 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.UserServices;
 
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.User.UserDTO;
 import java.util.List;
 
 /**

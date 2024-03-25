@@ -1,6 +1,6 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.Enterprise;
 
-import be.vinci.pae.services.EnterpriseDAO;
+import be.vinci.pae.services.EnterpriseServices.EnterpriseDAO;
 import jakarta.inject.Inject;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.Enterprise;
 
 /**
  * Interface of enterprise for checking methods.

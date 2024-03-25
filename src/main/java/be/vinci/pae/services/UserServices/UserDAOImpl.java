@@ -1,8 +1,9 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.UserServices;
 
 import be.vinci.pae.api.filters.FatalException;
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.UserDTO;
+import be.vinci.pae.domain.Factory.DomainFactory;
+import be.vinci.pae.domain.User.UserDTO;
+import be.vinci.pae.services.DAL.DALServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

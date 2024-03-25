@@ -1,4 +1,4 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.Enterprise;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

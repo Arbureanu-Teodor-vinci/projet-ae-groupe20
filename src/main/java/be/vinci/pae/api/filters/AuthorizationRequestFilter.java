@@ -1,7 +1,7 @@
 package be.vinci.pae.api.filters;
 
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.domain.User.UserDTO;
+import be.vinci.pae.services.UserServices.UserDAO;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

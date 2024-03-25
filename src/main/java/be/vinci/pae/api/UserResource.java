@@ -2,9 +2,9 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.domain.Factory.DomainFactory;
+import be.vinci.pae.domain.User.UserDTO;
+import be.vinci.pae.domain.User.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -89,12 +89,15 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode jsonUser) {
+
+    // Check if all fields are present
     if (!jsonUser.hasNonNull("email") || !jsonUser.hasNonNull("password") || !jsonUser.hasNonNull(
         "firstName") || !jsonUser.hasNonNull("lastName") || !jsonUser.hasNonNull("phoneNumber")) {
       throw new WebApplicationException(
           "You must enter an email, a password, a first name, a last name and a phone number.",
           Status.BAD_REQUEST);
     }
+    // Create a userDTO object from JSON to register with
     UserDTO encodedUser = domainFactory.getUserDTO();
     encodedUser.setEmail(jsonUser.get("email").asText());
     encodedUser.setPassword(jsonUser.get("password").asText());

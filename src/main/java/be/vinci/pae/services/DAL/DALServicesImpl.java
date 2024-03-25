@@ -1,4 +1,4 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.DAL;
 
 import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.utils.Config;

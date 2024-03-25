@@ -1,8 +1,8 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.User;
 
 import be.vinci.pae.api.filters.BiznessException;
-import be.vinci.pae.services.DALTransactionServices;
-import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.services.DAL.DALTransactionServices;
+import be.vinci.pae.services.UserServices.UserDAO;
 import jakarta.inject.Inject;
 import java.util.List;
 

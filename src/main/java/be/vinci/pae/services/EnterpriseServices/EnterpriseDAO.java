@@ -1,6 +1,6 @@
-package be.vinci.pae.services;
+package be.vinci.pae.services.EnterpriseServices;
 
-import be.vinci.pae.domain.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
 import java.util.List;
 
 /**

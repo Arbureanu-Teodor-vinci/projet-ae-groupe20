@@ -3,7 +3,10 @@ package be.vinci.pae.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import be.vinci.pae.TestsApplicationBinder;
-import be.vinci.pae.services.EnterpriseDAO;
+import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.Factory.DomainFactory;
+import be.vinci.pae.services.EnterpriseServices.EnterpriseDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;

@@ -1,4 +1,9 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.Factory;
+
+import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.Enterprise.EnterpriseImpl;
+import be.vinci.pae.domain.User.UserDTO;
+import be.vinci.pae.domain.User.UserImpl;
 
 /**
  * Implementation of factory for each UCC.

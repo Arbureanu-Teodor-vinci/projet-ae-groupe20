@@ -1,4 +1,4 @@
-package be.vinci.pae.domain;
+package be.vinci.pae.domain.User;
 
 /**
  * Interface of user for checking methods.
