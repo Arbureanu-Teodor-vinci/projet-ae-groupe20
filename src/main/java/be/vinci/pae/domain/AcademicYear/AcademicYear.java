@@ -20,4 +20,12 @@ public interface AcademicYear extends AcademicYearDTO {
    */
   boolean checkUniqueAcademicYear(String academicYear);
 
+  /**
+   * Check if the academic year is a valid format.
+   *
+   * @param academicYear the academic year to check.
+   * @return true if the academic year is valid.
+   */
+  boolean checkAcademicYear(String academicYear);
+
 }

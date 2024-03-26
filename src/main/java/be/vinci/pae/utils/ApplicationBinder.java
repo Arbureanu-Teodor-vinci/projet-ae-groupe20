@@ -6,6 +6,8 @@ import be.vinci.pae.domain.Enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.Enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.Factory.DomainFactory;
 import be.vinci.pae.domain.Factory.DomainFactoryImpl;
+import be.vinci.pae.domain.User.StudentUCC;
+import be.vinci.pae.domain.User.StudentUCCImpl;
 import be.vinci.pae.domain.User.UserUCC;
 import be.vinci.pae.domain.User.UserUCCImpl;
 import be.vinci.pae.services.AcademicYearServices.AcademicYearDAO;
@@ -15,6 +17,8 @@ import be.vinci.pae.services.DAL.DALServicesImpl;
 import be.vinci.pae.services.DAL.DALTransactionServices;
 import be.vinci.pae.services.EnterpriseServices.EnterpriseDAO;
 import be.vinci.pae.services.EnterpriseServices.EnterpriseDAOImpl;
+import be.vinci.pae.services.UserServices.StudentDAO;
+import be.vinci.pae.services.UserServices.StudentDAOImpl;
 import be.vinci.pae.services.UserServices.UserDAO;
 import be.vinci.pae.services.UserServices.UserDAOImpl;
 import jakarta.inject.Singleton;
@@ -38,5 +42,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
     bind(AcademicYearUCCImpl.class).to(AcademicYearUCC.class).in(Singleton.class);
     bind(AcademicYearDAOImpl.class).to(AcademicYearDAO.class).in(Singleton.class);
+    bind(StudentUCCImpl.class).to(StudentUCC.class).in(Singleton.class);
+    bind(StudentDAOImpl.class).to(StudentDAO.class).in(Singleton.class);
   }
 }

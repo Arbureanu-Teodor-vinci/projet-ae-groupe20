@@ -12,9 +12,9 @@ import java.util.List;
 public class UserUCCImpl implements UserUCC {
 
   @Inject
-  UserDAO userDAO;
+  private UserDAO userDAO;
   @Inject
-  DALTransactionServices dalServices;
+  private DALTransactionServices dalServices;
 
   @Override
   public List<UserDTO> getAll() {
@@ -60,6 +60,7 @@ public class UserUCCImpl implements UserUCC {
 
     // add user to DB
     registeredUser = userDAO.addUser(registeredUser);
+
     if (registeredUser == null) {
       dalServices.rollbackTransaction(); //ROLLBACK TRANSACTION
       throw new BiznessException("Error while adding user.");

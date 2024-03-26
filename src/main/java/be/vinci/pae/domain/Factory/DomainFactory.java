@@ -2,6 +2,7 @@ package be.vinci.pae.domain.Factory;
 
 import be.vinci.pae.domain.AcademicYear.AcademicYearDTO;
 import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.User.StudentDTO;
 import be.vinci.pae.domain.User.UserDTO;
 
 /**
@@ -29,4 +30,11 @@ public interface DomainFactory {
    * @return a new AcademicYearDTO
    */
   AcademicYearDTO getAcademicYearDTO();
+
+  /**
+   * Method returning a new student.
+   *
+   * @return a new StudentDTO
+   */
+  StudentDTO getStudentDTO();
 }

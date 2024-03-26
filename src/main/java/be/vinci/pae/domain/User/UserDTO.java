@@ -126,19 +126,6 @@ public interface UserDTO {
    */
   void setRegistrationDateToNow();
 
-  /**
-   * Get academic year.
-   *
-   * @return the academicYear String
-   */
-  String getAcademicYear();
-
-  /**
-   * Set academic year.
-   *
-   * @param academicYear the academicYear to set
-   */
-  void setAcademicYear(String academicYear);
 
   /**
    * Hash user password.

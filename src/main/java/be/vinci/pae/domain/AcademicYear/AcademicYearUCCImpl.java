@@ -41,6 +41,11 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
 
   }
 
+  @Override
+  public AcademicYearDTO getAcademicYearByYear(String year) {
+    return academicYearDAO.getAcademicYearByAcademicYear(year);
+  }
+
   /**
    * Get the new academic year from the actual date.
    *

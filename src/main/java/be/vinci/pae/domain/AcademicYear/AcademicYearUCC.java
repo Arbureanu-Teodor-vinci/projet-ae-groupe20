@@ -12,5 +12,12 @@ public interface AcademicYearUCC {
    */
   AcademicYearDTO getOrAddActualAcademicYear();
 
+  /**
+   * Get the academic year by year.
+   *
+   * @param year -> year to get
+   * @return the academic year.
+   */
+  AcademicYearDTO getAcademicYearByYear(String year);
 
 }

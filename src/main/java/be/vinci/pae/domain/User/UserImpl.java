@@ -8,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UserImpl implements User {
 
-  private static final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
+  private final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
   private int id;
   private String lastName;
   private String firstName;
@@ -18,7 +18,6 @@ public class UserImpl implements User {
   private String password;
   private LocalDate registrationDate;
 
-  private String academicYear;
 
   @Override
   public int getId() {
@@ -105,21 +104,12 @@ public class UserImpl implements User {
     this.registrationDate = LocalDate.now();
   }
 
-  @Override
-  public String getAcademicYear() {
-    return academicYear;
-  }
-
-  @Override
-  public void setAcademicYear(String academicYear) {
-    this.academicYear = academicYear;
-  }
 
   @Override
   public void setRoleByEmail() {
     if (this.email.endsWith("@student.vinci.be")) {
       setRole(POSSIBLE_ROLES[0]);
-    } else {
+    } else if (this.email.endsWith("@vinci.be")) {
       setRole(role);
     }
   }
@@ -145,6 +135,7 @@ public class UserImpl implements User {
   public int hashCode() {
     return id;
   }
+
 
   @Override
   public String toString() {

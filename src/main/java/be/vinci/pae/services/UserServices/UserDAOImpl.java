@@ -18,10 +18,10 @@ public class UserDAOImpl implements UserDAO {
 
   //using a domain factory to create object from the domain
   @Inject
-  private DomainFactory domainFactory;
+  protected DomainFactory domainFactory;
   //using the DALService to establish a connection to the database
   @Inject
-  private DALServices dalConn;
+  protected DALServices dalConn;
 
 
   @Override
@@ -48,7 +48,7 @@ public class UserDAOImpl implements UserDAO {
           to set the attributes of the user with the given results
            */
           user = getResultSet(resultSet);
-          user.setAcademicYear(resultSet.getString("academic_year"));
+          // user.setAcademicYear(resultSet.getString("academic_year"));
         }
       }
       // closing the prepared statement
@@ -76,7 +76,7 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-          user.setAcademicYear(rs.getString("academic_year"));
+          //user.setAcademicYear(rs.getString("academic_year"));
         }
       }
       ps.close();
@@ -99,7 +99,7 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           user = getResultSet(rs);
-          user.setAcademicYear(rs.getString("academic_year"));
+          // user.setAcademicYear(rs.getString("academic_year"));
           users.add(user);
         }
         ps.close();
