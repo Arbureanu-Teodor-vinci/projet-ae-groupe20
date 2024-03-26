@@ -2,13 +2,13 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
-import be.vinci.pae.domain.AcademicYear.AcademicYearDTO;
-import be.vinci.pae.domain.AcademicYear.AcademicYearUCC;
-import be.vinci.pae.domain.Factory.DomainFactory;
-import be.vinci.pae.domain.User.StudentDTO;
-import be.vinci.pae.domain.User.StudentUCC;
-import be.vinci.pae.domain.User.UserDTO;
-import be.vinci.pae.domain.User.UserUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -101,6 +101,12 @@ public class UserResource {
     }
   }
 
+  /**
+   * Register a new user.
+   *
+   * @param jsonUser JSON object containing user infos.
+   * @return JSON object containing user infos.
+   */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)

@@ -7,11 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BiznessException;
-import be.vinci.pae.domain.Factory.DomainFactory;
-import be.vinci.pae.domain.User.User;
-import be.vinci.pae.domain.User.UserDTO;
-import be.vinci.pae.domain.User.UserUCC;
-import be.vinci.pae.services.UserServices.UserDAO;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.services.userservices.UserDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;

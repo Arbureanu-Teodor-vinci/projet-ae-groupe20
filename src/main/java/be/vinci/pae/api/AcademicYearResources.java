@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.domain.AcademicYear.AcademicYearDTO;
-import be.vinci.pae.domain.AcademicYear.AcademicYearUCC;
-import be.vinci.pae.domain.Factory.DomainFactory;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -12,6 +12,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * AcademicYearResources class.
+ */
 @Singleton
 @Path("/academicYear")
 public class AcademicYearResources {

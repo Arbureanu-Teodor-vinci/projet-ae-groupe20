@@ -2,10 +2,10 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
-import be.vinci.pae.domain.Enterprise.EnterpriseUCC;
-import be.vinci.pae.domain.Factory.DomainFactory;
-import be.vinci.pae.services.EnterpriseServices.EnterpriseDAO;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -15,6 +15,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * EnterpriseUCC test class.
+ */
 class EnterpriseUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());

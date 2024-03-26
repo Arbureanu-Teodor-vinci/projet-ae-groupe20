@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BiznessException;
-import be.vinci.pae.domain.AcademicYear.AcademicYearDTO;
-import be.vinci.pae.domain.Factory.DomainFactory;
-import be.vinci.pae.domain.User.Student;
-import be.vinci.pae.domain.User.StudentDTO;
-import be.vinci.pae.domain.User.StudentUCC;
-import be.vinci.pae.services.UserServices.StudentDAO;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.user.Student;
+import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.services.userservices.StudentDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * StudentUCC test class.
+ */
 public class StudentUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
@@ -28,6 +31,9 @@ public class StudentUCCTest {
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
   private StudentDTO studentDTO = domainFactory.getStudentDTO();
 
+  /**
+   * Initialize studentDTO before each test.
+   */
   @BeforeEach
   void initEach() {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();

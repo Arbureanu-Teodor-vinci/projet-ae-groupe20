@@ -2,11 +2,11 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import be.vinci.pae.domain.AcademicYear.AcademicYear;
-import be.vinci.pae.domain.AcademicYear.AcademicYearDTO;
-import be.vinci.pae.domain.AcademicYear.AcademicYearUCC;
-import be.vinci.pae.domain.Factory.DomainFactory;
-import be.vinci.pae.services.AcademicYearServices.AcademicYearDAO;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.academicyear.AcademicYear;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * AcademicYearUCC test class.
+ */
 public class AcademicYearUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
@@ -22,6 +25,9 @@ public class AcademicYearUCCTest {
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
   private AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
 
+  /**
+   * Initialize academicYearDTO before each test.
+   */
   @BeforeEach
   public void setUp() {
     academicYearDTO.setId(1);
