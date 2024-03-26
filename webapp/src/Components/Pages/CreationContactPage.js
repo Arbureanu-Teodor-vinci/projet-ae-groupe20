@@ -13,6 +13,20 @@ const creationContactPage = async () => {
 };
 
 async function renderCreationContactPage() {
+    
+    const options = {
+        method: 'GET',
+        headers : {
+          'Content-Type': 'application/json',
+          'Authorization': `${getAuthenticatedUser().token}`
+        },
+      };
+      const response = await fetch('/api/enterprises/getAll', options);
+      const companies = await response.json();
+
+      // eslint-disable-next-line no-console
+      console.log(companies[0].tradeName);
+    
     const main = document.querySelector('main');
 
     main.innerHTML = `
@@ -51,9 +65,6 @@ async function renderCreationContactPage() {
         Navigate('/creationCompany');
     });
 
-    const companies = [];
-  
-
     const companySelect = document.querySelector('#company');
     const companyFilterInput = document.querySelector('#company-filter');
 
@@ -75,7 +86,7 @@ async function renderCreationContactPage() {
         companiesToRender.forEach(company => {
             const option = document.createElement('option');
             option.value = company.value;
-            option.text = company.label;
+            option.text = company.tradeName;
             companySelect.appendChild(option);
         });
     }
