@@ -1,5 +1,7 @@
 package be.vinci.pae;
 
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearUCCImpl;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.factory.DomainFactory;
@@ -8,8 +10,6 @@ import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.StudentUCCImpl;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
-import be.vinci.pae.domain.academicyear.AcademicYearUCC;
-import be.vinci.pae.domain.academicyear.AcademicYearUCCImpl;
 import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;

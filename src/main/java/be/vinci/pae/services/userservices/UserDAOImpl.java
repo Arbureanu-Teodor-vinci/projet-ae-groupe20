@@ -36,7 +36,8 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
               + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " Left Join InternshipManagement.academic_year ay on "
+              + " ay.id_academic_year=s.academic_year"
               + " WHERE u.id_user = ?"
       );
       ps.setInt(1, id);
@@ -70,7 +71,8 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
               + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year"
+              + " Left Join InternshipManagement.academic_year ay on "
+              + " ay.id_academic_year=s.academic_year"
               + " WHERE u.email = ?");
       ps.setString(1, email);
       try (ResultSet rs = ps.executeQuery()) {
@@ -95,7 +97,8 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
               + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay on ay.id_academic_year=s.academic_year");
+              + " Left Join InternshipManagement.academic_year ay "
+              + " on ay.id_academic_year=s.academic_year");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           user = getResultSet(rs);
@@ -115,8 +118,12 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO addUser(UserDTO user) {
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)"
-              + " VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id_user, role_user, email, firstname_user, lastname_user, phone_number, registration_date, password_user");
+          "INSERT INTO InternshipManagement.users "
+              + " (lastname_user, firstname_user, email, phone_number, registration_date, "
+              + " role_user, password_user)"
+              + " VALUES (?, ?, ?, ?, ?, ?, ?) "
+              + " RETURNING id_user, role_user, email, firstname_user, lastname_user, "
+              + " phone_number, registration_date, password_user");
       ps.setString(1, user.getLastName());
       ps.setString(2, user.getFirstName());
       ps.setString(3, user.getEmail());
@@ -141,7 +148,9 @@ public class UserDAOImpl implements UserDAO {
   public UserDTO updateUser(UserDTO user) {
     try {
       PreparedStatement ps = dalConn.getPS(
-          "UPDATE InternshipManagement.users SET lastname_user = ?, firstname_user = ?, email = ?, phone_number = ?, password_user = ?"
+          "UPDATE InternshipManagement.users SET "
+              + " lastname_user = ?, firstname_user = ?, email = ?, phone_number = ?,"
+              + " password_user = ?"
               + " WHERE id_user = ?");
       ps.setString(1, user.getLastName());
       ps.setString(2, user.getFirstName());

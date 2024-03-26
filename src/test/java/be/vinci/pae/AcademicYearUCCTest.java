@@ -2,10 +2,10 @@ package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.academicyear.AcademicYear;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;

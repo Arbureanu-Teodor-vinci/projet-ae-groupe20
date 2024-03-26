@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;

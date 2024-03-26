@@ -5,6 +5,9 @@ import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.userservices.StudentDAO;
 import jakarta.inject.Inject;
 
+/**
+ * StudentUCCImpl class.
+ */
 public class StudentUCCImpl implements StudentUCC {
 
   @Inject

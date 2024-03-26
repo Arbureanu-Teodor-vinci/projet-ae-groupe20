@@ -3,6 +3,9 @@ package be.vinci.pae.domain.user;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import java.util.Objects;
 
+/**
+ * Implementation of Student interface.
+ */
 public class StudentImpl extends UserImpl implements Student {
 
   private int id;

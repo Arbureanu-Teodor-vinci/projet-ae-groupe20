@@ -2,13 +2,13 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
-import be.vinci.pae.domain.academicyear.AcademicYearDTO;
-import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
