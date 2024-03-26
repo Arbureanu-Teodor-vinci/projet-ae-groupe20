@@ -71,7 +71,7 @@ async function renderCreationContactPage() {
     // Filtrer les options lors de la saisie dans le champ de filtre
     companyFilterInput.addEventListener('input', (event) => {
         const filterValue = event.target.value.toLowerCase();
-        const filteredCompanies = companies.filter(company => company.label.toLowerCase().includes(filterValue));
+        const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(filterValue));
         renderCompaniesOptions(filteredCompanies);
     });
 
