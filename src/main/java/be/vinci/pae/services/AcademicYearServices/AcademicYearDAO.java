@@ -12,7 +12,7 @@ public interface AcademicYearDAO {
    *
    * @return the actual academic year.
    */
-  AcademicYearDTO getThisAcademicYear();
+  AcademicYearDTO getActualAcademicYear();
 
   /**
    * Add the new actual academic year.
@@ -20,9 +20,15 @@ public interface AcademicYearDAO {
    * @param academicYear the new academic year.
    * @return the new academic year.
    */
-  AcademicYearDTO addThisNewAcademicYear(String academicYear);
+  AcademicYearDTO addAcademicYear(String academicYear);
 
-  AcademicYearDTO getThisAcademicYearByAcademicYear(String academicYear);
+  /**
+   * Get an academic year by its academic year.
+   *
+   * @param academicYear the academic year to search.
+   * @return an academic year.
+   */
+  AcademicYearDTO getAcademicYearByAcademicYear(String academicYear);
 
 
 }

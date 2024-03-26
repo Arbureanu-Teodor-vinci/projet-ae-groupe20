@@ -6,6 +6,9 @@ import be.vinci.pae.services.DAL.DALTransactionServices;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
 
+/**
+ * AcademicYearUCCImpl class.
+ */
 public class AcademicYearUCCImpl implements AcademicYearUCC {
 
   @Inject
@@ -14,16 +17,17 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
   @Inject
   DALTransactionServices dalServices;
 
+  @Override
   public AcademicYearDTO getOrAddActualAcademicYear() {
 
-    AcademicYearDTO academicYearDTO = academicYearDAO.getThisAcademicYear();
+    AcademicYearDTO academicYearDTO = academicYearDAO.getActualAcademicYear();
     AcademicYear academicYear = (AcademicYear) academicYearDTO;
 
     if (academicYear == null || !academicYear.isActual()) {
       dalServices.startTransaction();
-      academicYear = (AcademicYear) academicYearDAO.getThisAcademicYearByAcademicYear(
+      academicYear = (AcademicYear) academicYearDAO.getAcademicYearByAcademicYear(
           getNewAcademicYear());
-      academicYearDTO = academicYearDAO.addThisNewAcademicYear(getNewAcademicYear());
+      academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
 
       if (academicYear.checkUniqueAcademicYear(academicYearDTO.getYear())) {
         dalServices.rollbackTransaction();
@@ -37,6 +41,11 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
 
   }
 
+  /**
+   * Get the new academic year from the actual date.
+   *
+   * @return the new academic year.
+   */
   private String getNewAcademicYear() {
     //Get the actual date
     LocalDate date = LocalDate.now();

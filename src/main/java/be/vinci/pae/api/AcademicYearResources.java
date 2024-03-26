@@ -23,6 +23,11 @@ public class AcademicYearResources {
   @Inject
   private DomainFactory domainFactory;
 
+  /**
+   * Get the actual academic year.
+   *
+   * @return the actual academic year.
+   */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getAcademicYear() {

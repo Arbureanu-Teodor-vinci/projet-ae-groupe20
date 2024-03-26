@@ -20,7 +20,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
   private DALServices dalConn;
 
   @Override
-  public AcademicYearDTO getThisAcademicYear() {
+  public AcademicYearDTO getActualAcademicYear() {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -40,7 +40,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
   }
 
   @Override
-  public AcademicYearDTO getThisAcademicYearByAcademicYear(String academicYear) {
+  public AcademicYearDTO getAcademicYearByAcademicYear(String academicYear) {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -61,7 +61,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
   }
 
   @Override
-  public AcademicYearDTO addThisNewAcademicYear(String academicYear) {
+  public AcademicYearDTO addAcademicYear(String academicYear) {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
