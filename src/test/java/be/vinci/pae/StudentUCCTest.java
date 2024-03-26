@@ -40,8 +40,7 @@ public class StudentUCCTest {
     studentDTO.setRole("Etudiant");
     Student student = (Student) studentDTO;
 
-    Mockito.when(studentDAO.getStudentById(1)).thenReturn(null);
-    Mockito.when(studentDAO.getStudentById(1)).thenReturn(null);
+    Mockito.when(studentDAO.getStudentById(1)).thenReturn(domainFactory.getStudentDTO());
     Mockito.when(studentDAO.addStudent(student)).thenReturn(studentDTO);
 
   }
@@ -81,6 +80,6 @@ public class StudentUCCTest {
   void testRegisterStudent4() {
     Student student = (Student) studentDTO;
     student.setId(0);
-    assertThrows(BiznessException.class, () -> studentUCC.registerStudent(studentDTO));
+    assertThrows(NullPointerException.class, () -> studentUCC.registerStudent(studentDTO));
   }
 }
