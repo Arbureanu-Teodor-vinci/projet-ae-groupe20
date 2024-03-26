@@ -20,11 +20,12 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
   @Override
   public AcademicYearDTO getOrAddActualAcademicYear() {
 
-    AcademicYearDTO academicYearDTO = academicYearDAO.getActualAcademicYear();
+    AcademicYearDTO academicYearDTO = academicYearDAO.getActualAcademicYear(); //Get the last added academic year in DB
     AcademicYear academicYear = (AcademicYear) academicYearDTO;
-
+    //If the academic year is null or not actual
     if (academicYear == null || !academicYear.isActual()) {
       dalServices.startTransaction();
+
       academicYear = (AcademicYear) academicYearDAO.getAcademicYearByAcademicYear(
           getNewAcademicYear());
       academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
@@ -46,12 +47,8 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
     return academicYearDAO.getAcademicYearByAcademicYear(year);
   }
 
-  /**
-   * Get the new academic year from the actual date.
-   *
-   * @return the new academic year.
-   */
-  private String getNewAcademicYear() {
+  @Override
+  public String getNewAcademicYear() {
     //Get the actual date
     LocalDate date = LocalDate.now();
     int startYear;

@@ -42,8 +42,13 @@ public class UserUCCImpl implements UserUCC {
     if (!user.checkVinciEmail(registeredUser.getEmail())) {
       throw new BiznessException("Email is not a vinci email.");
     }
+    // check if role is valid
     if (!user.checkRole(registeredUser.getRole())) {
       throw new BiznessException("Role is not valid.");
+    }
+    // check if password is null
+    if (registeredUser.getPassword() == null) {
+      throw new BiznessException("Password is null.");
     }
 
     dalServices.startTransaction(); //START TRANSACTION

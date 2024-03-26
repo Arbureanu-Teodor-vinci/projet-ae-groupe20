@@ -21,7 +21,6 @@ public class StudentDAOImpl implements StudentDAO {
   @Override
   public StudentDTO getStudentById(int id) {
     StudentDTO studentDTO = domainFactory.getStudentDTO();
-    AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT s.id_user,ay.id_academic_year, ay.academic_year FROM InternshipManagement.student s, InternshipManagement.academic_year ay\n"
@@ -32,7 +31,6 @@ public class StudentDAOImpl implements StudentDAO {
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
           studentDTO = getResultSet(resultSet);
-
         }
       }
       ps.close();
@@ -45,7 +43,6 @@ public class StudentDAOImpl implements StudentDAO {
 
   @Override
   public StudentDTO addStudent(StudentDTO student) {
-
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.student (id_user, academic_year) VALUES (?, ?)"

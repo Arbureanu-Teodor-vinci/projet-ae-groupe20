@@ -169,7 +169,15 @@ public class UserImpl implements User {
   public boolean checkRole(String role) {
     for (String possibleRole : POSSIBLE_ROLES) {
       if (role.equals(possibleRole)) {
-        return true;
+        if (role.equals(POSSIBLE_ROLES[0]) && email.endsWith("@student.vinci.be")) {
+          return true;
+        } else if (role.equals(POSSIBLE_ROLES[1]) && email.endsWith("@vinci.be")) {
+          return true;
+        } else if (role.equals(POSSIBLE_ROLES[2]) && email.endsWith("@vinci.be")) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
     return false;

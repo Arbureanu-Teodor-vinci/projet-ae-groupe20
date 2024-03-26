@@ -20,4 +20,11 @@ public interface AcademicYearUCC {
    */
   AcademicYearDTO getAcademicYearByYear(String year);
 
+  /**
+   * Get the new academic year from the actual date.
+   *
+   * @return the new academic year.
+   */
+  String getNewAcademicYear();
+
 }

@@ -30,7 +30,7 @@ public class StudentImpl extends UserImpl implements Student {
 
   @Override
   public boolean checkUniqueStudent(StudentDTO studentDTO) {
-    return studentDTO == null;
+    return studentDTO.getId() == 0;
   }
 
   @Override

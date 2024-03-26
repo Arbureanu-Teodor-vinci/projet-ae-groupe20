@@ -1,8 +1,7 @@
-package be.vinci.pae.domain;
+package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import be.vinci.pae.TestsApplicationBinder;
 import be.vinci.pae.domain.Enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.Enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.Factory.DomainFactory;
