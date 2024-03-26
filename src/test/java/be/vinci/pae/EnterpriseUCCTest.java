@@ -56,17 +56,17 @@ class EnterpriseUCCTest {
   @Test
   @DisplayName("Get all enterprises")
   void getAllEnterprises() {
-    List<EnterpriseDTO> ExpectedEnterprises = new ArrayList<>();
-    ExpectedEnterprises.add(enterpriseDTO);
-    ExpectedEnterprises.add(enterpriseDTO2);
+    List<EnterpriseDTO> expectedEnterprises = new ArrayList<>();
+    expectedEnterprises.add(enterpriseDTO);
+    expectedEnterprises.add(enterpriseDTO2);
 
     // Mocking the method call to the DAO layer to return the expected enterprises
-    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(ExpectedEnterprises);
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(expectedEnterprises);
 
     // Getting the actual enterprises from the UCC layer
     List<EnterpriseDTO> actualEnterprises = enterpriseUCC.getAllEnterprises();
 
     // Asserting that the actual enterprises are equal to the expected enterprises
-    assertEquals(ExpectedEnterprises, actualEnterprises);
+    assertEquals(expectedEnterprises, actualEnterprises);
   }
 }

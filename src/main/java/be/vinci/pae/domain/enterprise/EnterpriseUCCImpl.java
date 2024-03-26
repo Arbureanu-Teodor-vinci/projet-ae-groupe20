@@ -4,6 +4,9 @@ import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import jakarta.inject.Inject;
 import java.util.List;
 
+/**
+ * Implementation of enterpriseUCC.
+ */
 public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Inject

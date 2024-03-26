@@ -58,8 +58,8 @@ public class StudentImpl extends UserImpl implements Student {
 
   @Override
   public String toString() {
-    return "StudentImpl{" +
-        "academicYear=" + academicYear +
-        '}';
+    return "StudentImpl{"
+        + "academicYear=" + academicYear
+        + '}';
   }
 }

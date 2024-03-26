@@ -43,7 +43,7 @@ public class AcademicYearImpl implements AcademicYear {
     if (date.getYear() > endYear || date.getYear()
         < startYear) { //If the actual year is not in the years of the academic year
       return false;
-    } else if (date.getYear() == endYear) {//If the actual year is the end year
+    } else if (date.getYear() == endYear) {  //If the actual year is the end year
       if (date.getMonthValue() >= 9) { //After September, the academic year is not the actual one
         return false;
       } else {

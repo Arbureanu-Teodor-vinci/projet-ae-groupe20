@@ -1,8 +1,8 @@
 package be.vinci.pae.services.academicyear;
 
 import be.vinci.pae.api.filters.FatalException;
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
@@ -24,7 +24,8 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.academic_year ORDER BY id_academic_year DESC LIMIT 1");
+          "SELECT * FROM InternshipManagement.academic_year"
+              + " ORDER BY id_academic_year DESC LIMIT 1");
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
           academicYearDTO.setId(resultSet.getInt("id_academic_year"));
@@ -65,7 +66,8 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.academic_year (academic_year) VALUES (?) RETURNING id_academic_year, academic_year;");
+          "INSERT INTO InternshipManagement.academic_year (academic_year)"
+              + " VALUES (?) RETURNING id_academic_year, academic_year;");
 
       ps.setString(1, academicYear);
 

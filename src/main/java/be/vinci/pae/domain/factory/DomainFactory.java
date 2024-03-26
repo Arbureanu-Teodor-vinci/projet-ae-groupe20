@@ -1,9 +1,10 @@
 package be.vinci.pae.domain.factory;
 
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+
 
 /**
  * Interface factory for each UCC.
