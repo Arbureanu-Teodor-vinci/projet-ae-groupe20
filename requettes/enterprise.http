@@ -5,3 +5,8 @@
 GET {{baseUrl}}/enterprises/getOne:1
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### Get enterprise wich id is not in the database
+GET {{baseUrl}}/enterprises/getOne:999
+Content-Type: application/json
+Authorization : {{adminToken}}
