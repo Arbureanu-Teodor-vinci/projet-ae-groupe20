@@ -65,12 +65,6 @@ CREATE TABLE InternshipManagement.internship(
                                                 academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year)
 );
 INSERT INTO InternshipManagement.academic_year VALUES (DEFAULT,'2023-2024');
---***************************OUR TESTS****************************************************************************************************************************************************************************
-INSERT INTO InternshipManagement.users VALUES (10,'Erismann','Matteo','matteo@student.vinci.be','+320470000001',CURRENT_DATE,'Etudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
-INSERT INTO InternshipManagement.student VALUES (10,1);
-INSERT INTO InternshipManagement.users VALUES (11,'Arbureanu','Teodor','teodor@vinci.be','+320470000002',CURRENT_DATE,'Professeur','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
-INSERT INTO InternshipManagement.users VALUES (12,'Admin', 'Admin','admin','+32470000000',CURRENT_DATE,'Administratif','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
---*****************************************************************************************************************************************************************************************************************
 
 
 --**************************DEMOOOO********************************************************************************************************************************************************************************
@@ -173,3 +167,11 @@ VALUES ('sBMS project - a complex environment','13/11/2023',2,2,1);
 
 INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year)
 VALUES ('CRM : Microsoft Dynamics 365 For Sales','12/10/2023',3,3,1);
+
+--***************************OUR TESTS****************************************************************************************************************************************************************************
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Erismann','Matteo','matteo@student.vinci.be','+320470000001',CURRENT_DATE,'Etudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+INSERT INTO InternshipManagement.student VALUES (10,1);
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Arbureanu','Teodor','teodor@vinci.be','+320470000002',CURRENT_DATE,'Professeur','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Admin', 'Admin','admin','+32470000000',CURRENT_DATE,'Administratif','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+--*****************************************************************************************************************************************************************************************************************
+

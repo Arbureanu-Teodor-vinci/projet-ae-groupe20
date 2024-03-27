@@ -2,9 +2,13 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -38,6 +42,13 @@ public class UserResource {
   @Inject
   private UserUCC userController;
 
+  @Inject
+  private StudentUCC studentController;
+
+  @Inject
+  private AcademicYearUCC academicYearController;
+
+  @Inject
   private DomainFactory domainFactory;
 
 
@@ -74,13 +85,68 @@ public class UserResource {
           .withExpiresAt(expirationToken)
           .sign(this.jwtAlgorithm);
 
-      publicUser = toJson(user).put("token", token);
+      //publicUser = toJson(user, null).put("token", token);
+      if (user.getEmail().endsWith("@student.vinci.be")) {
+        //If the user is a student, get his academic year
+        StudentDTO student = studentController.getStudentById(user.getId());
+        publicUser = toJson(user, student.getStudentAcademicYear()).put("token", token);
+      } else {
+        publicUser = toJson(user, null).put("token", token);
+      }
       return publicUser;
 
     } catch (FatalException e) {
       System.out.println("Can't create token");
       return null;
     }
+  }
+
+  /**
+   * Register a new user.
+   *
+   * @param jsonUser JSON object containing user infos.
+   * @return JSON object containing user infos.
+   */
+  @POST
+  @Path("register")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode register(JsonNode jsonUser) {
+
+    // Check if all fields are present
+    if (!jsonUser.hasNonNull("email") || !jsonUser.hasNonNull("password") || !jsonUser.hasNonNull(
+        "firstName") || !jsonUser.hasNonNull("lastName") || !jsonUser.hasNonNull("phoneNumber")) {
+      throw new WebApplicationException(
+          "You must enter an email, a password, a first name, a last name and a phone number.",
+          Status.BAD_REQUEST);
+    }
+    if (!jsonUser.get("email").asText().endsWith("@vinci.be") && !jsonUser.get("email").asText()
+        .endsWith("@student.vinci.be")) {
+      throw new WebApplicationException("You must enter a vinci email address.",
+          Status.BAD_REQUEST);
+    }
+
+    // Create a userDTO object from JSON to register with
+    UserDTO encodedUser = domainFactory.getUserDTO();
+    encodedUser.setEmail(jsonUser.get("email").asText());
+    encodedUser.setPassword(jsonUser.get("password").asText());
+    encodedUser.setFirstName(jsonUser.get("firstName").asText());
+    encodedUser.setLastName(jsonUser.get("lastName").asText());
+    encodedUser.setTelephoneNumber(jsonUser.get("phoneNumber").asText());
+    encodedUser.setRole(jsonUser.get("role").asText());
+
+    UserDTO newUser;
+    StudentDTO studentDTO = domainFactory.getStudentDTO();
+    // Try to register
+    newUser = userController.register(encodedUser);
+    //If the user is a student, register him as a student
+    if (newUser.getEmail().endsWith("@student.vinci.be")) {
+      studentDTO.setId(newUser.getId());
+      studentDTO.setAcademicYear(academicYearController.getOrAddActualAcademicYear());
+      studentDTO = studentController.registerStudent(studentDTO);
+    }
+
+    return toJson(newUser, studentDTO.getStudentAcademicYear());
   }
 
   /**
@@ -112,23 +178,40 @@ public class UserResource {
     List<UserDTO> users = userController.getAll(); // Get all users
     List<ObjectNode> usersJsonList = new ArrayList<>(); // Create a list of JSON objects to return
     //Convert all users to JSON
+    ObjectNode userJson;
+
     for (UserDTO user : users) {
-      ObjectNode userJson = toJson(user);
+      //If the user is a student, get his academic year
+      if (user.getEmail().endsWith("@student.vinci.be")) {
+        StudentDTO student = studentController.getStudentById(user.getId());
+        userJson = toJson(user, student.getStudentAcademicYear());
+      } else {
+        userJson = toJson(user, null);
+      }
       usersJsonList.add(userJson);
     }
     return usersJsonList;
   }
 
-  private ObjectNode toJson(UserDTO user) {
-    return jsonMapper.createObjectNode()
+
+  private ObjectNode toJson(UserDTO user, AcademicYearDTO academicYear) {
+    // StudentDTO student = (StudentDTO) user;
+    ObjectNode json = jsonMapper.createObjectNode()
         .put("id", user.getId())
         .put("role", user.getRole())
         .put("email", user.getEmail())
         .put("firstName", user.getFirstName())
         .put("lastName", user.getLastName())
         .put("phoneNumber", user.getTelephoneNumber())
-        .put("registrationDate", user.getRegistrationDate().toString())
-        .put("academicYear", user.getAcademicYear());
+        .put("registrationDate", user.getRegistrationDate().toString());
+    //.put("academicYear", user.getAcademicYearTEST());
+    if (academicYear != null) {
+      json.put("academicYear", academicYear.toString());
+    } else {
+      json.put("academicYear", "null");
+    }
+
+    return json;
   }
 
 }

@@ -1,13 +1,20 @@
 package be.vinci.pae;
 
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.DomainFactoryImpl;
-import be.vinci.pae.domain.EnterpriseUCC;
-import be.vinci.pae.domain.EnterpriseUCCImpl;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.domain.UserUCCImpl;
-import be.vinci.pae.services.EnterpriseDAO;
-import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearUCCImpl;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.factory.DomainFactoryImpl;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.user.StudentUCCImpl;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.domain.user.UserUCCImpl;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
+import be.vinci.pae.services.dal.DALTransactionServices;
+import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
+import be.vinci.pae.services.userservices.StudentDAO;
+import be.vinci.pae.services.userservices.UserDAO;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -23,8 +30,13 @@ public class TestsApplicationBinder extends AbstractBinder {
   protected void configure() {
     bind(DomainFactoryImpl.class).to(DomainFactory.class).in(Singleton.class);
     bind(UserUCCImpl.class).to(UserUCC.class).in(Singleton.class);
+    bind(StudentUCCImpl.class).to(StudentUCC.class).in(Singleton.class);
+    bind(AcademicYearUCCImpl.class).to(AcademicYearUCC.class).in(Singleton.class);
+    bind(Mockito.mock(AcademicYearDAO.class)).to(AcademicYearDAO.class);
     bind(Mockito.mock(UserDAO.class)).to(UserDAO.class);
+    bind(Mockito.mock(StudentDAO.class)).to(StudentDAO.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
     bind(Mockito.mock(EnterpriseDAO.class)).to(EnterpriseDAO.class);
+    bind(Mockito.mock(DALTransactionServices.class)).to(DALTransactionServices.class);
   }
 }

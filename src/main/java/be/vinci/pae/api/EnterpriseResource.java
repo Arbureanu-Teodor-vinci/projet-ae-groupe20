@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
 
-import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.EnterpriseUCC;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

@@ -1,15 +1,17 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BiznessException;
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.UserDTO;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.services.UserDAO;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.user.User;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.services.userservices.UserDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,9 @@ public class UserUCCTest {
   void initEach() {
     userDTO.setEmail("admin");
     userDTO.setPassword("$2a$10$WYp2AihAECclbAeBQ9nwVu.8kw2yltBdJEwQTXKMI6qwOumku3bVy");
+    userDTO.setFirstName("admin");
+    userDTO.setLastName("admin");
+    userDTO.setTelephoneNumber("09999999");
 
     Mockito.when(userDAO.getOneUserByEmail("admin")).thenReturn(userDTO);
   }
@@ -95,4 +100,145 @@ public class UserUCCTest {
     });
   }
 
+  @Test
+  @DisplayName("Register with valid student credentials")
+  void testRegister1() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Etudiant");
+
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
+    UserDTO registeredUser = userUCC.register(newUser);
+
+    assertAll(
+        () -> assertTrue(user.checkRole(newUser.getRole())),
+        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
+        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
+        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
+        () -> assertNotNull(registeredUser)
+    );
+  }
+
+  @Test
+  @DisplayName("Register with valid teacher credentials")
+  void testRegister2() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Professeur");
+
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
+    UserDTO registeredUser = userUCC.register(newUser);
+
+    assertAll(
+        () -> assertTrue(user.checkRole(newUser.getRole())),
+        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
+        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
+        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
+        () -> assertNotNull(registeredUser)
+    );
+  }
+
+  @Test
+  @DisplayName("Register with valid administrator credentials")
+  void testRegister3() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Administratif");
+
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
+    UserDTO registeredUser = userUCC.register(newUser);
+
+    assertAll(
+        () -> assertTrue(user.checkRole(newUser.getRole())),
+        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
+        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
+        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
+        () -> assertNotNull(registeredUser)
+    );
+  }
+
+  @Test
+  @DisplayName("Register with wrong email")
+  void testRegister4() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Professeur");
+
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    assertAll(
+        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
+        () -> assertFalse(user.checkVinciEmail(newUser.getEmail()))
+    );
+    ;
+  }
+
+  @Test
+  @DisplayName("Register with wrong role")
+  void testRegister5() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Administratif");
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    assertAll(
+        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
+        () -> assertFalse(user.checkRole(newUser.getRole()))
+    );
+  }
+
+  @Test
+  @DisplayName("Register with existing email")
+  void testRegister6() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Professeur");
+    User user = (User) newUser;
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(newUser);
+    assertAll(
+        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
+        () -> assertFalse(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail())))
+    );
+  }
+
+  @Test
+  @DisplayName("Register with null email")
+  void testRegister7() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail(null);
+    newUser.setPassword("testPassword");
+    newUser.setRole("Professeur");
+
+    assertThrows(NullPointerException.class, () -> userUCC.register(newUser));
+  }
+
+  @Test
+  @DisplayName("Register with null password")
+  void testRegister8() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword(null);
+    newUser.setRole("Professeur");
+
+    assertThrows(BiznessException.class, () -> userUCC.register(newUser));
+  }
 }
+
