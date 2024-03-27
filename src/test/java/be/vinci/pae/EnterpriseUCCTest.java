@@ -51,8 +51,7 @@ class EnterpriseUCCTest {
 
     assertEquals(null, actualEnterprise);
   }
-
-
+  
   @Test
   @DisplayName("Get all enterprises")
   void getAllEnterprises() {

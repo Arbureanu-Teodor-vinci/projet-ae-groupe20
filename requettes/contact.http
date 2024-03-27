@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:3000
+@authToken ={{adminToken}}
+
+### Get contact wich id is 1
+GET {{baseUrl}}/contacts/getOne:1
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+### Get all contacts
+GET {{baseUrl}}/contacts/getAll
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+### Get all contacts wich user id is 7
+GET {{baseUrl}}/contacts/getByUser:7
+Content-Type: application/json
+Authorization: {{adminToken}}

@@ -2,6 +2,8 @@ package be.vinci.pae.domain.factory;
 
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.academicyear.AcademicYearImpl;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.contact.ContactImpl;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseImpl;
 import be.vinci.pae.domain.user.StudentDTO;
@@ -33,6 +35,11 @@ public class DomainFactoryImpl implements DomainFactory {
   @Override
   public StudentDTO getStudentDTO() {
     return new StudentImpl();
+  }
+
+  @Override
+  public ContactDTO getContactDTO() {
+    return new ContactImpl();
   }
 
 }
