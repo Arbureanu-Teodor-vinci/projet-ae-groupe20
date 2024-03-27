@@ -18,4 +18,11 @@ public interface DomainFactory {
    * @return a new EnterpriseDTO
    */
   EnterpriseDTO getEnterpriseDTO();
+
+  /**
+   * Method returning a new contact.
+   *
+   * @return a new ContactDTO
+   */
+  ContactDTO getContactDTO();
 }

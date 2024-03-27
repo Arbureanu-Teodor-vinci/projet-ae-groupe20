@@ -15,4 +15,8 @@ public class DomainFactoryImpl implements DomainFactory {
     return new EnterpriseImpl();
   }
 
+  @Override
+  public ContactDTO getContactDTO() {
+    return new ContactImpl();
+  }
 }

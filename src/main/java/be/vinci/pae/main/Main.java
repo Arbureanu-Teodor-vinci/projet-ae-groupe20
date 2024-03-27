@@ -32,7 +32,7 @@ public class Main {
         .register(WebExceptionMapper.class);
 
     // create and start a new instance of grizzly http server
-    // exposing the Jersey application at BASE_URI
+    // exposing the Jersey applicat ion at BASE_URI
     return GrizzlyHttpServerFactory.createHttpServer(URI.create(Config.getProperty("BaseUri")), rc);
   }
 

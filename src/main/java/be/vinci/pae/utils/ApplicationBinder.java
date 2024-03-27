@@ -1,11 +1,15 @@
 package be.vinci.pae.utils;
 
+import be.vinci.pae.domain.ContactUCC;
+import be.vinci.pae.domain.ContactUCCImpl;
 import be.vinci.pae.domain.DomainFactory;
 import be.vinci.pae.domain.DomainFactoryImpl;
 import be.vinci.pae.domain.EnterpriseUCC;
 import be.vinci.pae.domain.EnterpriseUCCImpl;
 import be.vinci.pae.domain.UserUCC;
 import be.vinci.pae.domain.UserUCCImpl;
+import be.vinci.pae.services.ContactDAO;
+import be.vinci.pae.services.ContactDAOImpl;
 import be.vinci.pae.services.DALServices;
 import be.vinci.pae.services.DALServicesImpl;
 import be.vinci.pae.services.DALTransactionServices;
@@ -32,5 +36,7 @@ public class ApplicationBinder extends AbstractBinder {
         .to(DALServices.class).in(Singleton.class);
     bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class).in(Singleton.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
+    bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
+    bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
   }
 }
