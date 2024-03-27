@@ -1,8 +1,8 @@
 package be.vinci.pae.api;
 
 
-import be.vinci.pae.domain.ContactDTO;
-import be.vinci.pae.domain.ContactUCC;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.contact.ContactUCC;
 import be.vinci.pae.utils.Config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -36,6 +36,24 @@ public class ContactResource {
   private ContactUCC contactUCC;
 
   /**
+   * Verify the JWT token.
+   *
+   * @param token The JWT token to verify.
+   * @throws WebApplicationException If the token is invalid.
+   */
+  private void verifyToken(String token) {
+    if (token == null || token.isEmpty()) {
+      throw new WebApplicationException("Authorization header must be provided",
+          Status.UNAUTHORIZED);
+    }
+    try {
+      JWT.require(jwtAlgorithm).build().verify(token);
+    } catch (Exception e) {
+      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
+    }
+  }
+
+  /**
    * Get 1 contact.
    *
    * @param id The id of the contact to get.
@@ -47,19 +65,8 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getOneContact(@PathParam("id") Integer id, @Context HttpHeaders headers) {
-    // get the user token from the headers
-    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-    // if the token is null or empty, throw an exception
-    if (token == null || token.isEmpty()) {
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    // verify the token
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
+    // Verify the token
+    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
     // if the id is null, throw an exception
     if (id == null) {
@@ -87,19 +94,8 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getAllContacts(@Context HttpHeaders headers) {
-    // get the user token from the headers
-    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-    // if the token is null or empty, throw an exception
-    if (token == null || token.isEmpty()) {
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    // verify the token
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
+    // Verify the token
+    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
     // Try to get all contacts
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
@@ -121,19 +117,9 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getContactsByUser(@PathParam("id") Integer id, @Context HttpHeaders headers) {
-    // get the user token from the headers
-    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-    // if the token is null or empty, throw an exception
-    if (token == null || token.isEmpty()) {
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    // verify the token
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
+
+    // Verify the token
+    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
     // if the id is null, throw an exception
     if (id == null) {
