@@ -53,11 +53,6 @@ async function renderCreationContactPage() {
         </div>
     </section>`;
 
-    const createButton = document.querySelector('#create');
-    createButton.addEventListener('click', async (event) => {
-        event.preventDefault();
-        Navigate('/profil');
-    });
 
     const addCompanyLink = document.querySelector('#add-company');
     addCompanyLink.addEventListener('click', (event) => {
@@ -75,6 +70,30 @@ async function renderCreationContactPage() {
         renderCompaniesOptions(filteredCompanies);
     });
 
+    const createButton = document.querySelector('#create');
+    createButton.addEventListener('click', async (event) => {
+        const optionsCreateContact = {
+            method: 'POST',
+            body: JSON.stringify({
+              studentID: getAuthenticatedUser().id,
+              enterpriseID : companySelect.options[companySelect.selectedIndex].getAttribute('data-idEnterprise'),
+            }),
+            headers : {
+              'Content-Type': 'application/json',
+              "Authorization": `${getAuthenticatedUser().token}`,
+            },
+          };
+          
+          const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
+          if (!responseCreateContact.ok) {
+            main.innerText = `${response.statusText} ; Status : ${response.status}`;
+          }else{
+            event.preventDefault();
+            Navigate('/profil');
+          }
+       
+    });
+
     // Initialiser les options avec toutes les entreprises
     renderCompaniesOptions(companies);
 
@@ -85,8 +104,8 @@ async function renderCreationContactPage() {
         // Ajouter les options filtrées ou toutes les options
         companiesToRender.forEach(company => {
             const option = document.createElement('option');
-            option.value = company.value;
             option.text = company.tradeName;
+            option.setAttribute('data-idEnterprise', company.id);
             companySelect.appendChild(option);
         });
     }

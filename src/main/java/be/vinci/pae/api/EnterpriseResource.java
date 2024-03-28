@@ -39,7 +39,8 @@ public class EnterpriseResource {
   /**
    * Get 1 enterprises.
    *
-   * @param id The id of the enterprise to get.
+   * @param id      The id of the enterprise to get.
+   * @param headers The headers of the request.
    * @return JSON object containing all enterprises.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -87,6 +88,7 @@ public class EnterpriseResource {
   /**
    * Get all enterprises.
    *
+   * @param headers The headers of the request.
    * @return JSON array containing the enterprises.
    * @throws WebApplicationException If the token is invalid.
    */

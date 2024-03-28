@@ -1,5 +1,7 @@
 package be.vinci.pae.domain.contact;
 
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.user.StudentDTO;
 import java.util.List;
 
 /**
@@ -29,5 +31,14 @@ public interface ContactUCC {
    * @return List of ContactDTO
    */
   List<ContactDTO> getContactsByUser(int id);
+
+  /**
+   * Add a contact.
+   *
+   * @param studentDTO    StudentDTO
+   * @param enterpriseDTO EnterpriseDTO
+   * @return ContactDTO
+   */
+  ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO);
 
 }

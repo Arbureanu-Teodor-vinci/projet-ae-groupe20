@@ -19,10 +19,10 @@ public class UserDAOImpl implements UserDAO {
 
   //using a domain factory to create object from the domain
   @Inject
-  protected DomainFactory domainFactory;
+  private DomainFactory domainFactory;
   //using the DALService to establish a connection to the database
   @Inject
-  protected DALServices dalConn;
+  private DALServices dalConn;
 
 
   @Override

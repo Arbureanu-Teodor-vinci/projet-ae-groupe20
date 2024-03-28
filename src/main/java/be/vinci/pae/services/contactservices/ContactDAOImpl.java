@@ -94,6 +94,32 @@ public class ContactDAOImpl implements ContactDAO {
     return contacts;
   }
 
+  @Override
+  public ContactDTO addContact(int studentID, int enterpriseID, int academicYearID) {
+    Logger.logEntry("Contact DAO - addContact");
+    ContactDTO contact = domainFactory.getContactDTO();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "INSERT INTO InternshipManagement.contacts (state_contact, student, academic_year, enterprise)"
+              + " VALUES ('initié', ?, ?, ?)"
+              + " RETURNING *"
+      );
+      ps.setInt(1, studentID);
+      ps.setInt(2, academicYearID);
+      ps.setInt(3, enterpriseID);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          contact = getResultSet(rs);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      Logger.logEntry("Error in ContactDAOImpl addContact" + e.getMessage());
+      throw new RuntimeException(e);
+    }
+    return contact;
+  }
+
   /**
    * Get the result set.
    *
