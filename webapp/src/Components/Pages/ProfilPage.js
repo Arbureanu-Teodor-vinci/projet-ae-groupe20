@@ -154,9 +154,9 @@ async function renderProfilPage() {
         const button = document.getElementById(`editButton${contact.id}`);
         button.addEventListener('click', () => {
             // Enregistrez l'ID du contact dans le localStorage
-            localStorage.setItem('contactIdToEdit', contact.id);
+            // localStorage.setItem('contactIdToEdit', contact.id);
             // Redirigez l'utilisateur vers la page de modification
-            window.location.href = '/updateContact';
+            window.location.href = `/updateContact?contactId=${contact.id}`;
         });
     });
 

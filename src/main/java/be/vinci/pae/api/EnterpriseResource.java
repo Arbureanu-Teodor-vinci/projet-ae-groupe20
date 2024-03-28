@@ -1,11 +1,11 @@
 package be.vinci.pae.api;
 
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logger;
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -18,8 +18,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -39,8 +37,7 @@ public class EnterpriseResource {
   /**
    * Get 1 enterprises.
    *
-   * @param id      The id of the enterprise to get.
-   * @param headers The headers of the request.
+   * @param id The id of the enterprise to get.
    * @return JSON object containing all enterprises.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -48,23 +45,9 @@ public class EnterpriseResource {
   @Path("getOne:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getOneEnterprise(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+  public ObjectNode getOneEnterprise(@PathParam("id") Integer id) {
     Logger.logEntry("GET /enterprises/getOne:" + id);
     // get the user token from the headers
-    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-    // if the token is null or empty, throw an exception
-    if (token == null || token.isEmpty()) {
-      Logger.logEntry("tries to access without token.");
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    // verify the token
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      Logger.logEntry("Invalid token", e);
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
 
     // if the id is null, throw an exception
     if (id == null) {
@@ -88,7 +71,6 @@ public class EnterpriseResource {
   /**
    * Get all enterprises.
    *
-   * @param headers The headers of the request.
    * @return JSON array containing the enterprises.
    * @throws WebApplicationException If the token is invalid.
    */
@@ -96,23 +78,9 @@ public class EnterpriseResource {
   @Path("getAll")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getAllEnterprises(@Context HttpHeaders headers) {
+  @Authorize
+  public ArrayNode getAllEnterprises() {
     Logger.logEntry("GET /enterprises/getAll");
-    // get the user token from the headers
-    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
-    // if the token is null or empty, throw an exception
-    if (token == null || token.isEmpty()) {
-      Logger.logEntry("tries to access without token.");
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    // verify the token
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      Logger.logEntry("Invalid token", e);
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
 
     // Try to get all enterprises
     ArrayNode enterprisesListNode = jsonMapper.createArrayNode();

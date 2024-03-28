@@ -9,7 +9,8 @@ const UpdateContactPage = async () => {
 }
 
 async function renderUpdateContactPage() {
-    const contactId = localStorage.getItem('contactIdToEdit');
+    const urlParams = new URLSearchParams(window.location.search);
+    const contactId = urlParams.get('contactId');
     const options = {
         method: 'GET',
         headers : {
@@ -29,8 +30,8 @@ async function renderUpdateContactPage() {
     if (['initié', 'pris'].includes(contact.stateContact)) {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="suspendu">Suspendu</option>
             <option value="non suivi">Non suivi</option>
+            <option value="suspendu">Suspendu</option>
         `;
     if (contact.stateContact === 'initié') {
             stateOptions += `<option value="pris">Pris</option>`;
@@ -73,7 +74,7 @@ async function renderUpdateContactPage() {
                         </div>
                         <div class="form-group">
                             <label for="tool">Outil de contact</label>
-                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool || ' - '}">
+                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool}">
                         </div>
                         <div class="form-group">
                             <label for="stateContact">Etat du contact</label>
@@ -86,7 +87,7 @@ async function renderUpdateContactPage() {
                             <label for="refusalReason">Raison de refus</label>
                             <input type="text" id="refusalReason" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ' '}" ${refusalReasonDisabled}>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>
+                        <button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>
                     </form>
                 </div>
             </div>
@@ -97,8 +98,39 @@ async function renderUpdateContactPage() {
         event.preventDefault();
         // Ajoutez ici le code pour mettre à jour le contact
         window.location.href = '/profil';
-    });    
-}
+    });
+
+    document.getElementById("updateContactButton").addEventListener('click', async (event) => {
+        event.preventDefault();
+        const interviewMethod = document.getElementById('interViewMethod').value;
+        const tool = document.getElementById('tool').value;
+        const stateContact = document.getElementById('stateContact').value;
+        const refusalReason = document.getElementById('refusalReason').value;
+
+        const body = {
+            idContact: contactId,
+            interviewMethod,
+            tool,
+            stateContact,
+            refusalReason
+        };
+
+        const optionsUpdateContact = {
+            method: 'PATCH',
+            headers : {
+                'Content-Type': 'application/json',
+                'Authorization': `${getAuthenticatedUser().token}`
+            },
+            body: JSON.stringify(body)
+        };
+        const responseUpdateContact = await fetch(`/api/contacts/update`, optionsUpdateContact);
+        if (responseUpdateContact.status === 200) {
+            window.location.href = '/profil';
+        } else {
+            alert('Une erreur est survenue lors de la modification du contact');
+        }
+    }
+    );}
 
 
 export default UpdateContactPage;

@@ -18,6 +18,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -185,6 +186,47 @@ public class ContactResource {
     }
 
     return contactNodeMaker(addedContact);
+  }
+
+  /**
+   * Update a contact.
+   *
+   * @param json    The JSON object containing the contact information.
+   * @param request The request.
+   * @return JSON object containing the contact infos.
+   */
+  @PATCH
+  @Path("update")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode updateContact(JsonNode json, @Context ContainerRequest request) {
+    Logger.logEntry("POST /contacts/update");
+
+    if (!json.hasNonNull("idContact") || json.get("idContact").asText().isEmpty()) {
+      Logger.logEntry("Tried to update contact without id.");
+      throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
+    }
+    int id = json.get("idContact").asInt();
+    ContactDTO contact = contactUCC.getOneContact(id);
+    if (contact == null) {
+      Logger.logEntry("Contact not found.");
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+    }
+    if (json.hasNonNull("interviewMethod")) {
+      contact.setInterviewMethod(json.get("interviewMethod").asText());
+    }
+    if (json.hasNonNull("tool")) {
+      contact.setTool(json.get("tool").asText());
+    }
+    if (json.hasNonNull("refusalReason")) {
+      contact.setRefusalReason(json.get("refusalReason").asText());
+    }
+    if (json.hasNonNull("stateContact")) {
+      contact.setStateContact(json.get("stateContact").asText());
+    }
+
+    ContactDTO updatedContact = contactUCC.updateContact(contact);
+    return contactNodeMaker(updatedContact);
   }
 
   /**

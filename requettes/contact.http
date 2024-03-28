@@ -16,12 +16,12 @@ GET {{baseUrl}}/contacts/getByUser
 Content-Type: application/json
 Authorization: {{adminToken}}
 
-### Create a new contact
-POST {{baseUrl}}/contacts/add
+### Update
+PATCH {{baseUrl}}/contacts/update
 Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-  "studentID": 10,
-  "enterpriseID": 1
+    "idContact": 1,
+    "stateContact": "En attente"
 }
