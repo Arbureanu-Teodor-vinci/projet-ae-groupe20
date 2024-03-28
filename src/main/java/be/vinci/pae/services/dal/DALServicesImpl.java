@@ -16,6 +16,16 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   private static final BasicDataSource dataSourcePool = new BasicDataSource();
   private static final ThreadLocal<Connection> threadConnection = new ThreadLocal<Connection>();
 
+  static {
+    dataSourcePool.setDriverClassName("org.postgresql.Driver");
+    dataSourcePool.setUrl(Config.getProperty("DatabaseFilePath"));
+    dataSourcePool.setUsername(Config.getProperty("DatabaseUser"));
+    dataSourcePool.setPassword(Config.getProperty("DatabasePassword"));
+    dataSourcePool.setMinIdle(5);
+    dataSourcePool.setMaxIdle(10);
+    dataSourcePool.setMaxTotal(50);
+  }
+
   /**
    * Instantiates a new DAL service impl and connect to the database.
    */
@@ -27,13 +37,6 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
       System.out.println("Driver PostgreSQL manquant !");
       System.exit(1);
     }
-
-    dataSourcePool.setDriverClassName("org.postgresql.Driver");
-    dataSourcePool.setUrl(Config.getProperty("DatabaseFilePath"));
-    dataSourcePool.setUsername(Config.getProperty("DatabaseUser"));
-    dataSourcePool.setPassword(Config.getProperty("DatabasePassword"));
-    dataSourcePool.setInitialSize(5);
-    dataSourcePool.setMaxTotal(5);
   }
 
   @Override
@@ -50,6 +53,8 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
         threadConnection.set(connection);
       }
     } catch (SQLException e) {
+      // If an error occurs, close the connection before throwing the exception
+      closeConnection();
       throw new FatalException(e);
     }
     return connection;
