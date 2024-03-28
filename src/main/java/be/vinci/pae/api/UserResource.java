@@ -10,6 +10,7 @@ import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logger;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,8 +65,10 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode login(JsonNode json) {
+    Logger.logEntry("POST /auths/login");
     if (!json.hasNonNull("email") || !json.hasNonNull("password") || json.get("email").asText()
         .isEmpty() || json.get("password").asText().isEmpty()) {
+      Logger.logEntry("Tried to log in withouth email or password.");
       throw new WebApplicationException("You must enter an email and a password.",
           Status.BAD_REQUEST);
     }
@@ -96,6 +99,7 @@ public class UserResource {
       return publicUser;
 
     } catch (FatalException e) {
+      Logger.logEntry("Can't create token", e);
       System.out.println("Can't create token");
       return null;
     }
@@ -112,16 +116,19 @@ public class UserResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode register(JsonNode jsonUser) {
+    Logger.logEntry("POST /auths/register");
 
     // Check if all fields are present
     if (!jsonUser.hasNonNull("email") || !jsonUser.hasNonNull("password") || !jsonUser.hasNonNull(
         "firstName") || !jsonUser.hasNonNull("lastName") || !jsonUser.hasNonNull("phoneNumber")) {
+      Logger.logEntry("Tried to register without all fields.");
       throw new WebApplicationException(
           "You must enter an email, a password, a first name, a last name and a phone number.",
           Status.BAD_REQUEST);
     }
     if (!jsonUser.get("email").asText().endsWith("@vinci.be") && !jsonUser.get("email").asText()
         .endsWith("@student.vinci.be")) {
+      Logger.logEntry("Tried to register with a non vinci email.");
       throw new WebApplicationException("You must enter a vinci email address.",
           Status.BAD_REQUEST);
     }
@@ -158,6 +165,7 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public ObjectNode getLoggedUser() {
+    Logger.logEntry("GET /auths");
     return publicUser;
   }
 
@@ -171,7 +179,9 @@ public class UserResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize
   public List<ObjectNode> getAllUsers() {
+    Logger.logEntry("GET /auths/users");
     if (publicUser.findValue("role").asText().equals("Etudiant")) {
+      Logger.logEntry("Tried to access users route as a student.");
       throw new WebApplicationException("You must be an admin or professor to access this route.",
           Status.FORBIDDEN);
     }

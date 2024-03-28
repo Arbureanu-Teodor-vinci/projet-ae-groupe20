@@ -4,6 +4,7 @@ package be.vinci.pae.api;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
 import be.vinci.pae.utils.Config;
+import be.vinci.pae.utils.Logger;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,6 +44,7 @@ public class ContactResource {
    */
   private void verifyToken(String token) {
     if (token == null || token.isEmpty()) {
+      Logger.logEntry("tries to access without token.");
       throw new WebApplicationException("Authorization header must be provided",
           Status.UNAUTHORIZED);
     }
@@ -65,11 +67,13 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getOneContact(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+    Logger.logEntry("GET /contacts/getOne:" + id);
     // Verify the token
     verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
     // if the id is null, throw an exception
     if (id == null) {
+      Logger.logEntry("id is missing.");
       throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
     }
 
@@ -77,6 +81,7 @@ public class ContactResource {
     ContactDTO contact = contactUCC.getOneContact(id);
     // if the contact is null, throw an exception
     if (contact == null) {
+      Logger.logEntry("Contact not found.");
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }
 
@@ -94,6 +99,7 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getAllContacts(@Context HttpHeaders headers) {
+    Logger.logEntry("GET /contacts/getAll");
     // Verify the token
     verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
@@ -117,12 +123,14 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ArrayNode getContactsByUser(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+    Logger.logEntry("GET /contacts/getByUser:" + id);
 
     // Verify the token
     verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
 
     // if the id is null, throw an exception
     if (id == null) {
+      Logger.logEntry("id is missing.");
       throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
     }
 

@@ -3,6 +3,7 @@ package be.vinci.pae.api;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
@@ -34,6 +35,7 @@ public class AcademicYearResources {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode getAcademicYear() {
+    Logger.logEntry("GET /academicYear");
     ObjectNode node = jsonMapper.createObjectNode();
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     academicYearDTO = academicYearUCC.getOrAddActualAcademicYear();

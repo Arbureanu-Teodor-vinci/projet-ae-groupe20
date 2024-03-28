@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +27,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO getOneUserByID(int id) {
+    Logger.logEntry("User DAO - getOneUserByID" + id);
     //creating a user DTO to stock the information, setting to null
     UserDTO user = null;
     try {
@@ -56,6 +58,7 @@ public class UserDAOImpl implements UserDAO {
       ps.close();
       // catching exeptions
     } catch (SQLException e) {
+      Logger.logEntry("Error in UserDAOImpl getOneUserByID" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -65,6 +68,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO getOneUserByEmail(String email) {
+    Logger.logEntry("User DAO - getOneUserByEmail" + email);
     // refere to the commentary of the getOneUserByID method
     UserDTO user = null;
     try {
@@ -83,6 +87,7 @@ public class UserDAOImpl implements UserDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in UserDAOImpl getOneUserByEmail" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -91,6 +96,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public List<UserDTO> getAllUsers() {
+    Logger.logEntry("User DAO - getAllUsers");
     List<UserDTO> users = new ArrayList<>();
     UserDTO user;
     try {
@@ -108,6 +114,7 @@ public class UserDAOImpl implements UserDAO {
         ps.close();
       }
     } catch (SQLException e) {
+      Logger.logEntry("Error in UserDAOImpl getAllUsers" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -116,6 +123,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO addUser(UserDTO user) {
+    Logger.logEntry("User DAO - addUser" + user.getEmail());
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.users "
@@ -138,6 +146,7 @@ public class UserDAOImpl implements UserDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in UserDAOImpl addUser" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -146,6 +155,7 @@ public class UserDAOImpl implements UserDAO {
 
   @Override
   public UserDTO updateUser(UserDTO user) {
+    Logger.logEntry("User DAO - updateUser" + user.getEmail());
     try {
       PreparedStatement ps = dalConn.getPS(
           "UPDATE InternshipManagement.users SET "
@@ -161,6 +171,7 @@ public class UserDAOImpl implements UserDAO {
       ps.executeUpdate();
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in UserDAOImpl updateUser" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
