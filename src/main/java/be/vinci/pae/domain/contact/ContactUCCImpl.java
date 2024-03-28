@@ -15,10 +15,10 @@ import java.util.List;
 public class ContactUCCImpl implements ContactUCC {
 
   @Inject
-  ContactDAO contactDS;
+  private ContactDAO contactDS;
 
   @Inject
-  DALTransactionServices dalServices;
+  private DALTransactionServices dalServices;
 
   @Override
   public ContactDTO getOneContact(int id) {
@@ -73,7 +73,17 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO updateContact(ContactDTO contact) {
-    return contactDS.updateContact(contact);
+    dalServices.startTransaction();
+    ContactDTO contactDTOToCheck = contactDS.getOneContactByid(contact.getId());
+    Contact contactToCheckState = (Contact) contactDTOToCheck;
+    if (contactToCheckState.checkContactStateUpdate(contact.getStateContact())) {
+      Logger.logEntry("ContactUCCImpl - updateContact - contact state invalid");
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Cant update contact state to this value");
+    }
+    ContactDTO contactUpdated = contactDS.updateContact(contact);
+    dalServices.commitTransaction();
+    return contactUpdated;
   }
 
 

@@ -5,8 +5,10 @@ import java.util.Objects;
 /**
  * Implementation of Contact and contactDTO.
  */
-public class ContactImpl implements ContactDTO {
+public class ContactImpl implements Contact {
 
+  private static final String[] POSSIBLESTATES = {"initié", "pris", "suspendu", "refusé",
+      "non suivis"};
   private int id;
   private String interviewMethod;
   private String tool;
@@ -106,6 +108,28 @@ public class ContactImpl implements ContactDTO {
     }
     ContactImpl contact = (ContactImpl) o;
     return id == contact.id;
+  }
+
+  @Override
+  public boolean checkContactStateUpdate(String state) {
+    if (this.stateContact.equals(POSSIBLESTATES[0])) {
+      return state.equals(POSSIBLESTATES[1]) || state.equals(POSSIBLESTATES[2]) || state.equals(
+          POSSIBLESTATES[3]) || state.equals(POSSIBLESTATES[4]);
+    }
+    if (this.stateContact.equals(POSSIBLESTATES[1])) {
+      return state.equals(POSSIBLESTATES[2]) || state.equals(POSSIBLESTATES[3]) || state.equals(
+          POSSIBLESTATES[4]);
+    }
+    return false;
+  }
+
+  public boolean checkContactState() {
+    for (String state : POSSIBLESTATES) {
+      if (this.stateContact.equals(state)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

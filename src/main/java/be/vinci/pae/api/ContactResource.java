@@ -221,9 +221,6 @@ public class ContactResource {
     if (json.hasNonNull("refusalReason")) {
       contact.setRefusalReason(json.get("refusalReason").asText());
     }
-    if (json.hasNonNull("stateContact")) {
-      contact.setStateContact(json.get("stateContact").asText());
-    }
 
     ContactDTO updatedContact = contactUCC.updateContact(contact);
     return contactNodeMaker(updatedContact);
