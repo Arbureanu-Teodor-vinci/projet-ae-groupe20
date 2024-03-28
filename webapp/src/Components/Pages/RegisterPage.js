@@ -1,6 +1,7 @@
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { getAuthenticatedUser } from '../../utils/auths';
+import Navbar from '../Navbar/Navbar';
 
 const RegisterPage = async () => {
     if (getAuthenticatedUser()) {
@@ -9,6 +10,8 @@ const RegisterPage = async () => {
       };
     clearPage();
     await renderRegisterPage();
+    const form = document.querySelector('form');
+    form.addEventListener('submit', register);
 }
 
 async function renderRegisterPage() {
@@ -39,7 +42,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Nom*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="text" class="form-control form-control-lg" id="nameInput" required >
+                                        <input type="text" class="form-control form-control-lg" id="lastNameInput" required >
                                     </div>
                                 </div>
 
@@ -142,5 +145,54 @@ async function renderRegisterPage() {
         Navigate('/login');
     });
 };
+
+async function register (e) {
+    e.preventDefault();
+
+    const main = document.querySelector('main');
+
+    const email = document.querySelector('#emailInput').value + document.querySelector('#emailDomainSelect').value;
+    const password = document.querySelector('#passwordInput').value;
+    const firstName = document.querySelector('#firstNameInput').value;
+    const lastName = document.querySelector('#lastNameInput').value;
+    const phoneNumber = document.querySelector('#phoneNumberInput').value;
+    const userRole = document.querySelector('#role').value;
+
+    let role;
+    if (userRole === 'option1') {
+        role = 'Professeur';
+    } else if (userRole === 'option2') {
+        role = 'Admin';
+    } else {
+        role = 'Etudiant';
+    }
+
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+        role,
+        firstName,
+        lastName,
+        phoneNumber,
+      }),
+      headers : {
+        'Content-Type': 'application/json',
+      },
+    };
+    
+    const response = await fetch(`/api/auths/register`, options);
+
+    if (!response.ok) {
+        main.innerText = `${response.statusText} ; Status : ${response.status}`;
+    } else {
+        Navigate('/login');
+        Navbar();
+    };
+
+    return null;
+  
+  };
 
 export default RegisterPage;

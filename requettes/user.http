@@ -1,0 +1,81 @@
+@baseUrl = http://localhost:3000
+
+
+### LOGIN WITH ADMIN USER
+POST {{baseUrl}}/auths/login
+Content-Type: application/json
+
+{
+  "email":"admin",
+  "password":"group20"
+}
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
+### LOGIN WITH STUDENT USER
+POST {{baseUrl}}/auths/login
+Content-Type: application/json
+
+{
+  "email":"matteo@student.vinci.be",
+  "password":"group20"
+}
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
+### LOGIN WITH TEACHER USER
+POST {{baseUrl}}/auths/login
+Content-Type: application/json
+
+{
+  "email":"teodor@vinci.be",
+  "password":"group20"
+}
+
+> {%
+  client.global.set("adminToken", response.body.token);
+%}
+
+### Get user loged in
+GET {{baseUrl}}/auths
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+
+### Get all users
+GET {{baseUrl}}/auths/users
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+
+
+### REGISTER A NEW STUDENT USER
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+  "email": "test@student.vinci.be",
+  "password": "group20",
+  "role": "Etudiant",
+  "firstName": "Student",
+  "lastName": "Vinci",
+  "phoneNumber": "0499999999"
+}
+
+### REGISTER A NEW TEACHER USER
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+  "email": "test@vinci.be",
+  "password": "group20",
+  "role": "Professeur",
+  "firstName": "Teacher",
+  "lastName": "Vinci",
+  "phoneNumber": "0499999999"
+}
+

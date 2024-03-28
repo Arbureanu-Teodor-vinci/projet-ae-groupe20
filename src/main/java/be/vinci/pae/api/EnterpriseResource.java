@@ -1,13 +1,14 @@
 package be.vinci.pae.api;
 
 
-import be.vinci.pae.domain.EnterpriseDTO;
-import be.vinci.pae.domain.EnterpriseUCC;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logger;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -23,7 +24,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Ressource route for the enterprises requests.
+ * Resource route for the enterprises requests.
  */
 @Singleton
 @Path("/enterprises")
@@ -52,6 +53,7 @@ public class EnterpriseResource {
     String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
     // if the token is null or empty, throw an exception
     if (token == null || token.isEmpty()) {
+      Logger.logEntry("tries to access without token.");
       throw new WebApplicationException("Authorization header must be provided",
           Status.UNAUTHORIZED);
     }
@@ -78,6 +80,53 @@ public class EnterpriseResource {
           Status.NOT_FOUND);
     }
 
+    return enterpriseNodeMaker(enterprise);
+
+  }
+
+  /**
+   * Get all enterprises.
+   *
+   * @return JSON array containing the enterprises.
+   * @throws WebApplicationException If the token is invalid.
+   */
+  @GET
+  @Path("getAll")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ArrayNode getAllEnterprises(@Context HttpHeaders headers) {
+    Logger.logEntry("GET /enterprises/getAll");
+    // get the user token from the headers
+    String token = headers.getHeaderString(HttpHeaders.AUTHORIZATION);
+    // if the token is null or empty, throw an exception
+    if (token == null || token.isEmpty()) {
+      Logger.logEntry("tries to access without token.");
+      throw new WebApplicationException("Authorization header must be provided",
+          Status.UNAUTHORIZED);
+    }
+    // verify the token
+    try {
+      JWT.require(jwtAlgorithm).build().verify(token);
+    } catch (Exception e) {
+      Logger.logEntry("Invalid token", e);
+      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
+    }
+
+    // Try to get all enterprises
+    ArrayNode enterprisesListNode = jsonMapper.createArrayNode();
+    for (EnterpriseDTO enterprise : enterpriseUCC.getAllEnterprises()) {
+      enterprisesListNode.add(enterpriseNodeMaker(enterprise));
+    }
+    return enterprisesListNode;
+  }
+
+  /**
+   * Create a JSON object with the enterprise infos.
+   *
+   * @param enterprise The enterprise to create the JSON object with.
+   * @return JSON object containing the enterprise infos.
+   */
+  private ObjectNode enterpriseNodeMaker(EnterpriseDTO enterprise) {
     try {
       // Create a JSON object with the enterprise infos
       ObjectNode enterpriseNode = jsonMapper.createObjectNode()
@@ -89,14 +138,12 @@ public class EnterpriseResource {
           .put("email", enterprise.getEmail())
           .put("blackListed", enterprise.isBlackListed())
           .put("blackListMotivation", enterprise.getBlackListMotivation());
-      Logger.logEntry("Enterprise found with id " + id);
       return enterpriseNode;
     } catch (Exception e) {
       Logger.logEntry("Can't create enterprise", e);
       System.out.println("Can't create enterprise");
       return null;
     }
-
   }
 
 }

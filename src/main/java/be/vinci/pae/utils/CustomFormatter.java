@@ -7,8 +7,17 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * Custom formatter for the logger.
+ */
 public class CustomFormatter extends Formatter {
 
+  /**
+   * Format the log record.
+   *
+   * @param record the log record
+   * @return the formatted log record
+   */
   @Override
   public String format(LogRecord record) {
     StringBuilder builder = new StringBuilder();

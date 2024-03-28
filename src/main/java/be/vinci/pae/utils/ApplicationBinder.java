@@ -1,18 +1,30 @@
 package be.vinci.pae.utils;
 
-import be.vinci.pae.domain.DomainFactory;
-import be.vinci.pae.domain.DomainFactoryImpl;
-import be.vinci.pae.domain.EnterpriseUCC;
-import be.vinci.pae.domain.EnterpriseUCCImpl;
-import be.vinci.pae.domain.UserUCC;
-import be.vinci.pae.domain.UserUCCImpl;
-import be.vinci.pae.services.DALServices;
-import be.vinci.pae.services.DALServicesImpl;
-import be.vinci.pae.services.DALTransactionServices;
-import be.vinci.pae.services.EnterpriseDAO;
-import be.vinci.pae.services.EnterpriseDAOImpl;
-import be.vinci.pae.services.UserDAO;
-import be.vinci.pae.services.UserDAOImpl;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
+import be.vinci.pae.domain.academicyear.AcademicYearUCCImpl;
+import be.vinci.pae.domain.contact.ContactUCC;
+import be.vinci.pae.domain.contact.ContactUCCImpl;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
+import be.vinci.pae.domain.factory.DomainFactory;
+import be.vinci.pae.domain.factory.DomainFactoryImpl;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.user.StudentUCCImpl;
+import be.vinci.pae.domain.user.UserUCC;
+import be.vinci.pae.domain.user.UserUCCImpl;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
+import be.vinci.pae.services.academicyear.AcademicYearDAOImpl;
+import be.vinci.pae.services.contactservices.ContactDAO;
+import be.vinci.pae.services.contactservices.ContactDAOImpl;
+import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.services.dal.DALServicesImpl;
+import be.vinci.pae.services.dal.DALTransactionServices;
+import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
+import be.vinci.pae.services.enterpriseservices.EnterpriseDAOImpl;
+import be.vinci.pae.services.userservices.StudentDAO;
+import be.vinci.pae.services.userservices.StudentDAOImpl;
+import be.vinci.pae.services.userservices.UserDAO;
+import be.vinci.pae.services.userservices.UserDAOImpl;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.ext.Provider;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -32,5 +44,11 @@ public class ApplicationBinder extends AbstractBinder {
         .to(DALServices.class).in(Singleton.class);
     bind(EnterpriseDAOImpl.class).to(EnterpriseDAO.class).in(Singleton.class);
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
+    bind(AcademicYearUCCImpl.class).to(AcademicYearUCC.class).in(Singleton.class);
+    bind(AcademicYearDAOImpl.class).to(AcademicYearDAO.class).in(Singleton.class);
+    bind(StudentUCCImpl.class).to(StudentUCC.class).in(Singleton.class);
+    bind(StudentDAOImpl.class).to(StudentDAO.class).in(Singleton.class);
+    bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
+    bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
   }
 }

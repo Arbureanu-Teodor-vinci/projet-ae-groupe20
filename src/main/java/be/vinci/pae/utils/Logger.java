@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
+/**
+ * Logger classe to manage the logs.
+ */
 public class Logger {
 
   private static java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(
@@ -15,6 +18,9 @@ public class Logger {
     setUpLogger();
   }
 
+  /**
+   * Set up the logger.
+   */
   private static void setUpLogger() {
     try {
       // Load properties
@@ -58,6 +64,11 @@ public class Logger {
 
   }
 
+  /**
+   * Log an entry.
+   *
+   * @param msg The message to log.
+   */
   public static void logEntry(String msg) {
     /*StringBuilder builder = new StringBuilder();
 
@@ -72,6 +83,12 @@ public class Logger {
     LOGGER.info(msg);
   }
 
+  /**
+   * Log an entry with a throwable.
+   *
+   * @param msg       The message to log.
+   * @param throwable The throwable to log.
+   */
   public static void logEntry(String msg, Throwable throwable) {
     /*
     StringBuilder builder = new StringBuilder();
