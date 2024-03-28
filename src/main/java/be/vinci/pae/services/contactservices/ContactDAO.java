@@ -40,4 +40,13 @@ public interface ContactDAO {
    * @return ContactDTO
    */
   ContactDTO addContact(int studentID, int academicYearID, int enterpriseID);
+
+  /**
+   * Update a contact in DB.
+   *
+   * @param contact contactDTO
+   * @return contactDTO
+   */
+  ContactDTO updateContact(ContactDTO contact);
 }
+
