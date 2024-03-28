@@ -93,9 +93,7 @@ async function renderUpdateContactPage() {
         event.preventDefault();
         // Ajoutez ici le code pour mettre à jour le contact
         window.location.href = '/profil';
-    });
-
-    
+    });    
 }
 
 
