@@ -7,6 +7,7 @@ import AllUsersPage from '../Pages/AllUsersPage';
 import CreationContactPage from '../Pages/CreationContactPage';
 import CreationCompanyPage from '../Pages/CreationCompanyPage';
 import UpdateContactPage from '../Pages/UpdateContactPage';
+import BoardPage from '../Pages/BoardPage';
 
 const routes = {
     '/': HomePage, // Default route, equivalent to '
@@ -17,7 +18,8 @@ const routes = {
     '/allUsers': AllUsersPage,
     '/creationContact': CreationContactPage,
     '/creationCompany': CreationCompanyPage,
-    '/updateContact': UpdateContactPage
+    '/updateContact': UpdateContactPage,
+    '/board': BoardPage
 };
 
 export default routes;

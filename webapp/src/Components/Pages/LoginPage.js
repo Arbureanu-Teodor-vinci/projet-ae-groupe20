@@ -122,7 +122,11 @@ async function login (e) {
         setRememberMe(rememberMe);
       }
       setAuthenticatedUser(authenticatedUser);
-      Navigate('/');
+      if (authenticatedUser.role === 'Etudiant') {
+        Navigate('/profil');
+      }else if (authenticatedUser.role === 'Professeur' || authenticatedUser.role === 'Administratif'){
+        Navigate('/board');
+      }
       Navbar();
     };
 
