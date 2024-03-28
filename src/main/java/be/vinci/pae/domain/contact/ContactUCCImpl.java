@@ -4,6 +4,8 @@ import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.services.contactservices.ContactDAO;
+import be.vinci.pae.services.dal.DALTransactionServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Inject
   ContactDAO contactDS;
+
+  @Inject
+  private DALTransactionServices dalServices;
 
   @Override
   public ContactDTO getOneContact(int id) {
@@ -49,7 +54,17 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO updateContact(ContactDTO contact) {
-    return contactDS.updateContact(contact);
+    dalServices.startTransaction();
+    ContactDTO contactDTOToCheck = contactDS.getOneContactByid(contact.getId());
+    Contact contactToCheckState = (Contact) contactDTOToCheck;
+    if (contactToCheckState.checkContactStateUpdate(contact.getStateContact())) {
+      Logger.logEntry("ContactUCCImpl - updateContact - contact state invalid");
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Cant update contact state to this value");
+    }
+    ContactDTO contactUpdated = contactDS.updateContact(contact);
+    dalServices.commitTransaction();
+    return contactUpdated;
   }
 
 

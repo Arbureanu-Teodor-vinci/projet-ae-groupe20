@@ -5,4 +5,18 @@ package be.vinci.pae.domain.contact;
  */
 public interface Contact extends ContactDTO {
 
+  /**
+   * Check if the state is valid to update.
+   *
+   * @param state String
+   */
+  boolean checkContactStateUpdate(String state);
+
+  /**
+   * Check if the state is valid.
+   *
+   * @return boolean
+   */
+  boolean checkContactState();
+
 }
