@@ -12,7 +12,7 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 ### Get all contacts wich user id is 7
-GET {{baseUrl}}/contacts/getByUser:5
+GET {{baseUrl}}/contacts/getByUser
 Content-Type: application/json
 Authorization: {{adminToken}}
 

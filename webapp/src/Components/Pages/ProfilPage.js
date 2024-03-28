@@ -21,7 +21,7 @@ async function renderProfilPage() {
           'Authorization': `${getAuthenticatedUser().token}`
         },
       };
-      const response = await fetch(`/api/contacts/getByUser:${user.id}`, options);
+      const response = await fetch(`/api/contacts/getByUser`, options);
       const contacts = await response.json();    
       
     const main = document.querySelector('main');

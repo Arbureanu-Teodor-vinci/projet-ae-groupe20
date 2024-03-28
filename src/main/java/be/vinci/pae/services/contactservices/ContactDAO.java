@@ -32,6 +32,16 @@ public interface ContactDAO {
   List<ContactDTO> getContactsByUser(int id);
 
   /**
+   * Add a contact to DB.
+   *
+   * @param studentID      integer
+   * @param academicYearID integer
+   * @param enterpriseID   integer
+   * @return ContactDTO
+   */
+  ContactDTO addContact(int studentID, int academicYearID, int enterpriseID);
+
+  /**
    * Update a contact in DB.
    *
    * @param contact contactDTO
@@ -39,3 +49,4 @@ public interface ContactDAO {
    */
   ContactDTO updateContact(ContactDTO contact);
 }
+

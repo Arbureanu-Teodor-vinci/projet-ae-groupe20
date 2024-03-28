@@ -1,12 +1,15 @@
 package be.vinci.pae.api;
 
 
+import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
-import be.vinci.pae.utils.Config;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.domain.user.StudentUCC;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.utils.Logger;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,12 +19,12 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 import org.glassfish.jersey.server.ContainerRequest;
@@ -33,36 +36,22 @@ import org.glassfish.jersey.server.ContainerRequest;
 @Path("/contacts")
 public class ContactResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
   private ContactUCC contactUCC;
 
-  /**
-   * Verify the JWT token.
-   *
-   * @param token The JWT token to verify.
-   * @throws WebApplicationException If the token is invalid.
-   */
-  private void verifyToken(String token) {
-    if (token == null || token.isEmpty()) {
-      Logger.logEntry("tries to access without token.");
-      throw new WebApplicationException("Authorization header must be provided",
-          Status.UNAUTHORIZED);
-    }
-    try {
-      JWT.require(jwtAlgorithm).build().verify(token);
-    } catch (Exception e) {
-      throw new WebApplicationException("Invalid token", Status.UNAUTHORIZED);
-    }
-  }
+  @Inject
+  private EnterpriseUCC enterpriseUCC;
+
+  @Inject
+  private StudentUCC studentUCC;
 
   /**
    * Get 1 contact.
    *
    * @param id      The id of the contact to get.
-   * @param headers The headers of the request.
+   * @param request The request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -70,10 +59,16 @@ public class ContactResource {
   @Path("getOne:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode getOneContact(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+  @Authorize
+  public ObjectNode getOneContact(@PathParam("id") Integer id, @Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getOne:" + id);
     // Verify the token
-    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    if (authentifiedUser == null) {
+      Logger.logEntry("tries to access without token.");
+      throw new WebApplicationException("Authorization header must be provided",
+          Status.UNAUTHORIZED);
+    }
 
     // if the id is null, throw an exception
     if (id == null) {
@@ -95,7 +90,6 @@ public class ContactResource {
   /**
    * Get all contacts.
    *
-   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If the token is invalid.
    */
@@ -103,10 +97,22 @@ public class ContactResource {
   @Path("getAll")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getAllContacts(@Context HttpHeaders headers) {
+  @Authorize
+  public ArrayNode getAllContacts(@Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getAll");
     // Verify the token
-    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    if (authentifiedUser == null) {
+      Logger.logEntry("tries to access without token.");
+      throw new WebApplicationException("Authorization header must be provided",
+          Status.UNAUTHORIZED);
+    }
+    if (!authentifiedUser.getRole().equals("Administratif") || !authentifiedUser.getRole()
+        .equals("Professeur")) {
+      Logger.logEntry("tries to access without admin role.");
+      throw new WebApplicationException("You must be an admin or teacher to access this route",
+          Status.UNAUTHORIZED);
+    }
 
     // Try to get all contacts
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
@@ -119,26 +125,19 @@ public class ContactResource {
   /**
    * Get contacts by user.
    *
-   * @param id      The id of the user to get the contacts from.
-   * @param headers The headers of the request.
+   * @param request The request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
   @GET
-  @Path("getByUser:{id}")
+  @Path("getByUser")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ArrayNode getContactsByUser(@PathParam("id") Integer id, @Context HttpHeaders headers) {
+  @Authorize
+  public ArrayNode getContactsByUser(@Context ContainerRequest request) {
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    int id = authentifiedUser.getId();
     Logger.logEntry("GET /contacts/getByUser:" + id);
-
-    // Verify the token
-    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
-
-    // if the id is null, throw an exception
-    if (id == null) {
-      Logger.logEntry("id is missing.");
-      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
-    }
 
     // Try to get the contacts by user
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
@@ -149,10 +148,51 @@ public class ContactResource {
   }
 
   /**
+   * Add a contact.
+   *
+   * @param jsonIDs The JSON object containing the studentID, enterpriseID and academicYearID.
+   * @param jsonIDs The JSON object containing the studentID and enterpriseID.
+   * @return JSON object containing the contact infos.
+   */
+  @POST
+  @Path("add")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize
+  public ObjectNode addContact(JsonNode jsonIDs, @Context ContainerRequest request) {
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    int studentID = authentifiedUser.getId();
+
+    Logger.logEntry("POST /contacts/add");
+    // Verify the token
+
+    if (!jsonIDs.hasNonNull("enterpriseID")) {
+      Logger.logEntry("Tried to add contact without enterpriseID.");
+      throw new WebApplicationException(
+          "You must enter a enterpriseID.",
+          Status.BAD_REQUEST);
+    }
+    int enterpriseID = jsonIDs.get("enterpriseID").asInt();
+
+    StudentDTO studentDTO = studentUCC.getStudentById(studentID);
+    EnterpriseDTO enterpriseDTO = enterpriseUCC.getOneEnterprise(enterpriseID);
+
+    // Try to add the contact
+    ContactDTO addedContact = contactUCC.addContact(studentDTO, enterpriseDTO);
+    // if the contact is null, throw an exception
+    if (addedContact == null) {
+      Logger.logEntry("Contact not added.");
+      throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
+    }
+
+    return contactNodeMaker(addedContact);
+  }
+
+  /**
    * Update a contact.
    *
    * @param json    The JSON object containing the contact information.
-   * @param headers The headers of the request.
+   * @param request The request.
    * @return JSON object containing the contact infos.
    */
   @PATCH
@@ -160,7 +200,6 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public ObjectNode updateContact(JsonNode json, @Context ContainerRequest request) {
-
     Logger.logEntry("POST /contacts/update");
 
     if (!json.hasNonNull("idContact") || json.get("idContact").asText().isEmpty()) {
