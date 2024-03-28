@@ -3,6 +3,7 @@ package be.vinci.pae.services.contactservices;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public ContactDTO getOneContactByid(int id) {
+    Logger.logEntry("Contact DAO - getOneContactByid" + id);
     ContactDTO contact = domainFactory.getContactDTO();
 
     try {
@@ -41,6 +43,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.close();
 
     } catch (SQLException e) {
+      Logger.logEntry("Error in ContactDAOImpl getOneContactByid" + e.getMessage());
       throw new RuntimeException(e);
     }
     return contact;
@@ -48,6 +51,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public List<ContactDTO> getAllContacts() {
+    Logger.logEntry("Contact DAO - getAllContacts");
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -61,6 +65,7 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in ContactDAOImpl getAllContacts" + e.getMessage());
       throw new RuntimeException(e);
     }
     return contacts;
@@ -68,6 +73,7 @@ public class ContactDAOImpl implements ContactDAO {
 
   @Override
   public List<ContactDTO> getContactsByUser(int id) {
+    Logger.logEntry("Contact DAO - getContactsByUser" + id);
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -82,6 +88,7 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in ContactDAOImpl getContactsByUser" + e.getMessage());
       throw new RuntimeException(e);
     }
     return contacts;

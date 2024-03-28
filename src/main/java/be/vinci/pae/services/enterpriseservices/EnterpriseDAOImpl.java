@@ -3,6 +3,7 @@ package be.vinci.pae.services.enterpriseservices;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +25,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
   @Override
   public EnterpriseDTO getOneEnterpriseByid(int id) {
+    Logger.logEntry("Enterprise DAO - getOneEnterpriseByid" + id);
     EnterpriseDTO enterprise = null;
 
     try {
@@ -42,6 +44,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
+      Logger.logEntry("Error in EnterpriseDAOImpl getOneEnterpriseByid" + e.getMessage());
       throw new RuntimeException(e);
     }
     return enterprise;
@@ -49,6 +52,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
   @Override
   public List<EnterpriseDTO> getAllEnterprises() {
+    Logger.logEntry("Enterprise DAO - getAllEnterprises");
     List<EnterpriseDTO> enterprises = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -63,6 +67,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
+      Logger.logEntry("Error in EnterpriseDAOImpl getAllEnterprises" + e.getMessage());
       throw new RuntimeException(e);
     }
     return enterprises;
