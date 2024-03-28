@@ -94,6 +94,33 @@ public class ContactDAOImpl implements ContactDAO {
     return contacts;
   }
 
+  @Override
+  public ContactDTO updateContact(ContactDTO contact) {
+    Logger.logEntry("Contact DAO - updateContact" + contact);
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "UPDATE InternshipManagement.contacts SET interview_method = ?, tool = ?,"
+              + " refusal_reason = ?, state_contact = ?"
+              + " WHERE id_contacts = ? RETURNING *"
+      );
+      ps.setString(1, contact.getInterviewMethod());
+      ps.setString(2, contact.getTool());
+      ps.setString(3, contact.getRefusalReason());
+      ps.setString(4, contact.getStateContact());
+      ps.setInt(5, contact.getId());
+      try (ResultSet resultSet = ps.executeQuery()) {
+        if (resultSet.next()) {
+          contact = getResultSet(resultSet);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      Logger.logEntry("Error in ContactDAOImpl updateContact" + e.getMessage());
+      throw new RuntimeException(e);
+    }
+    return contact;
+  }
+
   /**
    * Get the result set.
    *

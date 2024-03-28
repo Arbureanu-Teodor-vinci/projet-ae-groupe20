@@ -30,4 +30,11 @@ public interface ContactUCC {
    */
   List<ContactDTO> getContactsByUser(int id);
 
+  /**
+   * Update a contact.
+   *
+   * @param contact ContactDTO
+   * @return ContactDTO
+   */
+  ContactDTO updateContact(ContactDTO contact);
 }

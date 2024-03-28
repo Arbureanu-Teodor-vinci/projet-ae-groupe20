@@ -15,3 +15,13 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/contacts/getByUser:7
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### Update contact
+PATCH {{baseUrl}}/contacts/update
+Content-Type: application/json
+Authorization:{{adminToken}}
+
+{
+    "id": 1,
+    "stateContact" : "rgrg"
+}

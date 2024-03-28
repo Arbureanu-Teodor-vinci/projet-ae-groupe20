@@ -32,4 +32,9 @@ public class ContactUCCImpl implements ContactUCC {
     return contactDS.getContactsByUser(id);
   }
 
+  @Override
+  public ContactDTO updateContact(ContactDTO contact) {
+    return contactDS.updateContact(contact);
+  }
+
 }

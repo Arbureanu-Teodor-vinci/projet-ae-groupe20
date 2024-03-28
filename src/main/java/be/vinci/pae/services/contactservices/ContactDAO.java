@@ -30,4 +30,12 @@ public interface ContactDAO {
    * @return List of ContactDTO
    */
   List<ContactDTO> getContactsByUser(int id);
+
+  /**
+   * Update a contact in DB.
+   *
+   * @param contact contactDTO
+   * @return contactDTO
+   */
+  ContactDTO updateContact(ContactDTO contact);
 }
