@@ -47,6 +47,7 @@ async function renderCreationContactPage() {
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" id="create">Créer</button>
+                        <p class = "contactExist errorMessage"><p>
                     </form>
                 </div>
             </div>
@@ -85,8 +86,9 @@ async function renderCreationContactPage() {
           };
           
           const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
-          if (!responseCreateContact.ok) {
-            main.innerText = `${response.statusText} ; Status : ${response.status}`;
+          if (!responseCreateContact.ok && responseCreateContact.status === 412) {
+            const erreur = document.querySelector('.contactExist');
+            erreur.innerText = "Vous avez déjà contacté cette entreprise au cours de cette année académique";
           }else{
             event.preventDefault();
             Navigate('/profil');
