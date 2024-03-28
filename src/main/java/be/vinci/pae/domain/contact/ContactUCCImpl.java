@@ -37,6 +37,13 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO) {
     int academicYearId = studentDTO.getStudentAcademicYear().getId();
+    List<ContactDTO> contactsExisting = contactDS.getContactsByUser(studentDTO.getId());
+    for (ContactDTO contact : contactsExisting) {
+      if (contact.getEnterpriseId() == enterpriseDTO.getId()
+          && contact.getAcademicYear() == academicYearId) {
+        throw new BiznessException("Contact already exists");
+      }
+    }
     return contactDS.addContact(studentDTO.getId(), enterpriseDTO.getId(), academicYearId);
   }
 
