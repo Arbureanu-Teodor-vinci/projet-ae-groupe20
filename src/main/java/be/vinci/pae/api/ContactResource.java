@@ -154,6 +154,13 @@ public class ContactResource {
     return contactsListNode;
   }
 
+  /**
+   * Add a contact.
+   *
+   * @param jsonIDs The JSON object containing the studentID, enterpriseID and academicYearID.
+   * @param headers The headers of the request.
+   * @return JSON object containing the contact infos.
+   */
   @POST
   @Path("add")
   @Consumes(MediaType.APPLICATION_JSON)

@@ -36,8 +36,6 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO) {
-    int studentId = studentDTO.getId();
-    int enterpriseId = enterpriseDTO.getId();
     int academicYearId = studentDTO.getStudentAcademicYear().getId();
     return contactDS.addContact(studentDTO.getId(), enterpriseDTO.getId(), academicYearId);
   }
