@@ -6,6 +6,7 @@ import ModificationPage from '../Pages/ModificationPage';
 import AllUsersPage from '../Pages/AllUsersPage';
 import CreationContactPage from '../Pages/CreationContactPage';
 import CreationCompanyPage from '../Pages/CreationCompanyPage';
+import UpdateContactPage from '../Pages/UpdateContactPage';
 
 const routes = {
     '/': HomePage, // Default route, equivalent to '
@@ -15,7 +16,8 @@ const routes = {
     '/modification': ModificationPage,
     '/allUsers': AllUsersPage,
     '/creationContact': CreationContactPage,
-    '/creationCompany': CreationCompanyPage
+    '/creationCompany': CreationCompanyPage,
+    '/updateContact': UpdateContactPage
 };
 
 export default routes;

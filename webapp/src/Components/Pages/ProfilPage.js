@@ -14,7 +14,16 @@ const ProfilPage = async () => {
 
 async function renderProfilPage() {
     const user = await getUser();
-
+    const options = {
+        method: 'GET',
+        headers : {
+          'Content-Type': 'application/json',
+          'Authorization': `${getAuthenticatedUser().token}`
+        },
+      };
+      const response = await fetch(`/api/contacts/getByUser:${user.id}`, options);
+      const contacts = await response.json();    
+      
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
@@ -45,7 +54,7 @@ async function renderProfilPage() {
                     </tr>
                     <tr>
                         <th>Tel</th>
-                        <td>${user && user.telephoneNumber}</td>
+                        <td>${user && user.phoneNumber}</td>
                     </tr>
                 </tbody>
             </table>
@@ -61,19 +70,19 @@ async function renderProfilPage() {
                     <tbody>
                         <tr>
                             <th>Entreprise</th>
-                            <td>${user && user.internship && user.internship.company}</td>
+                            <td class="text-center">${user && user.internship && user.internship.company || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Responsable de stage</th>
-                            <td>${user && user.internship && user.internship.internshipManager}</td>
+                            <td class="text-center">${user && user.internship && user.internship.internshipManager || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Sujet du stage</th>
-                            <td>${user && user.internship && user.internship.internshipSubject}</td>
+                            <td class="text-center">${user && user.internship && user.internship.internshipSubject || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Date de signature du stage</th>
-                            <td>${user && user.internship && user.internship.internshipSignatureDate}</td>
+                            <td class="text-center">${user && user.internship && user.internship.internshipSignatureDate || ' - '}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -97,13 +106,18 @@ async function renderProfilPage() {
                             </tr>
                         </thead>
                         <tbody>
+                            ${contacts.map(contact => `
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td class="text-center">${contact.enterpriseId}</td>
+                                <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                                <td class="text-center">${contact.tool || ' - '}</td>
+                                <td class="text-center">${contact.stateContact || ' - '}</td>
+                                <td class="text-center">${contact.refusalReason || ' - '}</td>
+                                <td class="text-center">
+                                    <button id="editButton${contact.id}" class="btn btn-primary">Modifier</button>
+                                </td>
                             </tr>
+                            `).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -112,6 +126,16 @@ async function renderProfilPage() {
         ` : ''}
     </div>
 </section>`
+
+    contacts.forEach(contact => {
+        const button = document.getElementById(`editButton${contact.id}`);
+        button.addEventListener('click', () => {
+            // Enregistrez l'ID du contact dans le localStorage
+            localStorage.setItem('contactIdToEdit', contact.id);
+            // Redirigez l'utilisateur vers la page de modification
+            window.location.href = '/updateContact';
+        });
+    });
 
     const link = document.querySelector('#editButton');
     link.addEventListener('click', (e) => {
