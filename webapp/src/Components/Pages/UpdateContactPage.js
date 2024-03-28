@@ -21,6 +21,10 @@ async function renderUpdateContactPage() {
     const response = await fetch(`/api/contacts/getOne:${contactId}`, options);
     const contact = await response.json();
 
+    const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
+    const enterprise = await responseEnterprise.json();
+    // eslint-disable-next-line no-console
+    console.log(enterprise.tradeName);
     let stateOptions = '';
     let selectDisabled = '';
     if (['initié', 'pris'].includes(contact.stateContact)) {
@@ -28,6 +32,7 @@ async function renderUpdateContactPage() {
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
             <option value="non suivi">Non suivi</option>
             <option value="suspendu">Suspendu</option>
+            
         `;
     if (contact.stateContact === 'initié') {
             stateOptions += `<option value="pris">Pris</option>`;
@@ -59,13 +64,13 @@ async function renderUpdateContactPage() {
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="enterpriseId">Entreprise</label>
-                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${contact.enterpriseId}">
+                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}">
                         </div>
                         <div class="form-group">
                             <label for="interViewMethod">Moyen de contact</label>
                             <select id="interViewMethod" name="interViewMethod" class="form-control text-center">
                                 <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
-                                <option value="Dans l'entreprise" ${contact.interViewMethod === 'Dans l\'entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
+                                <option value="Dans l entreprise" ${contact.interViewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
                             </select>
                         </div>
                         <div class="form-group">
