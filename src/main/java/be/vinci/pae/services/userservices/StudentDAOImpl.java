@@ -5,6 +5,7 @@ import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ public class StudentDAOImpl implements StudentDAO {
 
   @Override
   public StudentDTO getStudentById(int id) {
+    Logger.logEntry("Student DAO - getStudentById" + id);
     StudentDTO studentDTO = domainFactory.getStudentDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -39,6 +41,7 @@ public class StudentDAOImpl implements StudentDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in StudentDAOImpl getStudentById" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -47,6 +50,7 @@ public class StudentDAOImpl implements StudentDAO {
 
   @Override
   public StudentDTO addStudent(StudentDTO student) {
+    Logger.logEntry("Student DAO - addStudent" + student);
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.student (id_user, academic_year) VALUES (?, ?)"
@@ -64,6 +68,7 @@ public class StudentDAOImpl implements StudentDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in StudentDAOImpl addStudent" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }

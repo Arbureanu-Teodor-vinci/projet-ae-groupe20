@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
+import be.vinci.pae.utils.Logger;
 import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
 
   @Override
   public AcademicYearDTO getActualAcademicYear() {
+    Logger.logEntry("AcademicYearDAOImpl - getActualAcademicYear");
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -34,6 +36,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in AcademicYearDAOImpl getActualAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -42,6 +45,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
 
   @Override
   public AcademicYearDTO getAcademicYearByAcademicYear(String academicYear) {
+    Logger.logEntry("AcademicYearDAOImpl - getAcademicYearByAcademicYear" + academicYear);
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -55,6 +59,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in AcademicYearDAOImpl getAcademicYearByAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -63,6 +68,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
 
   @Override
   public AcademicYearDTO addAcademicYear(String academicYear) {
+    Logger.logEntry("AcademicYearDAOImpl - addAcademicYear" + academicYear);
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -79,6 +85,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
+      Logger.logEntry("Error in AcademicYearDAOImpl addAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
