@@ -2,6 +2,8 @@ package be.vinci.pae;
 
 import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.academicyear.AcademicYearUCCImpl;
+import be.vinci.pae.domain.contact.ContactUCC;
+import be.vinci.pae.domain.contact.ContactUCCImpl;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.factory.DomainFactory;
@@ -11,6 +13,7 @@ import be.vinci.pae.domain.user.StudentUCCImpl;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.domain.user.UserUCCImpl;
 import be.vinci.pae.services.academicyear.AcademicYearDAO;
+import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import be.vinci.pae.services.userservices.StudentDAO;
@@ -38,5 +41,7 @@ public class TestsApplicationBinder extends AbstractBinder {
     bind(EnterpriseUCCImpl.class).to(EnterpriseUCC.class).in(Singleton.class);
     bind(Mockito.mock(EnterpriseDAO.class)).to(EnterpriseDAO.class);
     bind(Mockito.mock(DALTransactionServices.class)).to(DALTransactionServices.class);
+    bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
+    bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
   }
 }
