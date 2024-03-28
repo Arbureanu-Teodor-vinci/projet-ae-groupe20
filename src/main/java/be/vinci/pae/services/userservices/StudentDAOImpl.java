@@ -17,10 +17,10 @@ import java.sql.SQLException;
 public class StudentDAOImpl implements StudentDAO {
 
   @Inject
-  protected DomainFactory domainFactory;
+  private DomainFactory domainFactory;
   //using the DALService to establish a connection to the database
   @Inject
-  protected DALServices dalConn;
+  private DALServices dalConn;
 
   @Override
   public StudentDTO getStudentById(int id) {

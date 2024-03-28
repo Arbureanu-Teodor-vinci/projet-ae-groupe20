@@ -70,7 +70,8 @@ public class ContactResource {
   /**
    * Get 1 contact.
    *
-   * @param id The id of the contact to get.
+   * @param id      The id of the contact to get.
+   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -126,7 +127,8 @@ public class ContactResource {
   /**
    * Get contacts by user.
    *
-   * @param id The id of the user to get the contacts from.
+   * @param id      The id of the user to get the contacts from.
+   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */

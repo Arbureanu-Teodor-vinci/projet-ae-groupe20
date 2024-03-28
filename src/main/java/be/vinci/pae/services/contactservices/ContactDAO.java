@@ -34,7 +34,9 @@ public interface ContactDAO {
   /**
    * Add a contact to DB.
    *
-   * @param studentID integer, academicYearID integer, enterpriseID integer
+   * @param studentID      integer
+   * @param academicYearID integer
+   * @param enterpriseID   integer
    * @return ContactDTO
    */
   ContactDTO addContact(int studentID, int academicYearID, int enterpriseID);
