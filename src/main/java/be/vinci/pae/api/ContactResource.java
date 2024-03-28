@@ -24,6 +24,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Resource route for the contacts requests.
@@ -158,9 +159,10 @@ public class ContactResource {
   @Path("update")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode updateContact(JsonNode json, @Context HttpHeaders headers) {
+  public ObjectNode updateContact(JsonNode json, @Context ContainerRequest request) {
+
     Logger.logEntry("POST /contacts/update");
-    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+
     if (!json.hasNonNull("idContact") || json.get("idContact").asText().isEmpty()) {
       Logger.logEntry("Tried to update contact without id.");
       throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);

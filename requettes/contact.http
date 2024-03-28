@@ -12,16 +12,16 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 ### Get all contacts wich user id is 7
-GET {{baseUrl}}/contacts/getByUser:7
+GET {{baseUrl}}/contacts/getByUser:5
 Content-Type: application/json
 Authorization: {{adminToken}}
 
-### Update contact
+### Update
 PATCH {{baseUrl}}/contacts/update
 Content-Type: application/json
-Authorization:{{adminToken}}
+Authorization: {{adminToken}}
 
 {
-    "id": 1,
-    "stateContact" : "rgrg"
+    "idContact": 1,
+    "stateContact": "En attente"
 }

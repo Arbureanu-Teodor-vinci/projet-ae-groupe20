@@ -51,7 +51,15 @@ class EnterpriseUCCTest {
 
     assertEquals(null, actualEnterprise);
   }
-  
+
+  @Test
+  @DisplayName("Get one enterprise with an id not in the database")
+  void getOneEnterprise3() {
+    EnterpriseDTO actualEnterprise = enterpriseUCC.getOneEnterprise(999);
+
+    assertEquals(null, actualEnterprise);
+  }
+
   @Test
   @DisplayName("Get all enterprises")
   void getAllEnterprises() {
@@ -66,6 +74,18 @@ class EnterpriseUCCTest {
     List<EnterpriseDTO> actualEnterprises = enterpriseUCC.getAllEnterprises();
 
     // Asserting that the actual enterprises are equal to the expected enterprises
+    assertEquals(expectedEnterprises, actualEnterprises);
+  }
+
+  @Test
+  @DisplayName("Get all enterprises with no enterprises in the database")
+  void getAllEnterprises2() {
+    List<EnterpriseDTO> expectedEnterprises = new ArrayList<>();
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(expectedEnterprises);
+
+    List<EnterpriseDTO> actualEnterprises = enterpriseUCC.getAllEnterprises();
+
     assertEquals(expectedEnterprises, actualEnterprises);
   }
 }

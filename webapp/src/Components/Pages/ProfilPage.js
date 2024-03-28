@@ -13,7 +13,7 @@ const ProfilPage = async () => {
 };
 
 async function renderProfilPage() {
-    const user = await getUser();
+    const user = getAuthenticatedUser();
     const options = {
         method: 'GET',
         headers : {
@@ -150,19 +150,6 @@ async function renderProfilPage() {
         Navigate('/creationContact');
     });
 }
-}
-
-async function getUser() {
-    const options = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `${getAuthenticatedUser().token}`
-        },
-    };
-
-    const response = await fetch(`/api/auths`, options);
-    return response.json();
 }
 
 export default ProfilPage;
