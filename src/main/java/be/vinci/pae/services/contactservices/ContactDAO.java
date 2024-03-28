@@ -30,4 +30,12 @@ public interface ContactDAO {
    * @return List of ContactDTO
    */
   List<ContactDTO> getContactsByUser(int id);
+
+  /**
+   * Add a contact to DB.
+   *
+   * @param contactDTO ContactDTO
+   * @return ContactDTO
+   */
+  ContactDTO addContact(int studentID, int academicYearID, int enterpriseID);
 }

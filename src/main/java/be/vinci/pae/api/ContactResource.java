@@ -3,10 +3,15 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logger;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -14,6 +19,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -35,6 +41,12 @@ public class ContactResource {
 
   @Inject
   private ContactUCC contactUCC;
+
+  @Inject
+  private EnterpriseUCC enterpriseUCC;
+
+  @Inject
+  private StudentUCC studentUCC;
 
   /**
    * Verify the JWT token.
@@ -140,6 +152,38 @@ public class ContactResource {
       contactsListNode.add(contactNodeMaker(contact));
     }
     return contactsListNode;
+  }
+
+  @POST
+  @Path("add")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public ObjectNode addContact(JsonNode jsonIDs, @Context HttpHeaders headers) {
+    Logger.logEntry("POST /contacts/add");
+    // Verify the token
+    verifyToken(headers.getHeaderString(HttpHeaders.AUTHORIZATION));
+
+    if (!jsonIDs.hasNonNull("studentID") || !jsonIDs.hasNonNull("enterpriseID")) {
+      Logger.logEntry("Tried to add contact without studentID, enterpriseID or academicYearID.");
+      throw new WebApplicationException(
+          "You must enter a studentID, enterpriseID and academicYearID",
+          Status.BAD_REQUEST);
+    }
+    int studentID = jsonIDs.get("studentID").asInt();
+    int enterpriseID = jsonIDs.get("enterpriseID").asInt();
+
+    StudentDTO studentDTO = studentUCC.getStudentById(studentID);
+    EnterpriseDTO enterpriseDTO = enterpriseUCC.getOneEnterprise(enterpriseID);
+
+    // Try to add the contact
+    ContactDTO addedContact = contactUCC.addContact(studentDTO, enterpriseDTO);
+    // if the contact is null, throw an exception
+    if (addedContact == null) {
+      Logger.logEntry("Contact not added.");
+      throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
+    }
+
+    return contactNodeMaker(addedContact);
   }
 
   /**

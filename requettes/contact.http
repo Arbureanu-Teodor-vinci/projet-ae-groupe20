@@ -12,6 +12,16 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 ### Get all contacts wich user id is 7
-GET {{baseUrl}}/contacts/getByUser:7
+GET {{baseUrl}}/contacts/getByUser:5
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### Create a new contact
+POST {{baseUrl}}/contacts/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "studentID": 10,
+  "enterpriseID": 1
+}
