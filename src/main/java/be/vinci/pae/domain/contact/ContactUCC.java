@@ -41,4 +41,12 @@ public interface ContactUCC {
    */
   ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO);
 
+  /**
+   * Update a contact.
+   *
+   * @param contact ContactDTO
+   * @return ContactDTO
+   */
+  ContactDTO updateContact(ContactDTO contact);
+
 }

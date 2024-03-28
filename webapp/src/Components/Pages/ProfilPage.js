@@ -17,12 +17,35 @@ async function renderProfilPage() {
     const options = {
         method: 'GET',
         headers : {
-          'Content-Type': 'application/json',
-          'Authorization': `${getAuthenticatedUser().token}`
+            'Content-Type': 'application/json',
+            "Authorization": `${getAuthenticatedUser().token}`,
         },
-      };
-      const response = await fetch(`/api/contacts/getByUser`, options);
-      const contacts = await response.json();    
+    };
+    
+    const response = await fetch(`/api/contacts/getByUser`, options);
+    
+    if (response.ok) {
+        const contacts = await response.json();
+    
+        // Créez un tableau de promesses pour chaque contact
+        const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
+    
+        // Attendez que toutes les promesses soient résolues
+        const entrepriseResponses = await Promise.all(entreprisePromises);
+    
+        // Récupérez les détails de l'entreprise pour chaque contact
+        // eslint-disable-next-line no-shadow
+        const contactsWithEnterprise = await Promise.all(entrepriseResponses.map(async (response, i) => {
+            if (response.ok) {
+                const entreprise = await response.json();
+                // Ajoutez les détails de l'entreprise au contact
+                return { ...contacts[i], entreprise };
+            } 
+                // eslint-disable-next-line no-console
+                console.log(`Erreur lors de la récupération de l'entreprise : ${response.statusText}`);
+                return contacts[i];
+            
+        }));
       
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -106,18 +129,18 @@ async function renderProfilPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            ${contacts.map(contact => `
-                            <tr>
-                                <td class="text-center">${contact.enterpriseId}</td>
-                                <td class="text-center">${contact.interViewMethod || ' - '}</td>
-                                <td class="text-center">${contact.tool || ' - '}</td>
-                                <td class="text-center">${contact.stateContact || ' - '}</td>
-                                <td class="text-center">${contact.refusalReason || ' - '}</td>
-                                <td class="text-center">
-                                    <button id="editButton${contact.id}" class="btn btn-primary">Modifier</button>
-                                </td>
-                            </tr>
-                            `).join('')}
+                        ${contactsWithEnterprise.map(contact => `
+                        <tr>
+                            <td class="text-center">${contact.entreprise.tradeName}</td>
+                            <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                            <td class="text-center">${contact.tool || ' - '}</td>
+                            <td class="text-center">${contact.stateContact || ' - '}</td>
+                            <td class="text-center">${contact.refusalReason || ' - '}</td>
+                            <td class="text-center">
+                                <button id="editButton${contact.id}" class="btn btn-primary">Modifier</button>
+                            </td>
+                        </tr>
+                        `).join('')}
                         </tbody>
                     </table>
                 </div>
@@ -131,9 +154,9 @@ async function renderProfilPage() {
         const button = document.getElementById(`editButton${contact.id}`);
         button.addEventListener('click', () => {
             // Enregistrez l'ID du contact dans le localStorage
-            localStorage.setItem('contactIdToEdit', contact.id);
+            // localStorage.setItem('contactIdToEdit', contact.id);
             // Redirigez l'utilisateur vers la page de modification
-            window.location.href = '/updateContact';
+            window.location.href = `/updateContact?contactId=${contact.id}`;
         });
     });
 
@@ -149,6 +172,7 @@ async function renderProfilPage() {
         e.preventDefault();
         Navigate('/creationContact');
     });
+}
 }
 }
 

@@ -71,4 +71,10 @@ public class ContactUCCImpl implements ContactUCC {
     return contact;
   }
 
+  @Override
+  public ContactDTO updateContact(ContactDTO contact) {
+    return contactDS.updateContact(contact);
+  }
+
+
 }
