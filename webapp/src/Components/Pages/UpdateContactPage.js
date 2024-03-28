@@ -32,6 +32,7 @@ async function renderUpdateContactPage() {
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
             <option value="non suivi">Non suivi</option>
             <option value="suspendu">Suspendu</option>
+            
         `;
     if (contact.stateContact === 'initié') {
             stateOptions += `<option value="pris">Pris</option>`;
