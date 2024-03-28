@@ -25,7 +25,6 @@ async function renderUpdateContactPage() {
     if (['initié', 'pris'].includes(contact.stateContact)) {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivi">Non suivi</option>
             <option value="suspendu">Suspendu</option>
         `;
     if (contact.stateContact === 'initié') {
@@ -69,7 +68,7 @@ async function renderUpdateContactPage() {
                         </div>
                         <div class="form-group">
                             <label for="tool">Outil de contact</label>
-                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool}">
+                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool || ' '}">
                         </div>
                         <div class="form-group">
                             <label for="stateContact">Etat du contact</label>
@@ -83,17 +82,30 @@ async function renderUpdateContactPage() {
                             <input type="text" id="refusalReason" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ' '}" ${refusalReasonDisabled}>
                         </div>
                         <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>
+                        <button id="unfollowContact" class="btn btn-danger" style="margin-top: 20px; margin-left: 10px;">Ne plus suivre le contact</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>`;
 
+    document.getElementById('unfollowContact').addEventListener('click', (event) => {
+        event.preventDefault();
+        // eslint-disable-next-line no-restricted-globals, no-alert
+        const confirmation = confirm("Êtes-vous sûr de vouloir ne plus suivre ce contact ?");
+        if (confirmation) {
+            // Ajoutez ici le code pour ne plus suivre le contact
+            window.location.href = '/profil';
+        }
+    });
+
     document.getElementById('contactForm').addEventListener('submit', (event) => {
         event.preventDefault();
         // Ajoutez ici le code pour mettre à jour le contact
         window.location.href = '/profil';
     });
+
+    
 }
 
 
