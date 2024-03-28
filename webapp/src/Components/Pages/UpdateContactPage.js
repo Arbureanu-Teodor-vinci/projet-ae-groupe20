@@ -25,8 +25,8 @@ async function renderUpdateContactPage() {
     if (['initié', 'pris'].includes(contact.stateContact)) {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivi">Non suivi</option>
             <option value="suspendu">Suspendu</option>
+            <option value="non suivi">Non suivi</option>
         `;
     if (contact.stateContact === 'initié') {
             stateOptions += `<option value="pris">Pris</option>`;
@@ -69,7 +69,7 @@ async function renderUpdateContactPage() {
                         </div>
                         <div class="form-group">
                             <label for="tool">Outil de contact</label>
-                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool}">
+                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool || ' - '}">
                         </div>
                         <div class="form-group">
                             <label for="stateContact">Etat du contact</label>
@@ -93,7 +93,7 @@ async function renderUpdateContactPage() {
         event.preventDefault();
         // Ajoutez ici le code pour mettre à jour le contact
         window.location.href = '/profil';
-    });
+    });    
 }
 
 
