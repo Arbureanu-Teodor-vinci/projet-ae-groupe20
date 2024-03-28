@@ -60,7 +60,8 @@ public class ContactResource {
   /**
    * Get 1 contact.
    *
-   * @param id The id of the contact to get.
+   * @param id      The id of the contact to get.
+   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -93,6 +94,7 @@ public class ContactResource {
   /**
    * Get all contacts.
    *
+   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If the token is invalid.
    */
@@ -116,7 +118,8 @@ public class ContactResource {
   /**
    * Get contacts by user.
    *
-   * @param id The id of the user to get the contacts from.
+   * @param id      The id of the user to get the contacts from.
+   * @param headers The headers of the request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
@@ -144,6 +147,13 @@ public class ContactResource {
     return contactsListNode;
   }
 
+  /**
+   * Update a contact.
+   *
+   * @param json    The JSON object containing the contact information.
+   * @param headers The headers of the request.
+   * @return JSON object containing the contact infos.
+   */
   @PATCH
   @Path("update")
   @Consumes(MediaType.APPLICATION_JSON)
