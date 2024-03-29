@@ -36,7 +36,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in AcademicYearDAOImpl getActualAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -59,7 +58,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in AcademicYearDAOImpl getAcademicYearByAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
@@ -85,7 +83,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in AcademicYearDAOImpl addAcademicYear" + e);
       e.printStackTrace();
       throw new FatalException(e);
     }
