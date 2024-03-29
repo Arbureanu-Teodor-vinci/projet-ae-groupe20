@@ -47,7 +47,6 @@ public class ContactUCCImpl implements ContactUCC {
     for (ContactDTO contact : contactsExisting) {
       if (contact.getEnterpriseId() == enterpriseDTO.getId()
           && contact.getAcademicYear() == academicYearId) {
-        Logger.logEntry("Contact already exists");
         dalServices.rollbackTransaction();
         throw new BiznessException("Contact already exists");
       }
@@ -55,7 +54,6 @@ public class ContactUCCImpl implements ContactUCC {
     for (ContactDTO contact : contactsExisting) {
       if (contact.getStateContact().equals("accepted")
           && contact.getAcademicYear() == academicYearId) {
-        Logger.logEntry("Student already has a contact for this academic year");
         dalServices.rollbackTransaction();
         throw new BiznessException("Student already has a contact for this academic year");
       }
@@ -77,7 +75,6 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contactDTOToCheck = contactDS.getOneContactByid(contact.getId());
     Contact contactToCheckState = (Contact) contactDTOToCheck;
     if (contactToCheckState.checkContactStateUpdate(contact.getStateContact())) {
-      Logger.logEntry("ContactUCCImpl - updateContact - contact state invalid");
       dalServices.rollbackTransaction();
       throw new BiznessException("Cant update contact state to this value");
     }

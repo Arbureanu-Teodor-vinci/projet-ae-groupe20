@@ -110,7 +110,7 @@ public class EnterpriseResource {
           .put("blackListMotivation", enterprise.getBlackListMotivation());
       return enterpriseNode;
     } catch (Exception e) {
-      Logger.logEntry("Can't create enterprise", e);
+      Logger.logEntry("Can't create enterprise", e, 2);
       System.out.println("Can't create enterprise");
       return null;
     }

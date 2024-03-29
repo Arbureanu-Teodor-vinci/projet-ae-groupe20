@@ -103,13 +103,11 @@ public class ContactResource {
     // Verify the token
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {
-      Logger.logEntry("tries to access without token.");
       throw new WebApplicationException("Authorization header must be provided",
           Status.UNAUTHORIZED);
     }
     if (!authentifiedUser.getRole().equals("Administratif") || !authentifiedUser.getRole()
         .equals("Professeur")) {
-      Logger.logEntry("tries to access without admin role.");
       throw new WebApplicationException("You must be an admin or teacher to access this route",
           Status.UNAUTHORIZED);
     }
@@ -167,7 +165,6 @@ public class ContactResource {
     // Verify the token
 
     if (!jsonIDs.hasNonNull("enterpriseID")) {
-      Logger.logEntry("Tried to add contact without enterpriseID.");
       throw new WebApplicationException(
           "You must enter a enterpriseID.",
           Status.BAD_REQUEST);
@@ -181,7 +178,6 @@ public class ContactResource {
     ContactDTO addedContact = contactUCC.addContact(studentDTO, enterpriseDTO);
     // if the contact is null, throw an exception
     if (addedContact == null) {
-      Logger.logEntry("Contact not added.");
       throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
     }
 

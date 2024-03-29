@@ -114,7 +114,6 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl addContact" + e.getMessage());
       throw new RuntimeException(e);
     }
     return contact;
@@ -141,7 +140,6 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl updateContact" + e.getMessage());
       throw new RuntimeException(e);
     }
     return contact;

@@ -16,6 +16,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
     exception.printStackTrace();
     // If the exception is a WebApplicationException, we return the response
     if (exception instanceof WebApplicationException) {
+      Logger.logEntry("WebApplicationException: " + exception.getMessage(), exception, 2);
       return Response.status(((WebApplicationException) exception).getResponse().getStatus())
           .entity(exception.getMessage())
           .build();
@@ -23,6 +24,7 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
     // If the exception is a IllegalStateException and the message is "Forbidden", we return a 403
     if (exception instanceof IllegalStateException
         && exception.getMessage().equals("Forbidden")) {
+      Logger.logEntry("Forbidden: " + exception.getMessage(), exception, 2);
       return Response.status(Response.Status.FORBIDDEN)
           .entity("You are not the author")
           .build();
@@ -30,11 +32,13 @@ public class WebExceptionMapper implements ExceptionMapper<Throwable> {
     // If the exception is a NullPointerException and the message is "Not found", we return a 404
     if (exception instanceof NullPointerException
         && exception.getMessage().equals("Not found")) {
+      Logger.logEntry("Not found: " + exception.getMessage(), exception, 2);
       return Response.status(Response.Status.NOT_FOUND)
           .entity(exception.getMessage())
           .build();
     }
     // Else we return a 500
+    Logger.logEntry("Internal server error: " + exception.getMessage(), exception, 2);
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
         .entity(exception.getMessage())
         .build();
