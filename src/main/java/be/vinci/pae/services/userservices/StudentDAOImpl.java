@@ -44,6 +44,8 @@ public class StudentDAOImpl implements StudentDAO {
       Logger.logEntry("Error in StudentDAOImpl getStudentById" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return studentDTO;
   }
@@ -71,6 +73,8 @@ public class StudentDAOImpl implements StudentDAO {
       Logger.logEntry("Error in StudentDAOImpl addStudent" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return student;
   }
