@@ -23,7 +23,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
     dataSourcePool.setPassword(Config.getProperty("DatabasePassword"));
     dataSourcePool.setMinIdle(5);
     dataSourcePool.setMaxIdle(10);
-    dataSourcePool.setMaxTotal(50);
+    dataSourcePool.setMaxTotal(5);
   }
 
   /**
@@ -40,8 +40,12 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   }
 
   @Override
-  public PreparedStatement getPS(String request) throws SQLException {
-    return getConnection().prepareStatement(request);
+  public PreparedStatement getPS(String request) {
+    try {
+      return getConnection().prepareStatement(request);
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    }
   }
 
   @Override
@@ -64,13 +68,13 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   public void closeConnection() {
     Connection connection = threadConnection.get();
     try {
-      if (connection != null && !connection.isClosed()) {
+      if (connection != null && !connection.isClosed() && connection.getAutoCommit()) {
         connection.close();
+        threadConnection.remove();
       }
     } catch (SQLException e) {
       throw new FatalException(e);
     }
-    threadConnection.remove();
   }
 
   @Override
@@ -85,14 +89,15 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
 
   @Override
   public void commitTransaction() {
-    Connection connection = getConnection();
+    Connection connection = threadConnection.get();
     try {
       connection.commit();
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       throw new FatalException(e);
+    } finally {
+      closeConnection();
     }
-    closeConnection();
   }
 
   @Override
@@ -104,8 +109,9 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
         connection.setAutoCommit(true);
       } catch (SQLException e) {
         throw new FatalException(e);
+      } finally {
+        closeConnection();
       }
     }
-    closeConnection();
   }
 }
