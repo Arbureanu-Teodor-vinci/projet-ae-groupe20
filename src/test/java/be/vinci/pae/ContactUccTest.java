@@ -131,7 +131,8 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 1")
   void addContact() {
-
+    List<ContactDTO> contactsExisting = new ArrayList<>();
+    Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
     ContactDTO actualContact = contactUCC.addContact(studentDTO, enterpriseDTO);
 
     assertEquals(contactDTO, actualContact);
