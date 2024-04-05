@@ -48,12 +48,12 @@ public class ContactUCCImpl implements ContactUCC {
     if (student.checkContactExists(enterpriseDTO, contactsExisting)) {
       Logger.logEntry("Contact already exists");
       dalServices.rollbackTransaction();
-      throw new BiznessException("1e Contact already exists");
+      throw new BiznessException("Contact already exists");
     }
     if (student.checkContactAccepted(contactsExisting)) {
       Logger.logEntry("Student already has a contact for this academic year");
       dalServices.rollbackTransaction();
-      throw new BiznessException("2e Student already has a contact for this academic year");
+      throw new BiznessException("Student already has a contact for this academic year");
     }
     ContactDTO contact = contactDS.addContact(studentDTO.getId(), enterpriseDTO.getId(),
         studentDTO.getStudentAcademicYear().getId());
