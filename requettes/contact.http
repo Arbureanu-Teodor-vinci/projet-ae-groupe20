@@ -11,7 +11,7 @@ GET {{baseUrl}}/contacts/getAll
 Content-Type: application/json
 Authorization: {{adminToken}}
 
-### Get all contacts wich user id is 7
+### Get all contacts by user
 GET {{baseUrl}}/contacts/getByUser
 Content-Type: application/json
 Authorization: {{adminToken}}
@@ -22,6 +22,15 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "idContact": 1,
-    "stateContact": "En attente"
+    "idContact": 12,
+    "stateContact": "accepté"
+}
+
+### Add
+POST {{baseUrl}}/contacts/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "enterpriseID": 2
 }
