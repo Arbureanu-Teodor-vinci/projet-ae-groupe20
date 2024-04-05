@@ -107,37 +107,40 @@ public class UserResource {
   /**
    * Register a new user.
    *
-   * @param jsonUser JSON object containing user infos.
+   * @param user A DTO object containing the user infos.
    * @return JSON object containing user infos.
    */
   @POST
   @Path("register")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public ObjectNode register(JsonNode jsonUser) {
+  public ObjectNode register(UserDTO user) {
     Logger.logEntry("POST /auths/register");
 
     // Check if all fields are present
-    if (!jsonUser.hasNonNull("email") || !jsonUser.hasNonNull("password") || !jsonUser.hasNonNull(
-        "firstName") || !jsonUser.hasNonNull("lastName") || !jsonUser.hasNonNull("phoneNumber")) {
+    if (user == null || user.getEmail() == null || user.getEmail().isBlank() ||
+        user.getPassword() == null || user.getPassword().isBlank()
+        || user.getFirstName() == null || user.getFirstName().isBlank() ||
+        user.getLastName() == null || user.getLastName().isBlank()
+        || user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank() ||
+        user.getRole() == null) {
       throw new WebApplicationException(
           "You must enter an email, a password, a first name, a last name and a phone number.",
           Status.BAD_REQUEST);
     }
-    if (!jsonUser.get("email").asText().endsWith("@vinci.be") && !jsonUser.get("email").asText()
-        .endsWith("@student.vinci.be")) {
+    if (!user.getEmail().endsWith("@vinci.be") && !user.getEmail().endsWith("@student.vinci.be")) {
       throw new WebApplicationException("You must enter a vinci email address.",
           Status.BAD_REQUEST);
     }
 
     // Create a userDTO object from JSON to register with
     UserDTO encodedUser = domainFactory.getUserDTO();
-    encodedUser.setEmail(jsonUser.get("email").asText());
-    encodedUser.setPassword(jsonUser.get("password").asText());
-    encodedUser.setFirstName(jsonUser.get("firstName").asText());
-    encodedUser.setLastName(jsonUser.get("lastName").asText());
-    encodedUser.setTelephoneNumber(jsonUser.get("phoneNumber").asText());
-    encodedUser.setRole(jsonUser.get("role").asText());
+    encodedUser.setEmail(user.getEmail());
+    encodedUser.setPassword(user.getPassword());
+    encodedUser.setFirstName(user.getFirstName());
+    encodedUser.setLastName(user.getLastName());
+    encodedUser.setTelephoneNumber(user.getTelephoneNumber());
+    encodedUser.setRole(user.getRole());
 
     UserDTO newUser;
     StudentDTO studentDTO = domainFactory.getStudentDTO();

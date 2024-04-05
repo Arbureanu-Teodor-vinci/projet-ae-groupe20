@@ -1,8 +1,11 @@
 package be.vinci.pae.domain.contact;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Interface of contact for checking methods.
  */
+@JsonDeserialize(as = ContactImpl.class)
 public interface Contact extends ContactDTO {
 
   /**

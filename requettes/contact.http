@@ -22,6 +22,6 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "idContact": 1,
+    "id": 1,
     "stateContact": "En attente"
 }

@@ -31,6 +31,7 @@ public class ContactUccTest {
   private ContactDTO contactDTO2 = domainFactory.getContactDTO();
   private ContactDTO contactAccepted = domainFactory.getContactDTO();
   private StudentDTO studentDTO = domainFactory.getStudentDTO();
+  private StudentDTO studentDTO2 = domainFactory.getStudentDTO();
   private AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
   private EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
 
@@ -50,10 +51,13 @@ public class ContactUccTest {
 
     studentDTO.setId(1);
     studentDTO.setAcademicYear(academicYearDTO);
+    studentDTO2.setId(2);
+    studentDTO2.setAcademicYear(academicYearDTO);
 
     contactDTO.setStudentId(1);
     contactDTO2.setStudentId(2);
     contactAccepted.setStudentId(2);
+    contactDTO.setAcademicYear(1);
 
     enterpriseDTO.setId(1);
 
@@ -141,11 +145,10 @@ public class ContactUccTest {
 
     Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contactsExisting);
 
-    try {
-      contactUCC.addContact(studentDTO, enterpriseDTO);
-    } catch (Exception e) {
-      assertEquals("Student already has a contact for this academic year", e.getMessage());
-    }
+    assertThrows(BiznessException.class, () -> {
+      contactUCC.addContact(studentDTO2, enterpriseDTO);
+    });
+
   }
 
   @Test
@@ -153,13 +156,14 @@ public class ContactUccTest {
   void addContact3() {
     List<ContactDTO> contactsExisting = new ArrayList<>();
     contactsExisting.add(contactDTO);
+    contactDTO.setEnterpriseId(1);
 
     Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
 
-    try {
+    assertThrows(BiznessException.class, () -> {
       contactUCC.addContact(studentDTO, enterpriseDTO);
-    } catch (Exception e) {
-      assertEquals("Contact already exists", e.getMessage());
-    }
+    });
   }
+
+
 }
