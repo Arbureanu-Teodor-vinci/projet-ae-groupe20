@@ -89,7 +89,7 @@ public class Logger {
    * @param msg       The message to log.
    * @param throwable The throwable to log.
    */
-  public static void logEntry(String msg, Throwable throwable) {
+  public static void logEntry(String msg, Throwable throwable, int severity) {
     /*
     StringBuilder builder = new StringBuilder();
 
@@ -102,6 +102,25 @@ public class Logger {
     LOGGER.log(Level.SEVERE, builder.toString(), throwable);
 
      */
-    LOGGER.log(Level.SEVERE, msg, throwable);
+    Level level = severity(severity);
+    LOGGER.log(level, msg, throwable);
+  }
+
+  /**
+   * Set the severity of the logger.
+   *
+   * @param severity The severity to set.
+   */
+  private static Level severity(int severity) {
+    switch (severity) {
+      case 1:
+        return Level.INFO;
+      case 2:
+        return Level.WARNING;
+      case 3:
+        return Level.SEVERE;
+      default:
+        return Level.INFO;
+    }
   }
 }

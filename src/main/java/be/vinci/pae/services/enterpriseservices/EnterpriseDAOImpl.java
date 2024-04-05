@@ -44,8 +44,10 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getOneEnterpriseByid" + e.getMessage());
+      Logger.logEntry("Error in EnterpriseDAOImpl getOneEnterpriseByid");
       throw new RuntimeException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return enterprise;
   }
@@ -67,8 +69,10 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getAllEnterprises" + e.getMessage());
+      Logger.logEntry("Error in EnterpriseDAOImpl getAllEnterprises");
       throw new RuntimeException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return enterprises;
   }

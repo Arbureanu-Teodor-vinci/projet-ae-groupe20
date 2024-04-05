@@ -69,10 +69,8 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO updateContact(ContactDTO contact) {
     dalServices.startTransaction();
-    ContactDTO contactDTOToCheck = contactDS.getOneContactByid(contact.getId());
-    Contact contactToCheckState = (Contact) contactDTOToCheck;
+    Contact contactToCheckState = (Contact) contact;
     if (contactToCheckState.checkContactStateUpdate(contact.getStateContact())) {
-      Logger.logEntry("ContactUCCImpl - updateContact - contact state invalid");
       dalServices.rollbackTransaction();
       throw new BiznessException("Cant update contact state to this value");
     }

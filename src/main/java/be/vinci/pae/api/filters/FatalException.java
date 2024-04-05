@@ -1,5 +1,6 @@
 package be.vinci.pae.api.filters;
 
+import be.vinci.pae.utils.Logger;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
@@ -39,6 +40,7 @@ public class FatalException extends WebApplicationException {
         .entity(cause.getMessage())
         .type("text/plain")
         .build());
+    Logger.logEntry("Fatal exception: " + cause.getMessage(), cause, 3);
   }
 
 }

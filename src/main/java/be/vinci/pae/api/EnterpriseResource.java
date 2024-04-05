@@ -45,6 +45,7 @@ public class EnterpriseResource {
   @Path("getOne:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getOneEnterprise(@PathParam("id") Integer id) {
     Logger.logEntry("GET /enterprises/getOne:" + id);
     // get the user token from the headers
@@ -78,7 +79,7 @@ public class EnterpriseResource {
   @Path("getAll")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ArrayNode getAllEnterprises() {
     Logger.logEntry("GET /enterprises/getAll");
 
@@ -110,7 +111,7 @@ public class EnterpriseResource {
           .put("blackListMotivation", enterprise.getBlackListMotivation());
       return enterpriseNode;
     } catch (Exception e) {
-      Logger.logEntry("Can't create enterprise", e);
+      Logger.logEntry("Can't create enterprise", e, 2);
       System.out.println("Can't create enterprise");
       return null;
     }

@@ -61,6 +61,8 @@ public class UserDAOImpl implements UserDAO {
       Logger.logEntry("Error in UserDAOImpl getOneUserByID" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     // returning the result, either a userDTO with information or null if no result set
     return user;
@@ -90,6 +92,8 @@ public class UserDAOImpl implements UserDAO {
       Logger.logEntry("Error in UserDAOImpl getOneUserByEmail" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return user;
   }
@@ -117,6 +121,8 @@ public class UserDAOImpl implements UserDAO {
       Logger.logEntry("Error in UserDAOImpl getAllUsers" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return users;
   }
@@ -149,6 +155,8 @@ public class UserDAOImpl implements UserDAO {
       Logger.logEntry("Error in UserDAOImpl addUser" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return user;
   }
@@ -174,6 +182,8 @@ public class UserDAOImpl implements UserDAO {
       Logger.logEntry("Error in UserDAOImpl updateUser" + e);
       e.printStackTrace();
       throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
     }
     return getOneUserByID(user.getId());
   }
