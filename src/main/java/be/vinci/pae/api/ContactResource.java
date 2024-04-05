@@ -143,7 +143,7 @@ public class ContactResource {
    * Add a contact.
    *
    * @param jsonIDs The JSON object containing the studentID, enterpriseID and academicYearID.
-   * @param jsonIDs The JSON object containing the studentID and enterpriseID.
+   * @param request The request.
    * @return JSON object containing the contact infos.
    */
   @POST
