@@ -24,8 +24,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -160,7 +162,7 @@ public class UserResource {
    */
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getLoggedUser() {
     Logger.logEntry("GET /auths");
     return publicUser;
@@ -174,13 +176,9 @@ public class UserResource {
   @GET
   @Path("users")
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
-  public List<ObjectNode> getAllUsers() {
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public List<ObjectNode> getAllUsers(@Context SecurityContext securityContext) {
     Logger.logEntry("GET /auths/users");
-    if (publicUser.findValue("role").asText().equals("Etudiant")) {
-      throw new WebApplicationException("You must be an admin or professor to access this route.",
-          Status.FORBIDDEN);
-    }
     List<UserDTO> users = userController.getAll(); // Get all users
     List<ObjectNode> usersJsonList = new ArrayList<>(); // Create a list of JSON objects to return
     //Convert all users to JSON
