@@ -107,12 +107,12 @@ public class ContactResource {
       throw new WebApplicationException("Authorization header must be provided",
           Status.UNAUTHORIZED);
     }
-    if (!authentifiedUser.getRole().equals("Administratif") || !authentifiedUser.getRole()
+    /*if (!authentifiedUser.getRole().equals("Administratif") || !authentifiedUser.getRole()
         .equals("Professeur")) {
       Logger.logEntry("tries to access without admin role.");
       throw new WebApplicationException("You must be an admin or teacher to access this route",
           Status.UNAUTHORIZED);
-    }
+    }*/
 
     // Try to get all contacts
     ArrayNode contactsListNode = jsonMapper.createArrayNode();

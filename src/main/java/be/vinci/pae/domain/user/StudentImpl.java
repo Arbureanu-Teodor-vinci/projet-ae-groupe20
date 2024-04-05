@@ -1,6 +1,9 @@
 package be.vinci.pae.domain.user;
 
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +38,31 @@ public class StudentImpl extends UserImpl implements Student {
   public boolean checkUniqueStudent(StudentDTO studentDTO) {
     return studentDTO.getId() == 0;
   }
+
+  @Override
+  public boolean checkContactExists(EnterpriseDTO enterpriseDTO,
+      List<ContactDTO> contactsExisting) {
+    for (ContactDTO contact : contactsExisting) {
+      if (contact.getStudentId() == this.getId()
+          && contact.getEnterpriseId() == enterpriseDTO.getId()
+          && contact.getAcademicYear() == this.academicYear.getId()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean checkContactAccepted(List<ContactDTO> contactsExisting) {
+    for (ContactDTO contact : contactsExisting) {
+      if (contact.getStudentId() == this.getId()
+          && contact.getStateContact().equals("accepté")
+          && contact.getAcademicYear() == this.academicYear.getId()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   @Override
   public boolean equals(Object o) {
