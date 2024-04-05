@@ -59,7 +59,7 @@ public class ContactResource {
   @Path("getOne:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getOneContact(@PathParam("id") Integer id, @Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getOne:" + id);
     // Verify the token
@@ -97,7 +97,7 @@ public class ContactResource {
   @Path("getAll")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
   public ArrayNode getAllContacts(@Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getAll");
     // Verify the token
@@ -106,12 +106,6 @@ public class ContactResource {
       throw new WebApplicationException("Authorization header must be provided",
           Status.UNAUTHORIZED);
     }
-    if (!authentifiedUser.getRole().equals("Administratif") || !authentifiedUser.getRole()
-        .equals("Professeur")) {
-      throw new WebApplicationException("You must be an admin or teacher to access this route",
-          Status.UNAUTHORIZED);
-    }
-
     // Try to get all contacts
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
     for (ContactDTO contact : contactUCC.getAllContacts()) {
@@ -131,7 +125,7 @@ public class ContactResource {
   @Path("getByUser")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Etudiant"})
   public ArrayNode getContactsByUser(@Context ContainerRequest request) {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     int id = authentifiedUser.getId();
@@ -149,14 +143,14 @@ public class ContactResource {
    * Add a contact.
    *
    * @param jsonIDs The JSON object containing the studentID, enterpriseID and academicYearID.
-   * @param jsonIDs The JSON object containing the studentID and enterpriseID.
+   * @param request The request.
    * @return JSON object containing the contact infos.
    */
   @POST
   @Path("add")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize
+  @Authorize(rolesAllowed = {"Etudiant"})
   public ObjectNode addContact(JsonNode jsonIDs, @Context ContainerRequest request) {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     int studentID = authentifiedUser.getId();
@@ -187,14 +181,15 @@ public class ContactResource {
   /**
    * Update a contact.
    *
-   * @param json    The JSON object containing the contact information.
-   * @param request The request.
+   * @param contactDTO The DTO containing the contact infos.
+   * @param request    The request.
    * @return JSON object containing the contact infos.
    */
   @PATCH
   @Path("update")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Etudiant"})
   public ObjectNode updateContact(ContactDTO contactDTO, @Context ContainerRequest request) {
     Logger.logEntry("POST /contacts/update");
 
