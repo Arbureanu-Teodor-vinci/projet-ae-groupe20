@@ -25,8 +25,8 @@ async function renderUpdateContactPage() {
     const enterprise = await responseEnterprise.json();
     // eslint-disable-next-line no-console
     console.log(enterprise.tradeName);
+
     let stateOptions = '';
-    let selectDisabled = '';
     if (['initié', 'pris'].includes(contact.stateContact)) {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
@@ -43,10 +43,15 @@ async function renderUpdateContactPage() {
         `;
     }
 
-    } else if (['accepté', 'refusé', 'non suivi'].includes(contact.stateContact)) {
+    } else if (['accepté', 'refusé', 'non suivi','suspendu'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
-        selectDisabled = 'disabled';
     }
+
+    let nonUpdatable = '';
+    if (contact.stateContact === 'refusé' || contact.stateContact === 'accepté' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivi') {
+        nonUpdatable = 'disabled';
+    }
+
 
     
 
@@ -60,31 +65,31 @@ async function renderUpdateContactPage() {
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="enterpriseId"><B>Entreprise</B></label>
-                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}">
+                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}" ${nonUpdatable}>
                         </div>
                         <div class="form-group">
                             <label for="interViewMethod"><B>Moyen de contact</B></label>
-                            <select id="interViewMethod" name="interViewMethod" class="form-control text-center">
+                            <select id="interViewMethod" name="interViewMethod" class="form-control text-center" ${nonUpdatable}>
                                 <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
                                 <option value="Dans l entreprise" ${contact.interViewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
                             </select>
                         </div>
                         <div class="form-group tool">
                             <label for="tool"><B>Outil de contact</B></label>
-                            <input type="text" id="toolInput" name="tool" class="form-control text-center" value="${contact.tool}">
+                            <input type="text" id="toolInput" name="tool" class="form-control text-center" value="${contact.tool}" ${nonUpdatable}>
                         </div>
                         <div class="form-group">
                             <label for="stateContact"><B>Etat du contact</B></label>
-                            <select id="stateContact" name="stateContact" class="form-control text-center" ${selectDisabled}>
+                            <select id="stateContact" name="stateContact" class="form-control text-center" ${nonUpdatable}>
                                 ${stateOptions}
                             </select>
-                            ${selectDisabled ? '<p class="text-danger">Impossible de changer d\'état</p>' : ''}
                         </div>
                         <div class="form-group refusalReason">
                             <label for="refusalReason"><B>Raison de refus</B></label>
-                            <input type="text" id="refusalReasonInput" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ''}">
+                            <input type="text" id="refusalReasonInput" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ''}" ${nonUpdatable}>
                         </div>
-                        <button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>
+                        ${nonUpdatable ? '<p class="text-danger">Vous ne pouvez pas changer l\'état du contact une fois qu\'il est passé à "accepté", "refusé", "suspendu" ou "non suivi"</p>' :
+                        '<button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>'}
                     </form>
                 </div>
             </div>
@@ -128,7 +133,7 @@ stateContactSelect.addEventListener('change', (event) => {
         event.preventDefault();
         Navigate('/profil');
     });
-
+if(nonUpdatable === ''){
     document.getElementById("updateContactButton").addEventListener('click', async (event) => {
         event.preventDefault();
         const interviewMethod = interViewMethodSelect.value;
@@ -159,7 +164,7 @@ stateContactSelect.addEventListener('change', (event) => {
             alert('Une erreur est survenue lors de la modification du contact');
         }
     }
-    );}
+    );}}
 
 
 export default UpdateContactPage;

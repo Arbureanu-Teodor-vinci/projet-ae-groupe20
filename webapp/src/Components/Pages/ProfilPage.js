@@ -152,12 +152,17 @@ async function renderProfilPage() {
 
     contacts.forEach(contact => {
         const button = document.getElementById(`editButton${contact.id}`);
-        button.addEventListener('click', () => {
-            // Enregistrez l'ID du contact dans le localStorage
-            // localStorage.setItem('contactIdToEdit', contact.id);
-            // Redirigez l'utilisateur vers la page de modification
-            window.location.href = `/updateContact?contactId=${contact.id}`;
-        });
+        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivi') {
+            button.disabled = true;
+        }else{
+            button.addEventListener('click', () => {
+                // Enregistrez l'ID du contact dans le localStorage
+                // localStorage.setItem('contactIdToEdit', contact.id);
+                // Redirigez l'utilisateur vers la page de modification
+                window.location.href = `/updateContact?contactId=${contact.id}`;
+            });
+        }
+        
     });
 
     const link = document.querySelector('#editButton');
