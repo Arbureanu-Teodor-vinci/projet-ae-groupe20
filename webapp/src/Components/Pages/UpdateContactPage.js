@@ -9,6 +9,7 @@ const UpdateContactPage = async () => {
 }
 
 async function renderUpdateContactPage() {
+    const main = document.querySelector('main');
     const urlParams = new URLSearchParams(window.location.search);
     const contactId = urlParams.get('contactId');
     const options = {
@@ -19,8 +20,24 @@ async function renderUpdateContactPage() {
         },
     };
     const response = await fetch(`/api/contacts/getOne:${contactId}`, options);
-    const contact = await response.json();
+    
 
+    if(!response.ok){
+        main.innerHTML = `
+        <section>
+            <div class="container h-100">
+                <div class="row d-flex
+                justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>${response.status} : ${response.statusText}</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `;
+    }else{
+
+    const contact = await response.json();
     const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
     const enterprise = await responseEnterprise.json();
     // eslint-disable-next-line no-console
@@ -55,7 +72,7 @@ async function renderUpdateContactPage() {
 
     
 
-    const main = document.querySelector('main');
+    
     main.innerHTML = `
     <section>
         <div class="container h-100">
@@ -161,10 +178,27 @@ if(nonUpdatable === ''){
         if (responseUpdateContact.status === 200) {
             window.location.href = '/profil';
         } else {
-            alert('Une erreur est survenue lors de la modification du contact');
+            main.innerHTML = `
+            <section>
+                <div class="container h-100">
+                    <div class="row d-flex
+                    justify-content-center align-items-center h-100">
+                        <div class="col-12 text-center">
+                            <h1>${responseUpdateContact.status} : ${responseUpdateContact.statusText}</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `;
         }
     }
-    );}}
+    );}
+
+}
+
+   
+
+}
 
 
 export default UpdateContactPage;

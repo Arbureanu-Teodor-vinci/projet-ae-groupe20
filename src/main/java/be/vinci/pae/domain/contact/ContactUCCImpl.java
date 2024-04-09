@@ -2,6 +2,7 @@ package be.vinci.pae.domain.contact;
 
 import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.user.Student;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
@@ -42,24 +43,20 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO) {
     dalServices.startTransaction();
-    int academicYearId = studentDTO.getStudentAcademicYear().getId();
     List<ContactDTO> contactsExisting = contactDS.getContactsByUser(studentDTO.getId());
-    for (ContactDTO contact : contactsExisting) {
-      if (contact.getEnterpriseId() == enterpriseDTO.getId()
-          && contact.getAcademicYear() == academicYearId) {
-        dalServices.rollbackTransaction();
-        throw new BiznessException("Contact already exists");
-      }
+    Student student = (Student) studentDTO;
+    if (student.checkContactExists(enterpriseDTO, contactsExisting)) {
+      Logger.logEntry("Contact already exists");
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Contact already exists");
     }
-    for (ContactDTO contact : contactsExisting) {
-      if (contact.getStateContact().equals("accepted")
-          && contact.getAcademicYear() == academicYearId) {
-        dalServices.rollbackTransaction();
-        throw new BiznessException("Student already has a contact for this academic year");
-      }
+    if (student.checkContactAccepted(contactsExisting)) {
+      Logger.logEntry("Student already has a contact for this academic year");
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Student already has a contact for this academic year");
     }
     ContactDTO contact = contactDS.addContact(studentDTO.getId(), enterpriseDTO.getId(),
-        academicYearId);
+        studentDTO.getStudentAcademicYear().getId());
     if (contact == null) {
       Logger.logEntry("Contact not added");
       dalServices.rollbackTransaction();
