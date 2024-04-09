@@ -31,7 +31,6 @@ async function renderUpdateContactPage() {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
             <option value="non suivi">Non suivi</option>
-            <option value="suspendu">Suspendu</option>
             
         `;
     if (contact.stateContact === 'initié') {
@@ -44,15 +43,12 @@ async function renderUpdateContactPage() {
         `;
     }
 
-    } else if (['suspendu', 'accepté', 'refusé', 'non suivi'].includes(contact.stateContact)) {
+    } else if (['accepté', 'refusé', 'non suivi'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
         selectDisabled = 'disabled';
     }
 
-    let refusalReasonDisabled = '';
-    if (contact.stateContact !== 'refusé') {
-        refusalReasonDisabled = 'disabled';
-    }
+    
 
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -63,30 +59,30 @@ async function renderUpdateContactPage() {
                     <h1>Modifier un contact</h1>
                     <form id="contactForm">
                         <div class="form-group">
-                            <label for="enterpriseId">Entreprise</label>
+                            <label for="enterpriseId"><B>Entreprise</B></label>
                             <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}">
                         </div>
                         <div class="form-group">
-                            <label for="interViewMethod">Moyen de contact</label>
+                            <label for="interViewMethod"><B>Moyen de contact</B></label>
                             <select id="interViewMethod" name="interViewMethod" class="form-control text-center">
                                 <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
                                 <option value="Dans l entreprise" ${contact.interViewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="tool">Outil de contact</label>
-                            <input type="text" id="tool" name="tool" class="form-control text-center" value="${contact.tool}">
+                        <div class="form-group tool">
+                            <label for="tool"><B>Outil de contact</B></label>
+                            <input type="text" id="toolInput" name="tool" class="form-control text-center" value="${contact.tool}">
                         </div>
                         <div class="form-group">
-                            <label for="stateContact">Etat du contact</label>
+                            <label for="stateContact"><B>Etat du contact</B></label>
                             <select id="stateContact" name="stateContact" class="form-control text-center" ${selectDisabled}>
                                 ${stateOptions}
                             </select>
                             ${selectDisabled ? '<p class="text-danger">Impossible de changer d\'état</p>' : ''}
                         </div>
-                        <div class="form-group">
-                            <label for="refusalReason">Raison de refus</label>
-                            <input type="text" id="refusalReason" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ' '}" ${refusalReasonDisabled}>
+                        <div class="form-group refusalReason">
+                            <label for="refusalReason"><B>Raison de refus</B></label>
+                            <input type="text" id="refusalReasonInput" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ''}">
                         </div>
                         <button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>
                     </form>
@@ -95,18 +91,50 @@ async function renderUpdateContactPage() {
         </div>
     </section>`;
 
+const interViewMethodSelect = document.querySelector('#interViewMethod');
+const stateContactSelect = document.querySelector('#stateContact');
+const toolDiv = document.querySelector('.tool');
+const toolInput = document.querySelector('#toolInput');
+const refusalReasonDiv = document.querySelector('.refusalReason');
+const refusalReasonInput = document.querySelector('#refusalReasonInput');
+
+// Hide the tool input if the interview method is not "A distance"
+toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
+
+interViewMethodSelect.addEventListener('change', (event) => {
+    // If the interview method is "A distance", display the tool input, otherwise hide it
+    if (event.target.value === 'A distance') {
+        toolDiv.style.display = 'block';
+    } else {
+        toolDiv.style.display = 'none';
+        toolInput.value = null; 
+    }
+});
+
+// Hide the refusal reason input if the state is not "refusé"
+refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
+
+stateContactSelect.addEventListener('change', (event) => {
+    // If the state is "refusé", display the refusal reason input, otherwise hide it
+    if (event.target.value === 'refusé') {
+        refusalReasonDiv.style.display = 'block';
+    } else {
+        refusalReasonDiv.style.display = 'none';
+        refusalReasonInput.value = null;
+    }
+});
+
     document.getElementById('contactForm').addEventListener('submit', (event) => {
         event.preventDefault();
-        // Ajoutez ici le code pour mettre à jour le contact
-        window.location.href = '/profil';
+        Navigate('/profil');
     });
 
     document.getElementById("updateContactButton").addEventListener('click', async (event) => {
         event.preventDefault();
-        const interviewMethod = document.getElementById('interViewMethod').value;
-        const tool = document.getElementById('tool').value;
-        const stateContact = document.getElementById('stateContact').value;
-        const refusalReason = document.getElementById('refusalReason').value;
+        const interviewMethod = interViewMethodSelect.value;
+        const tool = toolInput.value;
+        const stateContact = stateContactSelect.value;
+        const refusalReason = refusalReasonInput.value;
 
         const body = {
             idContact: contactId,

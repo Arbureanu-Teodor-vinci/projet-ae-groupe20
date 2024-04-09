@@ -19,4 +19,20 @@ public interface Contact extends ContactDTO {
    */
   boolean checkContactState();
 
+  /**
+   * Check if the interview method is updatable from state.
+   *
+   * @param interviewMethodBeforeUpdate String before the update
+   * @return boolean
+   */
+  boolean checkInterviewMethodUpdate(String interviewMethodBeforeUpdate);
+
+
+  /**
+   * Check if the refusal reason is updatable from state.
+   *
+   * @return boolean
+   */
+  boolean checkContactRefusalReasonUpdate();
+
 }

@@ -8,7 +8,7 @@ import java.util.Objects;
 public class ContactImpl implements Contact {
 
   private static final String[] POSSIBLESTATES = {"initié", "pris", "suspendu", "refusé",
-      "non suivis"};
+      "non suivis", "accepté"};
   private int id;
   private String interviewMethod;
   private String tool;
@@ -99,6 +99,11 @@ public class ContactImpl implements Contact {
   }
 
   @Override
+  public String[] getAllPossibleStates() {
+    return POSSIBLESTATES;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -112,17 +117,64 @@ public class ContactImpl implements Contact {
 
   @Override
   public boolean checkContactStateUpdate(String state) {
+    // if state is one of final states which cant be updated
+    if (state.equals(POSSIBLESTATES[5]) || state.equals(POSSIBLESTATES[4])
+        || state.equals(POSSIBLESTATES[3]) || state.equals(POSSIBLESTATES[2])) {
+      return false;
+    }
+    // if updated state is initialised the previous state can only be initialised
     if (this.stateContact.equals(POSSIBLESTATES[0])) {
-      return state.equals(POSSIBLESTATES[1]) || state.equals(POSSIBLESTATES[2]) || state.equals(
-          POSSIBLESTATES[3]) || state.equals(POSSIBLESTATES[4]);
+      return state.equals(POSSIBLESTATES[0]);
     }
+    // if updated state is taken the previous state can only be initialised or taken
     if (this.stateContact.equals(POSSIBLESTATES[1])) {
-      return state.equals(POSSIBLESTATES[2]) || state.equals(POSSIBLESTATES[3]) || state.equals(
-          POSSIBLESTATES[4]);
+      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
     }
+    // if updated state is suspended the previous state can only be initialised, taken or suspended
+    if (this.stateContact.equals(POSSIBLESTATES[2])) {
+      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
+    }
+    // if updated state is refused the previous state can only be initialised or refused
+    if (this.stateContact.equals(POSSIBLESTATES[3])) {
+      return state.equals(POSSIBLESTATES[1]);
+    }
+    // if updated state is not followed the previous state can only be initialised, taken or not followed
+    if (this.stateContact.equals(POSSIBLESTATES[4])) {
+      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
+    }
+    // if updated state is accepted the previous state can only be taken or accepted
+    if (this.stateContact.equals(POSSIBLESTATES[5])) {
+      return state.equals(POSSIBLESTATES[1]);
+    }
+
     return false;
   }
 
+  @Override
+  public boolean checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) {
+    if (this.stateContact.equals(
+        POSSIBLESTATES[0])) { // initial state can only have null interviewMethod
+      return this.interviewMethod == null;
+    } else if (this.stateContact.equals(
+        POSSIBLESTATES[1])) { // taken state can update interviewMethod
+      return this.interviewMethod != null;
+    } else { // on other states cant update interviewMethod from previous value when it was on taken state
+      return this.interviewMethod.equals(interviewMethodBeforeUpdate);
+    }
+  }
+
+  @Override
+  public boolean checkContactRefusalReasonUpdate() {
+    //can only update contactRefusal on refused state
+    if (this.stateContact.equals(POSSIBLESTATES[3])) {
+      return this.refusalReason != null;
+    } else {
+      return this.refusalReason == null || this.refusalReason.isBlank();
+    }
+  }
+
+
+  @Override
   public boolean checkContactState() {
     for (String state : POSSIBLESTATES) {
       if (this.stateContact.equals(state)) {

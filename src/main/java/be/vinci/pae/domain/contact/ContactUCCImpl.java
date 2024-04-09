@@ -70,12 +70,26 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
-  public ContactDTO updateContact(ContactDTO contact) {
+  public ContactDTO updateContact(ContactDTO contactDTO) {
     dalServices.startTransaction();
-    Contact contactToCheckState = (Contact) contact;
-    if (contactToCheckState.checkContactStateUpdate(contact.getStateContact())) {
+    Contact contact = (Contact) contactDTO;
+    ContactDTO contactBeforeUpdate = contactDS.getOneContactByid(contact.getId());
+
+    if (!contact.checkContactState()) {
       dalServices.rollbackTransaction();
       throw new BiznessException("Cant update contact state to this value");
+    }
+    if (!contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact())) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Cant update contact state to this value from previous state");
+    }
+    if (!contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod())) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Cant update interview method to this value");
+    }
+    if (!contact.checkContactRefusalReasonUpdate()) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Refusal reason needs to be updatable only on refused state");
     }
     ContactDTO contactUpdated = contactDS.updateContact(contact);
     dalServices.commitTransaction();
