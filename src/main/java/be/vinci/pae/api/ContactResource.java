@@ -83,8 +83,8 @@ public class ContactResource {
     // Try to get the contact
     ContactDTO contact = contactUCC.getOneContact(id);
     // if the contact is null, throw an exception
-    if (contact == null || (contact.getStudentId() != authentifiedUser.getId()
-        && authentifiedUser.getRole().equals("Etudiant"))) {
+    if (contact == null || contact.getStudentId() != authentifiedUser.getId()
+        && authentifiedUser.getRole().equals("Etudiant")) {
       Logger.logEntry("Contact not found.");
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }
