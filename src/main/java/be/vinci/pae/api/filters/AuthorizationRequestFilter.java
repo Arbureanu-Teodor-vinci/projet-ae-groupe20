@@ -35,7 +35,7 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       .build();
 
   @Context
-    private ResourceInfo resourceInfo;
+  private ResourceInfo resourceInfo;
 
   @Inject
   private UserDAO myUserDataService;
@@ -59,40 +59,40 @@ public class AuthorizationRequestFilter implements ContainerRequestFilter {
       if (authenticatedUser == null) {
         requestContext.abortWith(Response.status(Status.FORBIDDEN)
             .entity("You are forbidden to access this resource").build());
-      } else {
-        final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
-        requestContext.setSecurityContext(new SecurityContext() {
-            @Override
-            public Principal getUserPrincipal() {
-                return () -> String.valueOf(authenticatedUser.getId());
-            }
-
-            @Override
-            public boolean isUserInRole(String role) {
-                return authenticatedUser.getRole().equals(role);
-            }
-
-            @Override
-            public boolean isSecure() {
-                return currentSecurityContext.isSecure();
-            }
-
-            @Override
-            public String getAuthenticationScheme() {
-                return "Bearer";
-            }
-        });
-
-        // Check if the user's role is allowed
-        Authorize authorize = resourceInfo.getResourceMethod().getAnnotation(Authorize.class);
-        if (authorize != null && !Arrays.asList(authorize.rolesAllowed())
-            .contains(authenticatedUser.getRole())) {
-              requestContext.abortWith(Response.status(Response.Status.FORBIDDEN)
-              .entity("You are forbidden to access this resource").build());
-        }
       }
-      
-          
+      requestContext.setProperty("user", authenticatedUser);
+      final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
+      requestContext.setSecurityContext(new SecurityContext() {
+        @Override
+        public Principal getUserPrincipal() {
+          return () -> String.valueOf(authenticatedUser.getId());
+        }
+
+        @Override
+        public boolean isUserInRole(String role) {
+          return authenticatedUser.getRole().equals(role);
+        }
+
+        @Override
+        public boolean isSecure() {
+          return currentSecurityContext.isSecure();
+        }
+
+        @Override
+        public String getAuthenticationScheme() {
+          return "Bearer";
+        }
+      });
+
+      // Check if the user's role is allowed
+      Authorize authorize = resourceInfo.getResourceMethod().getAnnotation(Authorize.class);
+      if (authorize != null && !Arrays.asList(authorize.rolesAllowed())
+          .contains(authenticatedUser.getRole())) {
+        requestContext.abortWith(Response.status(Response.Status.FORBIDDEN)
+            .entity("You are forbidden to access this resource").build());
+      }
     }
+
+
   }
 }

@@ -22,4 +22,5 @@ public interface Contact extends ContactDTO {
    */
   boolean checkContactState();
 
+
 }
