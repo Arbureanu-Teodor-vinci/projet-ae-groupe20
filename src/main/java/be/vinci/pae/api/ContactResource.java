@@ -6,6 +6,7 @@ import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
+import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
@@ -47,6 +48,9 @@ public class ContactResource {
   @Inject
   private StudentUCC studentUCC;
 
+  @Inject
+  private DomainFactory domainFactory;
+
   /**
    * Get 1 contact.
    *
@@ -79,7 +83,8 @@ public class ContactResource {
     // Try to get the contact
     ContactDTO contact = contactUCC.getOneContact(id);
     // if the contact is null, throw an exception
-    if (contact == null) {
+    if (contact == null || contact.getStudentId() != authentifiedUser.getId()
+        && authentifiedUser.getRole().equals("Etudiant")) {
       Logger.logEntry("Contact not found.");
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }
@@ -198,11 +203,8 @@ public class ContactResource {
       throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
     }
     int id = json.get("idContact").asInt();
-    ContactDTO contact = contactUCC.getOneContact(id);
-    if (contact == null) {
-      Logger.logEntry("Contact not found.");
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
-    }
+    ContactDTO contact = domainFactory.getContactDTO();
+    contact.setId(id);
     if (json.hasNonNull("interviewMethod")) {
       contact.setInterviewMethod(json.get("interviewMethod").asText());
     }
