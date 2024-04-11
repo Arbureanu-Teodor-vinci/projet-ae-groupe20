@@ -76,6 +76,18 @@ Content-Type: application/json
   "role": "Professeur",
   "firstName": "Teacher",
   "lastName": "Vinci",
-  "phoneNumber": "0499999999"
+  "telephoneNumber": "0499999999"
 }
 
+### REGISTER A NEW ADMIN USER
+POST {{baseUrl}}/auths/register
+Content-Type: application/json
+
+{
+  "email": "test2@vinci.be",
+  "password": "group20",
+  "role": "Administratif",
+  "firstName": "admin2",
+  "lastName": "Vinci2",
+  "telephoneNumber": "0499999955"
+}

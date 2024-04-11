@@ -186,8 +186,8 @@ public class ContactResource {
   /**
    * Update a contact.
    *
-   * @param json    The JSON object containing the contact information.
-   * @param request The request.
+   * @param contactDTO The contact DTO containing the infos about the changes.
+   * @param request    The request.
    * @return JSON object containing the contact infos.
    */
   @PATCH
@@ -195,27 +195,36 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Etudiant"})
-  public ObjectNode updateContact(JsonNode json, @Context ContainerRequest request) {
+  public ObjectNode updateContact(ContactDTO contactDTO, @Context ContainerRequest request) {
     Logger.logEntry("POST /contacts/update");
 
-    if (!json.hasNonNull("idContact") || json.get("idContact").asText().isEmpty()) {
+    if (contactDTO == null || contactDTO.getId() == 0) {
       Logger.logEntry("Tried to update contact without id.");
       throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
     }
-    int id = json.get("idContact").asInt();
+
+    /*int id = json.get("idContact").asInt();
     ContactDTO contact = domainFactory.getContactDTO();
-    contact.setId(id);
-    if (json.hasNonNull("interviewMethod")) {
-      contact.setInterviewMethod(json.get("interviewMethod").asText());
+    contact.setId(id);*/
+
+    int id = contactDTO.getId();
+    ContactDTO contact = contactUCC.getOneContact(id);
+
+    if (contact == null) {
+      Logger.logEntry("Contact not found.");
+      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }
-    if (json.hasNonNull("tool")) {
-      contact.setTool(json.get("tool").asText());
+    if (contactDTO.getInterviewMethod() != null) {
+      contact.setInterviewMethod(contactDTO.getInterviewMethod());
     }
-    if (json.hasNonNull("refusalReason")) {
-      contact.setRefusalReason(json.get("refusalReason").asText());
+    if (contactDTO.getTool() != null) {
+      contact.setTool(contactDTO.getTool());
     }
-    if (json.hasNonNull("stateContact")) {
-      contact.setStateContact(json.get("stateContact").asText());
+    if (contactDTO.getRefusalReason() != null) {
+      contact.setRefusalReason(contactDTO.getRefusalReason());
+    }
+    if (contactDTO.getStateContact() != null) {
+      contact.setStateContact(contactDTO.getStateContact());
     }
 
     ContactDTO updatedContact = contactUCC.updateContact(contact);

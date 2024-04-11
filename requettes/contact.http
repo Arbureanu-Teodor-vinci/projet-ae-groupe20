@@ -22,7 +22,7 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "idContact": 12,
+    "id": 12,
     "stateContact": "accepté"
 }
 

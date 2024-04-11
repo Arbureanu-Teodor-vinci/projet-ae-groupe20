@@ -159,7 +159,7 @@ if(nonUpdatable === ''){
         const refusalReason = refusalReasonInput.value;
 
         const body = {
-            idContact: contactId,
+            id: contactId,
             interviewMethod,
             tool,
             stateContact,
