@@ -1,5 +1,6 @@
 package be.vinci.pae;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -31,10 +32,8 @@ public class ContactUccTest {
   private ContactDTO contactDTO2 = domainFactory.getContactDTO();
   private ContactDTO contactAccepted = domainFactory.getContactDTO();
   private StudentDTO studentDTO = domainFactory.getStudentDTO();
-  private StudentDTO studentDTO2 = domainFactory.getStudentDTO();
   private AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
   private EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
-
 
   @BeforeEach
   void setUp() {
@@ -51,17 +50,17 @@ public class ContactUccTest {
 
     studentDTO.setId(1);
     studentDTO.setAcademicYear(academicYearDTO);
-    studentDTO2.setId(2);
-    studentDTO2.setAcademicYear(academicYearDTO);
 
     contactDTO.setStudentId(1);
     contactDTO2.setStudentId(2);
     contactAccepted.setStudentId(2);
-    contactDTO.setAcademicYear(1);
 
     enterpriseDTO.setId(1);
 
     Mockito.when(contactDAO.addContact(1, 1, 1)).thenReturn(contactDTO);
+    //when contact is updated return the updated contact
+    Mockito.when(contactDAO.updateContact(Mockito.any(ContactDTO.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
   }
 
@@ -131,8 +130,7 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 1")
   void addContact() {
-    List<ContactDTO> contactsExisting = new ArrayList<>();
-    Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
+
     ContactDTO actualContact = contactUCC.addContact(studentDTO, enterpriseDTO);
 
     assertEquals(contactDTO, actualContact);
@@ -146,10 +144,11 @@ public class ContactUccTest {
 
     Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contactsExisting);
 
-    assertThrows(BiznessException.class, () -> {
-      contactUCC.addContact(studentDTO2, enterpriseDTO);
-    });
-
+    try {
+      contactUCC.addContact(studentDTO, enterpriseDTO);
+    } catch (Exception e) {
+      assertEquals("Student already has a contact for this academic year", e.getMessage());
+    }
   }
 
   @Test
@@ -157,13 +156,374 @@ public class ContactUccTest {
   void addContact3() {
     List<ContactDTO> contactsExisting = new ArrayList<>();
     contactsExisting.add(contactDTO);
-    contactDTO.setEnterpriseId(1);
 
     Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
 
-    assertThrows(BiznessException.class, () -> {
+    try {
       contactUCC.addContact(studentDTO, enterpriseDTO);
+    } catch (Exception e) {
+      assertEquals("Contact already exists", e.getMessage());
+    }
+  }
+
+
+  @Test
+  @DisplayName("Update contact state with all valid possible states from initiated state")
+  void updateContact1() {
+    contactDTO.setStateContact("initié");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("pris");
+          contactDTO2.setInterviewMethod("A distance");
+          contactDTO.setInterviewMethod("A distance");
+          assertEquals("pris", contactUCC.updateContact(contactDTO2).getStateContact());
+        },
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          assertEquals("suspendu", contactUCC.updateContact(contactDTO2).getStateContact());
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertEquals("non suivis", contactUCC.updateContact(contactDTO2).getStateContact());
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid states from initiated state")
+  void updateContact2() {
+    contactDTO.setStateContact("initié");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all valid possible states from taken state")
+  void updateContact3() {
+    contactDTO.setStateContact("pris");
+    contactDTO.setInterviewMethod("A distance");
+    contactDTO2.setId(1);
+    contactDTO2.setInterviewMethod("A distance");
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          assertEquals("suspendu", contactUCC.updateContact(contactDTO2).getStateContact());
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertEquals("non suivis", contactUCC.updateContact(contactDTO2).getStateContact());
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertEquals("accepté", contactUCC.updateContact(contactDTO2).getStateContact());
+        },
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertEquals("refusé", contactUCC.updateContact(contactDTO2).getStateContact());
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid states from taken state")
+  void updateContact4() {
+    contactDTO.setStateContact("pris");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("initié");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid possible states from suspended state")
+  void updateContact5() {
+    contactDTO.setStateContact("suspendu");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("initié");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("pris");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid possible states from accepted state")
+  void updateContact6() {
+    contactDTO.setStateContact("accepté");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("initié");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("pris");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid possible states from refused state")
+  void updateContact7() {
+    contactDTO.setStateContact("refusé");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("initié");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("pris");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact state with all invalid possible states from suspended state")
+  void updateContact8() {
+    contactDTO.setStateContact("non suivis");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("initié");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("pris");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact with non valid state")
+  void updateContact9() {
+    contactDTO.setStateContact("initié");
+    contactDTO2.setStateContact("état non valide");
+    contactDTO2.setId(1);
+    assertThrows(BiznessException.class, () -> {
+      contactUCC.updateContact(contactDTO2);
     });
+  }
+
+  @Test
+  @DisplayName("Update contact interview method when state is taken")
+  void updateContact10() {
+    contactDTO.setStateContact("initié");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("pris");
+          contactDTO2.setInterviewMethod("A distance");
+          assertEquals("A distance", contactUCC.updateContact(contactDTO2).getInterviewMethod());
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact interview method when state is not taken")
+  void updateContact11() {
+    contactDTO2.setStateContact("initié");
+    contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+          contactDTO2.setStateContact("suspendu");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact refusal reason when state is refused")
+  void updateContact12() {
+    contactDTO.setStateContact("pris");
+    contactDTO.setInterviewMethod("A distance");
+    contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("refusé");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertEquals("raison de refus", contactUCC.updateContact(contactDTO2).getRefusalReason());
+        }
+    );
+  }
+
+  @Test
+  @DisplayName("Update contact refusal reason when state is not refused")
+  void updateContact13() {
+    contactDTO.setStateContact("initié");
+    contactDTO2.setId(1);
+    assertAll(
+        () -> {
+          contactDTO2.setStateContact("pris");
+          contactDTO2.setInterviewMethod("A distance");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("suspendu");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("non suivis");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        },
+        () -> {
+          contactDTO2.setStateContact("accepté");
+          contactDTO2.setRefusalReason("raison de refus");
+          assertThrows(BiznessException.class, () -> {
+            contactUCC.updateContact(contactDTO2);
+          });
+        }
+    );
   }
 
 

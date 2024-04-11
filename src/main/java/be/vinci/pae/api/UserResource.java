@@ -120,12 +120,12 @@ public class UserResource {
     Logger.logEntry("POST /auths/register");
 
     // Check if all fields are present
-    if (user == null || user.getEmail() == null || user.getEmail().isBlank() ||
-        user.getPassword() == null || user.getPassword().isBlank()
-        || user.getFirstName() == null || user.getFirstName().isBlank() ||
-        user.getLastName() == null || user.getLastName().isBlank()
-        || user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank() ||
-        user.getRole() == null) {
+    if (user == null || user.getEmail() == null || user.getEmail().isBlank()
+        || user.getPassword() == null || user.getPassword().isBlank()
+        || user.getFirstName() == null || user.getFirstName().isBlank()
+        || user.getLastName() == null || user.getLastName().isBlank()
+        || user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank()
+        || user.getRole() == null) {
       throw new WebApplicationException(
           "You must enter an email, a password, a first name, a last name and a phone number.",
           Status.BAD_REQUEST);
