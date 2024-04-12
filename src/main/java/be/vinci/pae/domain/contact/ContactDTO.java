@@ -120,6 +120,13 @@ public interface ContactDTO {
    */
   void setAcademicYear(int academicYear);
 
+  /**
+   * Get all possible states of a contact.
+   *
+   * @return all possible states of a contact
+   */
+  String[] getAllPossibleStates();
+
   @Override
   boolean equals(Object o);
 

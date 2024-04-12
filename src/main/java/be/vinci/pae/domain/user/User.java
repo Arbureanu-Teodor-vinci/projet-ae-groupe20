@@ -1,8 +1,11 @@
 package be.vinci.pae.domain.user;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Interface of user for checking methods.
  */
+@JsonDeserialize(as = UserImpl.class)
 public interface User extends UserDTO {
 
   /**
