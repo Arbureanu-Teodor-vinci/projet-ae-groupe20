@@ -23,7 +23,8 @@ Authorization: {{adminToken}}
 
 {
     "idContact": 12,
-    "stateContact": "accepté"
+    "interviewMethod": "Dans l'entreprise",
+    "stateContact": "pris"
 }
 
 ### Add

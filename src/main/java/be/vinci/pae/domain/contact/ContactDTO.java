@@ -121,6 +121,20 @@ public interface ContactDTO {
   void setAcademicYear(int academicYear);
 
   /**
+   * Get version of the contact update.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Set version of the contact update.
+   *
+   * @param version the version to set
+   */
+  void setVersion(int version);
+
+  /**
    * Get all possible states of a contact.
    *
    * @return all possible states of a contact

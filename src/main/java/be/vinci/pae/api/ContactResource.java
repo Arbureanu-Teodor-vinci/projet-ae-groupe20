@@ -239,7 +239,8 @@ public class ContactResource {
           .put("stateContact", contact.getStateContact())
           .put("studentId", contact.getStudentId())
           .put("enterpriseId", contact.getEnterpriseId())
-          .put("academicYear", contact.getAcademicYear());
+          .put("academicYear", contact.getAcademicYear())
+          .put("version", contact.getVersion());
       return contactNode;
     } catch (Exception e) {
       System.out.println("Can't create contact");
