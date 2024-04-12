@@ -92,11 +92,11 @@ public class EnterpriseResource {
     return enterprisesListNode;
   }
 
+
   /**
-   * add an enterprise.
-   *       
-   * 
-   * @param enterpriseDTO the enterprise to add.
+   * Add an enterprise.
+   *
+   * @param enterpriseDTO The enterprise to add.
    * @return JSON object containing the enterprise infos.
    */
   @POST
