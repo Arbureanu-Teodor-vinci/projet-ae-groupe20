@@ -17,7 +17,7 @@ public @interface Authorize {
   /**
   * Returns an array of roles that are allowed to access the method.
   * 
-  * @return an array of roles
+  * @return an array of roles.
   */
   String[] rolesAllowed() default {};
 }
