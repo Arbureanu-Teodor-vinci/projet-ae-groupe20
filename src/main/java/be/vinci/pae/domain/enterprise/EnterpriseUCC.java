@@ -21,4 +21,12 @@ public interface EnterpriseUCC {
    * @return List of EnterpriseDTO
    */
   List<EnterpriseDTO> getAllEnterprises();
+
+  /**
+   * Add an enterprise.
+   *
+   * @param enterprise EnterpriseDTO
+   * @return EnterpriseDTO
+   */
+  EnterpriseDTO addEnterprise(EnterpriseDTO enterprise);
 }

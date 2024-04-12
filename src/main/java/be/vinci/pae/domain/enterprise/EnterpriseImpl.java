@@ -5,13 +5,14 @@ import java.util.Objects;
 /**
  * Implementation of Enterprise and enterpriseDTO.
  */
-public class EnterpriseImpl implements EnterpriseDTO {
+public class EnterpriseImpl implements Enterprise {
 
   private int id;
   private String tradeName;
   private String designation;
   private String adresse;
   private String phoneNumber;
+  private String city;
   private String email;
   private boolean blackListed;
   private String blackListMotivation;
@@ -66,6 +67,16 @@ public class EnterpriseImpl implements EnterpriseDTO {
     this.phoneNumber = phoneNumber;
   }
 
+  @Override
+  public String getCity() {
+    return city;
+  }
+
+  @Override
+  public void setCity(String city) {
+    this.city = city;
+  }
+  
   @Override
   public String getEmail() {
     return email;
@@ -125,5 +136,13 @@ public class EnterpriseImpl implements EnterpriseDTO {
         + ", blackListed=" + blackListed
         + ", blackListMotivation='" + blackListMotivation + '\''
         + '}';
+  }
+
+  @Override
+  public boolean checkEnterpriseAdd(){
+    if(tradeName != null && designation != null && adresse != null && phoneNumber != null && city != null && email != null){
+     return true;
+    }
+    return false;
   }
 }

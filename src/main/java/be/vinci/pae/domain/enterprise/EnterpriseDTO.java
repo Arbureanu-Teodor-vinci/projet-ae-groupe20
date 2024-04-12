@@ -79,6 +79,20 @@ public interface EnterpriseDTO {
   void setPhoneNumber(String phoneNumber);
 
   /**
+   * Get city.
+   *
+   * @return city String
+   */
+  String getCity();
+
+  /**
+   * Set city.
+   *
+   * @param city String
+   */
+  void setCity(String city);
+
+  /**
    * Get email.
    *
    * @return email String

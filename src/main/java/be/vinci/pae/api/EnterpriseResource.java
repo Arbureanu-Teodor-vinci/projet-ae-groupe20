@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -92,6 +93,38 @@ public class EnterpriseResource {
   }
 
   /**
+   * add an enterprise.
+   * 
+   * @param enterpriseDTO the enterprise to add
+   * @return
+   */
+  @POST
+  @Path("add")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Etudiant"})
+  public ObjectNode addEnterprise(EnterpriseDTO enterpriseDTO) {
+    Logger.logEntry("POST /enterprises/add");
+    // get the user token from the headers
+
+    // if the enterprise is null, throw an exception
+    if (enterpriseDTO == null) {
+      Logger.logEntry("Enterprise is missing.");
+      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+    }
+
+    // Try to add the enterprise
+    EnterpriseDTO enterprise = enterpriseUCC.addEnterprise(enterpriseDTO);
+    // if the enterprise is null, throw an exception
+    if (enterprise == null) {
+      Logger.logEntry("Can't add enterprise");
+      throw new WebApplicationException("Can't add enterprise", Status.NOT_FOUND);
+    }
+
+    return enterpriseNodeMaker(enterprise);
+  }
+
+  /**
    * Create a JSON object with the enterprise infos.
    *
    * @param enterprise The enterprise to create the JSON object with.
@@ -106,6 +139,7 @@ public class EnterpriseResource {
           .put("designation", enterprise.getDesignation())
           .put("adresse", enterprise.getAdresse())
           .put("phoneNumber", enterprise.getPhoneNumber())
+          .put("city", enterprise.getCity())
           .put("email", enterprise.getEmail())
           .put("blackListed", enterprise.isBlackListed())
           .put("blackListMotivation", enterprise.getBlackListMotivation());
