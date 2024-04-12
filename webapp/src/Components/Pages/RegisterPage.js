@@ -155,7 +155,7 @@ async function register (e) {
     const password = document.querySelector('#passwordInput').value;
     const firstName = document.querySelector('#firstNameInput').value;
     const lastName = document.querySelector('#lastNameInput').value;
-    const phoneNumber = document.querySelector('#phoneNumberInput').value;
+    const telephoneNumber = document.querySelector('#phoneNumberInput').value;
     const userRole = document.querySelector('#role').value;
 
     let role;
@@ -175,7 +175,7 @@ async function register (e) {
         role,
         firstName,
         lastName,
-        phoneNumber,
+        telephoneNumber,
       }),
       headers : {
         'Content-Type': 'application/json',
