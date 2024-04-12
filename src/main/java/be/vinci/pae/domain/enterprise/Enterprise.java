@@ -8,10 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(as = EnterpriseImpl.class)
 public interface Enterprise extends EnterpriseDTO {
 
-    /**
-     * Check if the enterprise is valid to be added.
-     * 
-     * @return boolean
-     */
-    boolean checkEnterpriseAdd();
+  /**
+  * Check if the enterprise is valid to be added.
+  * 
+  * @return boolean true if the enterprise is valid to be added.
+  */
+  boolean checkEnterpriseAdd();
 }

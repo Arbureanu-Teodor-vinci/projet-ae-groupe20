@@ -94,9 +94,9 @@ public class EnterpriseResource {
 
   /**
    * add an enterprise.
-   * 
-   * @param enterpriseDTO the enterprise to add
-   * @return
+   *       
+   * @param enterpriseDTO the enterprise to add.
+   * @return JSON object containing the enterprise infos.
    */
   @POST
   @Path("add")
