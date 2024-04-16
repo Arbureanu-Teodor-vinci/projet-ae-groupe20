@@ -22,8 +22,9 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "id": 12,
-    "stateContact": "accepté"
+    "idContact": 12,
+    "interviewMethod": "Dans l'entreprise",
+    "stateContact": "pris"
 }
 
 ### Add

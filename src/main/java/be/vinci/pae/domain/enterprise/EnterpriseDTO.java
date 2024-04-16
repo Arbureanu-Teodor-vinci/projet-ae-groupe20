@@ -134,6 +134,20 @@ public interface EnterpriseDTO {
    */
   void setBlackListMotivation(String blackListMotivation);
 
+  /**
+   * Get version for optimistic lock.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Set version for optimistic lock.
+   *
+   * @param version the version to set
+   */
+  void setVersion(int version);
+
   @Override
   boolean equals(Object o);
 

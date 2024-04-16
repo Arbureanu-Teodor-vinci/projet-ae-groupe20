@@ -163,7 +163,11 @@ if(nonUpdatable === ''){
             interviewMethod,
             tool,
             stateContact,
-            refusalReason
+            refusalReason,
+            academicYear: contact.academicYear,
+            enterpriseId: contact.enterpriseId,
+            studentId: contact.studentId,
+            version: contact.version,
         };
 
         const optionsUpdateContact = {
@@ -176,15 +180,16 @@ if(nonUpdatable === ''){
         };
         const responseUpdateContact = await fetch(`/api/contacts/update`, optionsUpdateContact);
         if (responseUpdateContact.status === 200) {
-            window.location.href = '/profil';
+            Navigate('/profil');
         } else {
+            const errorMessage = await responseUpdateContact.text();
             main.innerHTML = `
             <section>
                 <div class="container h-100">
                     <div class="row d-flex
                     justify-content-center align-items-center h-100">
                         <div class="col-12 text-center">
-                            <h1>${responseUpdateContact.status} : ${responseUpdateContact.statusText}</h1>
+                            <h1>${responseUpdateContact.status} : ${errorMessage}</h1>
                         </div>
                     </div>
                 </div>

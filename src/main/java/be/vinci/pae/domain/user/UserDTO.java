@@ -126,6 +126,19 @@ public interface UserDTO {
    */
   void setRegistrationDateToNow();
 
+  /**
+   * Get version for optimistic lock.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Set version for optimistic lock.
+   *
+   * @param version the version to set
+   */
+  void setVersion(int version);
 
   /**
    * Hash user password.

@@ -83,7 +83,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.enterprise (trade_name, designation, address, "
-              + "phone_number, city, email) VALUES (?, ?, ?, ?, ?, ?)"
+              + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1)"
       );
       ps.setString(1, enterprise.getTradeName());
       ps.setString(2, enterprise.getDesignation());
@@ -124,6 +124,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     enterprise.setEmail(resultSet.getString(7));
     enterprise.setBlackListed(resultSet.getBoolean(8));
     enterprise.setBlackListMotivation(resultSet.getString(9));
+    enterprise.setVersion(resultSet.getInt("version"));
     return enterprise;
   }
 

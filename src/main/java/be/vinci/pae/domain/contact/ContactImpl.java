@@ -17,6 +17,7 @@ public class ContactImpl implements Contact {
   private int studentId;
   private int enterpriseId;
   private int academicYear;
+  private int version; // version for optimistic lock
 
   @Override
   public int getId() {
@@ -101,6 +102,16 @@ public class ContactImpl implements Contact {
   @Override
   public String[] getAllPossibleStates() {
     return POSSIBLESTATES;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override
