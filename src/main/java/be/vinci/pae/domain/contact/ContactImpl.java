@@ -17,7 +17,7 @@ public class ContactImpl implements Contact {
   private int studentId;
   private int enterpriseId;
   private int academicYear;
-  private int version;
+  private int version; // version for optimistic lock
 
   @Override
   public int getId() {

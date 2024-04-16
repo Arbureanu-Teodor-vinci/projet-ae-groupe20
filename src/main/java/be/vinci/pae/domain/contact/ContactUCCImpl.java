@@ -73,9 +73,9 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contactBeforeUpdate = contactDS.getOneContactByid(contact.getId());
     if (contactBeforeUpdate.getVersion() != contact.getVersion()) {
       dalServices.rollbackTransaction();
-      throw new BiznessException("Contact update, retry");
+      throw new BiznessException(
+          "This contact was updated in the meantime, refresh and try again.");
     }
-
     if (!contact.checkContactState()) {
       dalServices.rollbackTransaction();
       throw new BiznessException("Cant update contact state to this value");

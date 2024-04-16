@@ -179,7 +179,7 @@ public class ContactDAOImpl implements ContactDAO {
     contact.setStudentId(resultSet.getInt(6));
     contact.setEnterpriseId(resultSet.getInt(7));
     contact.setAcademicYear(resultSet.getInt(8));
-    contact.setVersion(resultSet.getInt(9));
+    contact.setVersion(resultSet.getInt("version"));
     return contact;
   }
 }

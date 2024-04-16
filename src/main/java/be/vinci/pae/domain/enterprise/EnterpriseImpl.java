@@ -16,6 +16,7 @@ public class EnterpriseImpl implements Enterprise {
   private String email;
   private boolean blackListed;
   private String blackListMotivation;
+  private int version; // version for optimistic lock
 
   @Override
   public int getId() {
@@ -76,7 +77,7 @@ public class EnterpriseImpl implements Enterprise {
   public void setCity(String city) {
     this.city = city;
   }
-  
+
   @Override
   public String getEmail() {
     return email;
@@ -105,6 +106,16 @@ public class EnterpriseImpl implements Enterprise {
   @Override
   public void setBlackListMotivation(String blackListMotivation) {
     this.blackListMotivation = blackListMotivation;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override
@@ -140,8 +151,8 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public boolean checkEnterpriseAdd() {
-    if  (tradeName != null && designation != null && adresse != null 
-         && phoneNumber != null && city != null && email != null) {
+    if (tradeName != null && designation != null && adresse != null
+        && phoneNumber != null && city != null && email != null) {
       return true;
     }
     return false;

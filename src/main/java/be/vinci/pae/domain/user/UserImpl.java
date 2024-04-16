@@ -17,6 +17,7 @@ public class UserImpl implements User {
   private String role;
   private String password;
   private LocalDate registrationDate;
+  private int version; // version for optimistic lock
 
 
   @Override
@@ -104,6 +105,15 @@ public class UserImpl implements User {
     this.registrationDate = LocalDate.now();
   }
 
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
+  }
 
   @Override
   public void setRoleByEmail() {
