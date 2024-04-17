@@ -2,8 +2,8 @@ package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.factory.DomainFactory;
-import be.vinci.pae.domain.internshipSupervisor.SupervisorDTO;
-import be.vinci.pae.domain.internshipSupervisor.SupervisorUCC;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
 import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

@@ -1,6 +1,6 @@
 package be.vinci.pae.services.internshipSupervisorServices;
 
-import be.vinci.pae.domain.internshipSupervisor.SupervisorDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import java.util.List;
 
 /**

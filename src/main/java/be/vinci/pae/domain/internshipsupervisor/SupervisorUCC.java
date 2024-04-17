@@ -1,4 +1,4 @@
-package be.vinci.pae.domain.internshipSupervisor;
+package be.vinci.pae.domain.internshipsupervisor;
 
 import java.util.List;
 

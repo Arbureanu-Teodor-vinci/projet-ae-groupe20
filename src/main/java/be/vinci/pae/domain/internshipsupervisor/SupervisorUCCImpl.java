@@ -1,4 +1,4 @@
-package be.vinci.pae.domain.internshipSupervisor;
+package be.vinci.pae.domain.internshipsupervisor;
 
 import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.dal.DALTransactionServices;

@@ -1,4 +1,4 @@
-package be.vinci.pae.domain.internshipSupervisor;
+package be.vinci.pae.domain.internshipsupervisor;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

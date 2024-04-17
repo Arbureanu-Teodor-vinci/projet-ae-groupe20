@@ -3,7 +3,7 @@ package be.vinci.pae.domain.factory;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
-import be.vinci.pae.domain.internshipSupervisor.SupervisorDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.UserDTO;
 
