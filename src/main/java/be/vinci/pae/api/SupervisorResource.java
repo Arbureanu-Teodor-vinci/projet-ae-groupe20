@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipSupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipSupervisor.SupervisorUCC;
@@ -21,6 +20,9 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
 
+/**
+ * Resource route for the supervisors requests.
+ */
 @Singleton
 @Path("/supervisors")
 public class SupervisorResource {
@@ -28,8 +30,6 @@ public class SupervisorResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private SupervisorUCC supervisorUCC;
-  @Inject
-  private EnterpriseUCC EnterpriseUCC;
   @Inject
   private DomainFactory domainFactory;
 

@@ -71,7 +71,11 @@ public class ContactUCCImpl implements ContactUCC {
     dalServices.startTransaction();
     Contact contact = (Contact) contactDTO;
     ContactDTO contactBeforeUpdate = contactDS.getOneContactByid(contact.getId());
-
+    if (contactBeforeUpdate.getVersion() != contact.getVersion()) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException(
+          "This contact was updated in the meantime, refresh and try again.");
+    }
     if (!contact.checkContactState()) {
       dalServices.rollbackTransaction();
       throw new BiznessException("Cant update contact state to this value");
@@ -89,6 +93,11 @@ public class ContactUCCImpl implements ContactUCC {
       throw new BiznessException("Refusal reason needs to be updatable only on refused state");
     }
     ContactDTO contactUpdated = contactDS.updateContact(contact);
+    if (contactUpdated == null) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Contact not updated");
+    }
+
     dalServices.commitTransaction();
     return contactUpdated;
   }

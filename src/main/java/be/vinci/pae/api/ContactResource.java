@@ -186,8 +186,8 @@ public class ContactResource {
   /**
    * Update a contact.
    *
-   * @param json    The JSON object containing the contact information.
-   * @param request The request.
+   * @param contactDTO The contact DTO containing the infos about the changes.
+   * @param request    The request.
    * @return JSON object containing the contact infos.
    */
   @PATCH
@@ -195,30 +195,15 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Etudiant"})
-  public ObjectNode updateContact(JsonNode json, @Context ContainerRequest request) {
+  public ObjectNode updateContact(ContactDTO contactDTO, @Context ContainerRequest request) {
     Logger.logEntry("POST /contacts/update");
 
-    if (!json.hasNonNull("idContact") || json.get("idContact").asText().isEmpty()) {
+    if (contactDTO == null || contactDTO.getId() == 0) {
       Logger.logEntry("Tried to update contact without id.");
       throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
     }
-    int id = json.get("idContact").asInt();
-    ContactDTO contact = domainFactory.getContactDTO();
-    contact.setId(id);
-    if (json.hasNonNull("interviewMethod")) {
-      contact.setInterviewMethod(json.get("interviewMethod").asText());
-    }
-    if (json.hasNonNull("tool")) {
-      contact.setTool(json.get("tool").asText());
-    }
-    if (json.hasNonNull("refusalReason")) {
-      contact.setRefusalReason(json.get("refusalReason").asText());
-    }
-    if (json.hasNonNull("stateContact")) {
-      contact.setStateContact(json.get("stateContact").asText());
-    }
 
-    ContactDTO updatedContact = contactUCC.updateContact(contact);
+    ContactDTO updatedContact = contactUCC.updateContact(contactDTO);
     return contactNodeMaker(updatedContact);
   }
 
@@ -239,7 +224,8 @@ public class ContactResource {
           .put("stateContact", contact.getStateContact())
           .put("studentId", contact.getStudentId())
           .put("enterpriseId", contact.getEnterpriseId())
-          .put("academicYear", contact.getAcademicYear());
+          .put("academicYear", contact.getAcademicYear())
+          .put("version", contact.getVersion());
       return contactNode;
     } catch (Exception e) {
       System.out.println("Can't create contact");

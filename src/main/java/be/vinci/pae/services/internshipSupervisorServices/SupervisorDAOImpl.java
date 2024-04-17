@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of supervisor service.
+ */
 public class SupervisorDAOImpl implements SupervisorDAO {
 
   @Inject
@@ -47,7 +50,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     SupervisorDTO internshipSupervisor = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.internship_supervisor WHERE id_internship_supervisor = ?"
+          "SELECT * FROM InternshipManagement.internship_supervisor "
+              + "WHERE id_internship_supervisor = ?"
       );
       ps.setInt(1, id);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -94,7 +98,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     Logger.logEntry("Supervisor DAO - addSupervisor");
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.internship_supervisor (last_name_supervisor, first_name_supervisor, email, phone_number, enterprise) "
+          "INSERT INTO InternshipManagement.internship_supervisor "
+              + "(last_name_supervisor, first_name_supervisor, email, phone_number, enterprise) "
               + "VALUES (?, ?, ?, ?, ?) RETURNING *"
       );
       ps.setString(1, supervisor.getFirstName());

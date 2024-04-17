@@ -77,6 +77,33 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     return enterprises;
   }
 
+  @Override
+  public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
+    Logger.logEntry("Enterprise DAO - addEnterprise");
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "INSERT INTO InternshipManagement.enterprise (trade_name, designation, address, "
+              + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1)"
+      );
+      ps.setString(1, enterprise.getTradeName());
+      ps.setString(2, enterprise.getDesignation());
+      ps.setString(3, enterprise.getAdresse());
+      ps.setString(4, enterprise.getPhoneNumber());
+      ps.setString(5, enterprise.getCity());
+      ps.setString(6, enterprise.getEmail());
+
+      ps.executeUpdate();
+      ps.close();
+
+    } catch (SQLException e) {
+      Logger.logEntry("Error in EnterpriseDAOImpl addEnterprise");
+      throw new RuntimeException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return enterprise;
+  }
+
   /**
    * Get the result set.
    *
@@ -93,9 +120,11 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     enterprise.setDesignation(resultSet.getString(3));
     enterprise.setAdresse(resultSet.getString(4));
     enterprise.setPhoneNumber(resultSet.getString(5));
-    enterprise.setEmail(resultSet.getString(6));
-    enterprise.setBlackListed(resultSet.getBoolean(7));
-    enterprise.setBlackListMotivation(resultSet.getString(8));
+    enterprise.setCity(resultSet.getString(6));
+    enterprise.setEmail(resultSet.getString(7));
+    enterprise.setBlackListed(resultSet.getBoolean(8));
+    enterprise.setBlackListMotivation(resultSet.getString(9));
+    enterprise.setVersion(resultSet.getInt("version"));
     return enterprise;
   }
 

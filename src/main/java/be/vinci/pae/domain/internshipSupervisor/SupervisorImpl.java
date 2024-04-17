@@ -95,14 +95,13 @@ public class SupervisorImpl implements Supervisor {
 
   @Override
   public String toString() {
-    return "InternshipSupervisor{" +
-        "id=" + id +
-        ", firstName='" + firstName + '\'' +
-        ", lastName='" + lastName + '\'' +
-        ", email='" + email + '\'' +
-        ", phoneNumber='" + phoneNumber + '\'' +
-        ", enterpriseId=" + enterpriseId +
-        '}';
+    return "InternshipSupervisor{"
+        + "id=" + id
+        + ", firstName='" + firstName + '\''
+        + ", lastName='" + lastName + '\''
+        + ", email='" + email + '\''
+        + ", phoneNumber='" + phoneNumber + '\''
+        + ", enterpriseId=" + enterpriseId + '}';
   }
 
   @Override

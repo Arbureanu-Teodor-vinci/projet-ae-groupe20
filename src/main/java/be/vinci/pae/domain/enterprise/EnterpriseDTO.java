@@ -79,6 +79,20 @@ public interface EnterpriseDTO {
   void setPhoneNumber(String phoneNumber);
 
   /**
+   * Get city.
+   *
+   * @return city String
+   */
+  String getCity();
+
+  /**
+   * Set city.
+   *
+   * @param city String
+   */
+  void setCity(String city);
+
+  /**
    * Get email.
    *
    * @return email String
@@ -119,6 +133,20 @@ public interface EnterpriseDTO {
    * @param blackListMotivation integer
    */
   void setBlackListMotivation(String blackListMotivation);
+
+  /**
+   * Get version for optimistic lock.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Set version for optimistic lock.
+   *
+   * @param version the version to set
+   */
+  void setVersion(int version);
 
   @Override
   boolean equals(Object o);

@@ -22,4 +22,12 @@ public interface EnterpriseDAO {
    * @return List of EnterpriseDTO
    */
   List<EnterpriseDTO> getAllEnterprises();
+
+  /**
+   * Add an enterprise to the DB.
+   *
+   * @param enterprise EnterpriseDTO
+   * @return EnterpriseDTO
+   */
+  EnterpriseDTO addEnterprise(EnterpriseDTO enterprise);
 }
