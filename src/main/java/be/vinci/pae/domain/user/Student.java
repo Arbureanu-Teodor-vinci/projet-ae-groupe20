@@ -29,7 +29,7 @@ public interface Student extends StudentDTO, User {
 
   /**
    * Check if a contact with an enterprise with the state accepted and the same academic year
-   * already
+   * already.
    *
    * @param contactsExisting List of ContactDTO
    * @return boolean

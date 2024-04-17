@@ -2,7 +2,7 @@ package be.vinci.pae.domain.internshipsupervisor;
 
 import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.dal.DALTransactionServices;
-import be.vinci.pae.services.internshipSupervisorServices.SupervisorDAO;
+import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import jakarta.inject.Inject;
 import java.util.List;
 

@@ -8,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UserImpl implements User {
 
-  private final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
+  private static final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
   private int id;
   private String lastName;
   private String firstName;

@@ -9,7 +9,7 @@ import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
-import be.vinci.pae.services.internshipSupervisorServices.SupervisorDAO;
+import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +17,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * SupervisorTest.
+ */
 public class SupervisorTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
@@ -27,6 +30,9 @@ public class SupervisorTest {
   private EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
   private EnterpriseDTO blacklistedEnterpriseDTO = domainFactory.getEnterpriseDTO();
 
+  /**
+   * Setup.
+   */
   @BeforeEach
   public void setup() {
     supervisorDTO.setId(1);

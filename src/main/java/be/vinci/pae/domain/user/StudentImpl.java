@@ -52,6 +52,13 @@ public class StudentImpl extends UserImpl implements Student {
     return false;
   }
 
+  /**
+   * Check if a contact with an enterprise with the state accepted and the same academic year
+   * already.
+   *
+   * @param contactsExisting List of ContactDTO
+   * @return boolean
+   */
   public boolean checkContactAccepted(List<ContactDTO> contactsExisting) {
     for (ContactDTO contact : contactsExisting) {
       if (contact.getStudentId() == this.getId()

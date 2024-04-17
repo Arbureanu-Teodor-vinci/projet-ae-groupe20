@@ -18,7 +18,7 @@ import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
-import be.vinci.pae.services.internshipSupervisorServices.SupervisorDAO;
+import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import be.vinci.pae.services.userservices.StudentDAO;
 import be.vinci.pae.services.userservices.UserDAO;
 import jakarta.inject.Singleton;

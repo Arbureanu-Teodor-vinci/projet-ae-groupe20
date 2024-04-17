@@ -21,6 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * ContactUccTest.
+ */
 public class ContactUccTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());

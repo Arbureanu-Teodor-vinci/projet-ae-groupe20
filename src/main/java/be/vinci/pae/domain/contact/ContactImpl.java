@@ -149,7 +149,9 @@ public class ContactImpl implements Contact {
     if (this.stateContact.equals(POSSIBLESTATES[3])) {
       return state.equals(POSSIBLESTATES[1]);
     }
-    // if updated state is not followed the previous state can only be initialised, taken or not followed
+    /* if updated state is not followed the previous state can only be initialised,
+       taken or not followed
+     */
     if (this.stateContact.equals(POSSIBLESTATES[4])) {
       return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
     }
@@ -169,7 +171,8 @@ public class ContactImpl implements Contact {
     } else if (this.stateContact.equals(
         POSSIBLESTATES[1])) { // taken state can update interviewMethod
       return this.interviewMethod != null;
-    } else { // on other states cant update interviewMethod from previous value when it was on taken state
+    } else {
+      // on other states cant update interviewMethod from previous value when it was on taken state
       return this.interviewMethod.equals(interviewMethodBeforeUpdate);
     }
   }
