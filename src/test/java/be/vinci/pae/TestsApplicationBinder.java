@@ -8,6 +8,8 @@ import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.factory.DomainFactoryImpl;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorUCCImpl;
 import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.StudentUCCImpl;
 import be.vinci.pae.domain.user.UserUCC;
@@ -16,6 +18,7 @@ import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
+import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import be.vinci.pae.services.userservices.StudentDAO;
 import be.vinci.pae.services.userservices.UserDAO;
 import jakarta.inject.Singleton;
@@ -43,5 +46,7 @@ public class TestsApplicationBinder extends AbstractBinder {
     bind(Mockito.mock(DALTransactionServices.class)).to(DALTransactionServices.class);
     bind(ContactUCCImpl.class).to(ContactUCC.class).in(Singleton.class);
     bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
+    bind(SupervisorUCCImpl.class).to(SupervisorUCC.class).in(Singleton.class);
+    bind(Mockito.mock(SupervisorDAO.class)).to(SupervisorDAO.class);
   }
 }
