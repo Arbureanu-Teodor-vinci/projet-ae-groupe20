@@ -134,20 +134,9 @@ public class UserResource {
       throw new WebApplicationException("You must enter a vinci email address.",
           Status.BAD_REQUEST);
     }
-
-    // Create a userDTO object from JSON to register with
-    UserDTO encodedUser = domainFactory.getUserDTO();
-    encodedUser.setEmail(user.getEmail());
-    encodedUser.setPassword(user.getPassword());
-    encodedUser.setFirstName(user.getFirstName());
-    encodedUser.setLastName(user.getLastName());
-    encodedUser.setTelephoneNumber(user.getTelephoneNumber());
-    encodedUser.setRole(user.getRole());
-
-    UserDTO newUser;
     StudentDTO studentDTO = domainFactory.getStudentDTO();
     // Try to register
-    newUser = userController.register(encodedUser);
+    UserDTO newUser = userController.register(user);
     //If the user is a student, register him as a student
     if (newUser.getEmail().endsWith("@student.vinci.be")) {
       studentDTO.setId(newUser.getId());

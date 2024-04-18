@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.academicyear;
 
-import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import jakarta.inject.Inject;
@@ -31,11 +30,7 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
       academicYear = (AcademicYear) academicYearDAO.getAcademicYearByAcademicYear(
           getNewAcademicYear());
       academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
-
-      if (academicYear.checkUniqueAcademicYear(academicYearDTO.getYear())) {
-        dalServices.rollbackTransaction();
-        throw new BiznessException("Academic year already exists.");
-      }
+      academicYear.checkUniqueAcademicYear(academicYearDTO.getYear());
 
       dalServices.commitTransaction();
     }

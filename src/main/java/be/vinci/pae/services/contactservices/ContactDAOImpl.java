@@ -44,7 +44,6 @@ public class ContactDAOImpl implements ContactDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getOneContactByid" + e.getMessage());
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -68,7 +67,6 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getAllContacts" + e.getMessage());
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -93,7 +91,6 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getContactsByUser" + e.getMessage());
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();

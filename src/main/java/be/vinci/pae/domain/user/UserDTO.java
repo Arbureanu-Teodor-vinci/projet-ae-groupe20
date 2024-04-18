@@ -145,11 +145,6 @@ public interface UserDTO {
    */
   void hashPassword();
 
-  /**
-   * Set automatically role to student if email is @student.vinci.be.
-   */
-  void setRoleByEmail();
-
   @Override
   boolean equals(Object o);
 

@@ -1,6 +1,6 @@
 package be.vinci.pae.domain.internshipsupervisor;
 
-import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import jakarta.inject.Inject;
@@ -26,7 +26,7 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   @Override
   public SupervisorDTO getOneSupervisorById(int id) {
     if (id <= 0) {
-      throw new BiznessException("id must be positive");
+      throw new BusinessException("id must be positive");
     }
     return supervisorDS.getOneSupervisorById(id);
   }
@@ -34,23 +34,19 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   @Override
   public SupervisorDTO addSupervisor(SupervisorDTO newSsupervisor) {
     Supervisor supervisor = (Supervisor) newSsupervisor;
-
-    dalServices.startTransaction(); // START TRANSACTION
-    // check if email exists already
-    SupervisorDTO supervisorDTO = supervisorDS.getOneSupervisorByEmail(
-        newSsupervisor.getEmail());
-    if (!supervisor.checkUniqueEmail(supervisorDTO)) {
+    try {
+      dalServices.startTransaction(); // START TRANSACTION
+      // check if email exists already
+      SupervisorDTO supervisorDTO = supervisorDS.getOneSupervisorByEmail(
+          newSsupervisor.getEmail());
+      supervisor.checkUniqueEmail(supervisorDTO);
+      newSsupervisor = supervisorDS.addSupervisor(newSsupervisor);
+    } catch (Throwable e) {
       dalServices.rollbackTransaction(); // ROLLBACK TRANSACTION
-      return null;
-    }
-
-    SupervisorDTO finalSupervisor = supervisorDS.addSupervisor(newSsupervisor);
-    if (finalSupervisor == null) {
-      dalServices.rollbackTransaction(); // ROLLBACK TRANSACTION
-      return null;
+      throw e;
     }
     dalServices.commitTransaction(); // COMMIT TRANSACTION
-    return finalSupervisor;
+    return newSsupervisor;
   }
 
 }

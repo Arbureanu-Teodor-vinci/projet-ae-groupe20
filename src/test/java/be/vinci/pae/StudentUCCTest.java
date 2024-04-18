@@ -1,12 +1,9 @@
 package be.vinci.pae;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.Student;
@@ -46,7 +43,7 @@ public class StudentUCCTest {
     studentDTO.setRole("Etudiant");
     Student student = (Student) studentDTO;
 
-    Mockito.when(studentDAO.getStudentById(1)).thenReturn(domainFactory.getStudentDTO());
+    Mockito.when(studentDAO.getStudentById(1)).thenReturn(null);
     Mockito.when(studentDAO.addStudent(student)).thenReturn(studentDTO);
 
   }
@@ -54,38 +51,13 @@ public class StudentUCCTest {
   @Test
   @DisplayName("Register a valid student")
   void testRegisterStudent1() {
-    Student student = (Student) studentDTO;
-
-    assertAll(
-        () -> assertNotNull(studentUCC.registerStudent(studentDTO)),
-        () -> assertTrue(student.checkUniqueStudent(studentDAO.getStudentById(1)))
-    );
+    assertEquals(studentDTO, studentUCC.registerStudent(studentDTO));
   }
 
   @Test
   @DisplayName("Register a student that already exists")
   void testRegisterStudent2() {
-    Student student = (Student) studentDTO;
     Mockito.when(studentDAO.getStudentById(1)).thenReturn(studentDTO);
-    assertAll(
-        () -> assertThrows(BiznessException.class, () -> studentUCC.registerStudent(studentDTO)),
-        () -> assertFalse(student.checkUniqueStudent(studentDAO.getStudentById(1)))
-    );
-  }
-
-  @Test
-  @DisplayName("Register a student with no academic year")
-  void testRegisterStudent3() {
-    Student student = (Student) studentDTO;
-    student.setAcademicYear(null);
-    assertThrows(BiznessException.class, () -> studentUCC.registerStudent(studentDTO));
-  }
-
-  @Test
-  @DisplayName("Register a student with null id")
-  void testRegisterStudent4() {
-    Student student = (Student) studentDTO;
-    student.setId(0);
-    assertThrows(NullPointerException.class, () -> studentUCC.registerStudent(studentDTO));
+    assertThrows(BusinessException.class, () -> studentUCC.registerStudent(studentDTO));
   }
 }

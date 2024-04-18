@@ -1,5 +1,6 @@
 package be.vinci.pae.services.internshipsupervisorservices;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.services.dal.DALServices;
@@ -36,8 +37,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in InternshipSupervisorDAO getAllSupervisors");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -61,8 +61,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in InternshipSupervisorDAO getOneInternshipSupervisorById");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -85,8 +84,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in InternshipSupervisorDAO getOneInternshipSupervisorByEmail");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -114,8 +112,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in SupervisorDAO addSupervisor");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }

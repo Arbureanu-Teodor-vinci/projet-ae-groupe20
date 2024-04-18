@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.user;
 
-import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.userservices.StudentDAO;
 import jakarta.inject.Inject;
@@ -19,31 +18,16 @@ public class StudentUCCImpl implements StudentUCC {
   @Override
   public StudentDTO registerStudent(StudentDTO studentDTO) {
     Student student = (Student) studentDTO;
-
-    dalServices.startTransaction();
-    StudentDTO existingStudent = studentDAO.getStudentById(student.getId());
-
-    if (!student.checkUniqueStudent(existingStudent)) {
-      dalServices.rollbackTransaction();
-      throw new BiznessException("Student already exists");
+    try {
+      dalServices.startTransaction();
+      StudentDTO existingStudent = studentDAO.getStudentById(student.getId());
+      student.checkUniqueStudent(existingStudent);
+      studentDTO = studentDAO.addStudent(student);
+      dalServices.commitTransaction(); //COMMIT TRANSACTION
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction(); //ROLLBACK TRANSACTION
+      throw e;
     }
-    if (student.getStudentAcademicYear() == null) {
-      dalServices.rollbackTransaction();
-      throw new BiznessException("Academic year is required");
-    }
-    if (student.getId() == 0) {
-      dalServices.rollbackTransaction();
-      throw new BiznessException("Role is required");
-    }
-
-    studentDTO = studentDAO.addStudent(student);
-
-    if (studentDTO == null) {
-      dalServices.rollbackTransaction();
-      throw new BiznessException("Error while adding user.");
-    }
-
-    dalServices.commitTransaction(); //COMMIT TRANSACTION
     return studentDTO;
   }
 
