@@ -135,43 +135,35 @@ public class ContactImpl implements Contact {
       throw new BusinessException("Cant update contact from this final state");
     }
     // if updated state is initialised the previous state can only be initialised
-    if (this.stateContact.equals(POSSIBLESTATES[0])) {
-      if (!previousState.equals(POSSIBLESTATES[0])) {
-        throw new BusinessException("Cant update contact to initialised state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[0])) {
+      throw new BusinessException("Cant update contact to initialised state from previous state");
     }
     // if updated state is taken the previous state can only be initialised or taken
-    if (this.stateContact.equals(POSSIBLESTATES[1])) {
-      if (!previousState.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[1])) {
-        throw new BusinessException("Cant update contact to taken state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[1]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to taken state from previous state");
     }
     // if updated state is suspended the previous state can only be initialised, taken or suspended
-    if (this.stateContact.equals(POSSIBLESTATES[2])) {
-      if (!previousState.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[1])) {
-        throw new BusinessException("Cant update contact to suspended state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[2]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to suspended state from previous state");
     }
     // if updated state is refused the previous state can only be taken
-    if (this.stateContact.equals(POSSIBLESTATES[3])) {
-      if (!previousState.equals(POSSIBLESTATES[1])) {
-        throw new BusinessException("Cant update contact to refused state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[3]) && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to refused state from previous state");
     }
     /* if updated state is not followed the previous state can only be initialised,
        taken or not followed
      */
-    if (this.stateContact.equals(POSSIBLESTATES[4])) {
-      if (!previousState.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[1])) {
-        throw new BusinessException(
-            "Cant update contact to not followed state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[4]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException(
+          "Cant update contact to not followed state from previous state");
     }
     // if updated state is accepted the previous state can only be taken
-    if (this.stateContact.equals(POSSIBLESTATES[5])) {
-      if (!previousState.equals(POSSIBLESTATES[1])) {
-        throw new BusinessException("Cant update contact to accepted state from previous state");
-      }
+    if (this.stateContact.equals(POSSIBLESTATES[5]) &&
+        previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to accepted state from previous state");
     }
   }
 
