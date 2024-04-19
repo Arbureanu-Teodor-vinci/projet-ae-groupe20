@@ -149,12 +149,4 @@ public class EnterpriseImpl implements Enterprise {
         + '}';
   }
 
-  @Override
-  public boolean checkEnterpriseAdd() {
-    if (tradeName != null && designation != null && adresse != null
-        && phoneNumber != null && city != null && email != null) {
-      return true;
-    }
-    return false;
-  }
 }

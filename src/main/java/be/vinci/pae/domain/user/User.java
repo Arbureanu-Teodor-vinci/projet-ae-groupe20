@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.api.filters.BusinessException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -12,32 +13,28 @@ public interface User extends UserDTO {
    * Check if password is hashed.
    *
    * @param password -> password to check
-   * @return true/false
    */
-  boolean checkPassword(String password);
+  void checkPassword(String password) throws BusinessException;
 
   /**
    * Check if email is a vinci email.
    *
    * @param email -> email to check
-   * @return true/false
    */
-  boolean checkVinciEmail(String email);
+  void checkVinciEmail(String email) throws BusinessException;
 
   /**
    * Check if email is unique. If empty, return true.
    *
    * @param userDTO -> user to check
-   * @return true/false
    */
-  boolean checkUniqueEmail(UserDTO userDTO);
+  void checkUniqueEmail(UserDTO userDTO) throws BusinessException;
 
   /**
    * Check if role is "Etudiant", "Professeur" or "Administratif".
    *
    * @param role -> role to check
-   * @return true/false
    */
-  boolean checkRole(String role);
+  void checkRole(String role) throws BusinessException;
 
 }

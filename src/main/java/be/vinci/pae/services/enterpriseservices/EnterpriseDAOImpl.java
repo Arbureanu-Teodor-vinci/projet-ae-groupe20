@@ -1,5 +1,6 @@
 package be.vinci.pae.services.enterpriseservices;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
@@ -29,7 +30,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     EnterpriseDTO enterprise = null;
 
     try {
-
       PreparedStatement ps = dalConn.getPS(
           "SELECT * FROM InternshipManagement.enterprise WHERE id_enterprise = ?"
       );
@@ -44,8 +44,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getOneEnterpriseByid");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -60,7 +59,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT * FROM InternshipManagement.enterprise"
       );
-
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
           enterprises.add(getResultSet(resultSet));
@@ -69,8 +67,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getAllEnterprises");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -96,8 +93,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl addEnterprise");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }

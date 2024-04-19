@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.academicyear;
 
+import be.vinci.pae.api.filters.BusinessException;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -62,9 +63,11 @@ public class AcademicYearImpl implements AcademicYear {
   }
 
   @Override
-  public boolean checkUniqueAcademicYear(String academicYear) {
+  public void checkUniqueAcademicYear(String academicYear) {
     //Check if the academic year is unique
-    return !academicYear.equals(this.year);
+    if (academicYear.equals(this.year)) {
+      throw new BusinessException("Academic year already exists.");
+    }
   }
 
   @Override

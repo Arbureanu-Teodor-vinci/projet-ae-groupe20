@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
@@ -56,8 +56,8 @@ public class SupervisorTest {
   @DisplayName("Test getOneInternshipSupervisor with an id <= 0")
   public void testGetOneInternshipSupervisorWithNegativeId() {
     assertAll(
-        () -> assertThrows(BiznessException.class, () -> supervisorUCC.getOneSupervisorById(-1)),
-        () -> assertThrows(BiznessException.class, () -> supervisorUCC.getOneSupervisorById(0))
+        () -> assertThrows(BusinessException.class, () -> supervisorUCC.getOneSupervisorById(-1)),
+        () -> assertThrows(BusinessException.class, () -> supervisorUCC.getOneSupervisorById(0))
     );
   }
 
@@ -91,9 +91,9 @@ public class SupervisorTest {
     supervisorToAdd.setEmail("test@test.gmail");
 
     Mockito.when(supervisorDAO.getOneSupervisorByEmail("test@test.gmail"))
-        .thenReturn(supervisorDTO);
+        .thenReturn(supervisorToAdd);
 
-    assertEquals(null, supervisorUCC.addSupervisor(supervisorToAdd));
+    assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
   }
 
 }

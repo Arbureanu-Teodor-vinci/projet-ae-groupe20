@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.internshipsupervisor;
 
 
+import be.vinci.pae.api.filters.BusinessException;
 import java.util.Objects;
 
 /**
@@ -105,8 +106,10 @@ public class SupervisorImpl implements Supervisor {
   }
 
   @Override
-  public boolean checkUniqueEmail(SupervisorDTO supervisorDTO) {
-    return supervisorDTO == null;
+  public void checkUniqueEmail(SupervisorDTO supervisorDTO) {
+    if (supervisorDTO != null) {
+      throw new BusinessException("Email for this supervisor already exists");
+    }
   }
 
 }

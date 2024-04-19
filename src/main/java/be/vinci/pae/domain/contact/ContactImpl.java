@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.contact;
 
+import be.vinci.pae.api.filters.BusinessException;
 import java.util.Objects;
 
 /**
@@ -127,75 +128,95 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public boolean checkContactStateUpdate(String state) {
+  public void checkContactStateUpdate(String previousState) {
     // if state is one of final states which cant be updated
-    if (state.equals(POSSIBLESTATES[5]) || state.equals(POSSIBLESTATES[4])
-        || state.equals(POSSIBLESTATES[3]) || state.equals(POSSIBLESTATES[2])) {
-      return false;
+    if (previousState.equals(POSSIBLESTATES[5]) || previousState.equals(POSSIBLESTATES[4])
+        || previousState.equals(POSSIBLESTATES[3]) || previousState.equals(POSSIBLESTATES[2])) {
+      throw new BusinessException("Cant update contact from this final state");
     }
     // if updated state is initialised the previous state can only be initialised
-    if (this.stateContact.equals(POSSIBLESTATES[0])) {
-      return state.equals(POSSIBLESTATES[0]);
+    if (this.stateContact.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[0])) {
+      throw new BusinessException("Cant update contact to initialised state from previous state");
     }
     // if updated state is taken the previous state can only be initialised or taken
-    if (this.stateContact.equals(POSSIBLESTATES[1])) {
-      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
+    if (this.stateContact.equals(POSSIBLESTATES[1]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to taken state from previous state");
     }
     // if updated state is suspended the previous state can only be initialised, taken or suspended
-    if (this.stateContact.equals(POSSIBLESTATES[2])) {
-      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
+    if (this.stateContact.equals(POSSIBLESTATES[2]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to suspended state from previous state");
     }
-    // if updated state is refused the previous state can only be initialised or refused
-    if (this.stateContact.equals(POSSIBLESTATES[3])) {
-      return state.equals(POSSIBLESTATES[1]);
+    // if updated state is refused the previous state can only be taken
+    if (this.stateContact.equals(POSSIBLESTATES[3]) && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to refused state from previous state");
     }
     /* if updated state is not followed the previous state can only be initialised,
        taken or not followed
      */
-    if (this.stateContact.equals(POSSIBLESTATES[4])) {
-      return state.equals(POSSIBLESTATES[0]) || state.equals(POSSIBLESTATES[1]);
+    if (this.stateContact.equals(POSSIBLESTATES[4]) && !previousState.equals(POSSIBLESTATES[0])
+        && !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException(
+          "Cant update contact to not followed state from previous state");
     }
-    // if updated state is accepted the previous state can only be taken or accepted
-    if (this.stateContact.equals(POSSIBLESTATES[5])) {
-      return state.equals(POSSIBLESTATES[1]);
+    // if updated state is accepted the previous state can only be taken
+    if (this.stateContact.equals(POSSIBLESTATES[5]) &&
+        !previousState.equals(POSSIBLESTATES[1])) {
+      throw new BusinessException("Cant update contact to accepted state from previous state");
     }
-
-    return false;
   }
 
   @Override
-  public boolean checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) {
-    if (this.stateContact.equals(
-        POSSIBLESTATES[0])) { // initial state can only have null interviewMethod
-      return this.interviewMethod == null;
+  public void checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) {
+    // initial state can only have null interviewMethod
+    if (this.stateContact.equals(POSSIBLESTATES[0])) {
+      if (this.interviewMethod != null) {
+        throw new BusinessException("Cant update interview method if state is initialised");
+      }
     } else if (this.stateContact.equals(
         POSSIBLESTATES[1])) { // taken state can update interviewMethod
-      return this.interviewMethod != null;
+      if (this.interviewMethod == null || this.interviewMethod.isBlank()) {
+        throw new BusinessException(
+            "Cant update interview method to null or empty when state is taken");
+      }
     } else {
       // on other states cant update interviewMethod from previous value when it was on taken state
-      return this.interviewMethod.equals(interviewMethodBeforeUpdate);
-    }
-  }
+      if (!this.interviewMethod.equals(interviewMethodBeforeUpdate)) {
+        throw new BusinessException(
+            "Cant update interview method from previous value when state is not taken");
 
-  @Override
-  public boolean checkContactRefusalReasonUpdate() {
-    //can only update contactRefusal on refused state
-    if (this.stateContact.equals(POSSIBLESTATES[3])) {
-      return this.refusalReason != null;
-    } else {
-      return this.refusalReason == null || this.refusalReason.isBlank();
-    }
-  }
-
-
-  @Override
-  public boolean checkContactState() {
-    for (String state : POSSIBLESTATES) {
-      if (this.stateContact.equals(state)) {
-        return true;
       }
     }
-    return false;
+  }
+
+  @Override
+  public void checkContactRefusalReasonUpdate() {
+    //can only update contactRefusal on refused state
+    if (this.stateContact.equals(POSSIBLESTATES[3])) {
+      if (this.refusalReason == null) {
+        throw new BusinessException("Refusal reason needs to be not null on refused state");
+      }
+    } else {
+      if (this.refusalReason != null) {
+        throw new BusinessException("Refusal reason needs to be updatable only on refused state");
+      }
+    }
+  }
+
+
+  @Override
+  public void checkContactState() {
+    boolean validState = false;
+    for (String state : POSSIBLESTATES) {
+      if (this.stateContact.equals(state)) {
+        validState = true;
+        break;
+      }
+    }
+    if (!validState) {
+      throw new BusinessException("Invalid state");
+    }
   }
 
 

@@ -36,7 +36,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -60,7 +59,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -87,7 +85,6 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();

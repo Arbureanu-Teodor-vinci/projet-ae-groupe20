@@ -106,7 +106,6 @@ public class EnterpriseResource {
   @Authorize(rolesAllowed = {"Etudiant"})
   public ObjectNode addEnterprise(EnterpriseDTO enterpriseDTO) {
     Logger.logEntry("POST /enterprises/add");
-    // get the user token from the headers
 
     // if the enterprise is null, throw an exception
     if (enterpriseDTO == null) {
