@@ -155,7 +155,6 @@ stateContactSelect.addEventListener('change', (event) => {
     
     interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
     toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
-    // toolDiv.style.display = interViewMethodSelect.value === 'Dans l entreprise' ? 'none' : 'block';
     
 });
 
