@@ -24,9 +24,6 @@ async function renderCreationContactPage() {
       const response = await fetch('/api/enterprises/getAll', options);
       const companies = await response.json();
 
-      // eslint-disable-next-line no-console
-      console.log(companies[0].tradeName);
-    
     const main = document.querySelector('main');
 
     main.innerHTML = `
