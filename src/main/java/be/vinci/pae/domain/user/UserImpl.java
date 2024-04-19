@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.api.filters.BusinessException;
 import java.time.LocalDate;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -8,7 +9,7 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UserImpl implements User {
 
-  private final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
+  private static final String[] POSSIBLE_ROLES = {"Etudiant", "Professeur", "Administratif"};
   private int id;
   private String lastName;
   private String firstName;
@@ -116,15 +117,6 @@ public class UserImpl implements User {
   }
 
   @Override
-  public void setRoleByEmail() {
-    if (this.email.endsWith("@student.vinci.be")) {
-      setRole(POSSIBLE_ROLES[0]);
-    } else if (this.email.endsWith("@vinci.be")) {
-      setRole(role);
-    }
-  }
-
-  @Override
   public void hashPassword() {
     this.password = BCrypt.hashpw(this.password, BCrypt.gensalt());
   }
@@ -161,36 +153,38 @@ public class UserImpl implements User {
   }
 
   @Override
-  public boolean checkPassword(String password) {
-    return BCrypt.checkpw(password, this.password);
-  }
-
-  @Override
-  public boolean checkVinciEmail(String email) {
-    return email.endsWith("@vinci.be") || email.endsWith("@student.vinci.be");
-  }
-
-  @Override
-  public boolean checkUniqueEmail(UserDTO userDTO) {
-    return userDTO == null;
-  }
-
-  @Override
-  public boolean checkRole(String role) {
-    for (String possibleRole : POSSIBLE_ROLES) {
-      if (role.equals(possibleRole)) {
-        if (role.equals(POSSIBLE_ROLES[0]) && email.endsWith("@student.vinci.be")) {
-          return true;
-        } else if (role.equals(POSSIBLE_ROLES[1]) && email.endsWith("@vinci.be")) {
-          return true;
-        } else if (role.equals(POSSIBLE_ROLES[2]) && email.endsWith("@vinci.be")) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+  public void checkPassword(String password) {
+    if (!BCrypt.checkpw(password, this.password)) {
+      throw new BusinessException("Password is incorrect.");
     }
-    return false;
+  }
+
+  @Override
+  public void checkVinciEmail(String email) {
+    if (!email.endsWith("@vinci.be") && !email.endsWith("@student.vinci.be")) {
+      throw new BusinessException("Email is not a vinci email.");
+    }
+  }
+
+  @Override
+  public void checkUniqueEmail(UserDTO userDTO) {
+    if (userDTO != null) {
+      throw new BusinessException("Email already exists.");
+    }
+  }
+
+  @Override
+  public void checkRole(String role) throws BusinessException {
+    if (!role.equals(POSSIBLE_ROLES[0]) && !role.equals(POSSIBLE_ROLES[1]) && !role.equals(
+        POSSIBLE_ROLES[2])) {
+      throw new BusinessException("Role is not valid.");
+    }
+
+    if (!(role.equals(POSSIBLE_ROLES[0]) && email.endsWith("@student.vinci.be"))
+        && !(role.equals(POSSIBLE_ROLES[1]) && email.endsWith("@vinci.be"))
+        && !(role.equals(POSSIBLE_ROLES[2]) && email.endsWith("@vinci.be"))) {
+      throw new BusinessException("Role and email combination is not valid.");
+    }
   }
 
 }

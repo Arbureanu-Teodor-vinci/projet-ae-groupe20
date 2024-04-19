@@ -1,6 +1,5 @@
 package be.vinci.pae.domain.user;
 
-import be.vinci.pae.api.filters.BiznessException;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.userservices.UserDAO;
 import jakarta.inject.Inject;
@@ -23,15 +22,14 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public UserDTO login(String email, String password) {
-
     UserDTO userDTO = userDAO.getOneUserByEmail(email);
+
     User user = (User) userDTO;
     if (user == null) {
-      throw new NullPointerException("Not found");
+      throw new NullPointerException("Invalid email");
     }
-    if (!user.checkPassword(password)) {
-      throw new BiznessException("Password is incorrect.");
-    }
+    user.checkPassword(password);
+
     return userDTO;
   }
 
@@ -39,39 +37,28 @@ public class UserUCCImpl implements UserUCC {
   public UserDTO register(UserDTO registeredUser) {
     User user = (User) registeredUser; // cast to User to access Bizness methods
     // check if email is a vinci email
-    if (!user.checkVinciEmail(registeredUser.getEmail())) {
-      throw new BiznessException("Email is not a vinci email.");
-    }
-    // check if role is valid
-    if (!user.checkRole(registeredUser.getRole())) {
-      throw new BiznessException("Role is not valid.");
-    }
-    // check if password is null
-    if (registeredUser.getPassword() == null) {
-      throw new BiznessException("Password is null.");
-    }
+    try {
+      user.checkVinciEmail(registeredUser.getEmail());
+      // check if role is valid
+      user.checkRole(registeredUser.getRole());
 
-    dalServices.startTransaction(); //START TRANSACTION
-    // check if email exists already
-    UserDTO userDTO = userDAO.getOneUserByEmail(registeredUser.getEmail());
-    if (!user.checkUniqueEmail(userDTO)) {
+      dalServices.startTransaction(); //START TRANSACTION
+      // check if email exists already
+      UserDTO userDTO = userDAO.getOneUserByEmail(registeredUser.getEmail());
+      user.checkUniqueEmail(userDTO);
+
+      //set role, hashed password and set today registration date
+      registeredUser.hashPassword();
+      registeredUser.setRegistrationDateToNow();
+
+      // add user to DB
+      registeredUser = userDAO.addUser(registeredUser);
+      dalServices.commitTransaction(); //COMMIT TRANSACTION
+
+    } catch (Throwable e) {
       dalServices.rollbackTransaction(); //ROLLBACK TRANSACTION
-      throw new BiznessException("Email already exists.");
+      throw e;
     }
-    //set role, hashed password and set today registration date
-    registeredUser.hashPassword();
-    registeredUser.setRoleByEmail();
-    registeredUser.setRegistrationDateToNow();
-
-    // add user to DB
-    registeredUser = userDAO.addUser(registeredUser);
-
-    if (registeredUser == null) {
-      dalServices.rollbackTransaction(); //ROLLBACK TRANSACTION
-      throw new BiznessException("Error while adding user.");
-    }
-
-    dalServices.commitTransaction(); //COMMIT TRANSACTION
 
     return registeredUser;
   }

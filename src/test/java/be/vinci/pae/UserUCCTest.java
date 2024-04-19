@@ -1,12 +1,12 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
@@ -55,7 +55,7 @@ public class UserUCCTest {
   @Test
   @DisplayName("Login with invalid password")
   void testLogin2() {
-    assertThrows(BiznessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       userUCC.login("admin", "test");
     });
   }
@@ -79,7 +79,7 @@ public class UserUCCTest {
   @Test
   @DisplayName("Login with null password")
   void testLogin5() {
-    assertThrows(BiznessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       userUCC.login("admin", null);
     });
   }
@@ -95,8 +95,17 @@ public class UserUCCTest {
   @Test
   @DisplayName("Login with empty password")
   void testLogin7() {
-    assertThrows(BiznessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       userUCC.login("admin", "");
+    });
+  }
+
+  @Test
+  @DisplayName("Login with nonexistent email")
+  void testLogin8() {
+    Mockito.when(userDAO.getOneUserByEmail(Mockito.anyString())).thenReturn(null);
+    assertThrows(NullPointerException.class, () -> {
+      userUCC.login("eee", "admin");
     });
   }
 
@@ -108,19 +117,10 @@ public class UserUCCTest {
     newUser.setPassword("testPassword");
     newUser.setRole("Etudiant");
 
-    User user = (User) newUser;
-
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
     Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
-    UserDTO registeredUser = userUCC.register(newUser);
 
-    assertAll(
-        () -> assertTrue(user.checkRole(newUser.getRole())),
-        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
-        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
-        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
-        () -> assertNotNull(registeredUser)
-    );
+    assertEquals(userUCC.register(newUser), newUser);
   }
 
   @Test
@@ -131,19 +131,10 @@ public class UserUCCTest {
     newUser.setPassword("testPassword");
     newUser.setRole("Professeur");
 
-    User user = (User) newUser;
-
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
     Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
-    UserDTO registeredUser = userUCC.register(newUser);
 
-    assertAll(
-        () -> assertTrue(user.checkRole(newUser.getRole())),
-        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
-        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
-        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
-        () -> assertNotNull(registeredUser)
-    );
+    assertEquals(userUCC.register(newUser), newUser);
   }
 
   @Test
@@ -154,19 +145,10 @@ public class UserUCCTest {
     newUser.setPassword("testPassword");
     newUser.setRole("Administratif");
 
-    User user = (User) newUser;
-
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
     Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
-    UserDTO registeredUser = userUCC.register(newUser);
 
-    assertAll(
-        () -> assertTrue(user.checkRole(newUser.getRole())),
-        () -> assertTrue(user.checkVinciEmail(newUser.getEmail())),
-        () -> assertTrue(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail()))),
-        () -> assertTrue(BCrypt.checkpw("testPassword", newUser.getPassword())),
-        () -> assertNotNull(registeredUser)
-    );
+    assertEquals(userUCC.register(newUser), newUser);
   }
 
   @Test
@@ -181,8 +163,7 @@ public class UserUCCTest {
 
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
     assertAll(
-        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
-        () -> assertFalse(user.checkVinciEmail(newUser.getEmail()))
+        () -> assertThrows(BusinessException.class, () -> userUCC.register(newUser))
     );
     ;
   }
@@ -198,8 +179,7 @@ public class UserUCCTest {
 
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
     assertAll(
-        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
-        () -> assertFalse(user.checkRole(newUser.getRole()))
+        () -> assertThrows(BusinessException.class, () -> userUCC.register(newUser))
     );
   }
 
@@ -214,8 +194,7 @@ public class UserUCCTest {
 
     Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(newUser);
     assertAll(
-        () -> assertThrows(BiznessException.class, () -> userUCC.register(newUser)),
-        () -> assertFalse(user.checkUniqueEmail(userDAO.getOneUserByEmail(newUser.getEmail())))
+        () -> assertThrows(BusinessException.class, () -> userUCC.register(newUser))
     );
   }
 
@@ -238,7 +217,7 @@ public class UserUCCTest {
     newUser.setPassword(null);
     newUser.setRole("Professeur");
 
-    assertThrows(BiznessException.class, () -> userUCC.register(newUser));
+    assertThrows(BusinessException.class, () -> userUCC.register(newUser));
   }
 }
 

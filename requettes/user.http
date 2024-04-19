@@ -63,7 +63,7 @@ Content-Type: application/json
   "role": "Etudiant",
   "firstName": "Student",
   "lastName": "Vinci",
-  "phoneNumber": "0499999999"
+  "telephoneNumber": "0499999999"
 }
 
 ### REGISTER A NEW TEACHER USER

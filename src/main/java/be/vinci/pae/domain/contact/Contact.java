@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.contact;
 
+import be.vinci.pae.api.filters.BusinessException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -13,29 +14,24 @@ public interface Contact extends ContactDTO {
    *
    * @param state String
    */
-  boolean checkContactStateUpdate(String state);
+  void checkContactStateUpdate(String state) throws BusinessException;
 
   /**
    * Check if the state is valid.
-   *
-   * @return boolean
    */
-  boolean checkContactState();
+  void checkContactState() throws BusinessException;
 
   /**
    * Check if the interview method is updatable from state.
    *
    * @param interviewMethodBeforeUpdate String before the update
-   * @return boolean
    */
-  boolean checkInterviewMethodUpdate(String interviewMethodBeforeUpdate);
+  void checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) throws BusinessException;
 
 
   /**
    * Check if the refusal reason is updatable from state.
-   *
-   * @return boolean
    */
-  boolean checkContactRefusalReasonUpdate();
+  void checkContactRefusalReasonUpdate() throws BusinessException;
 
 }

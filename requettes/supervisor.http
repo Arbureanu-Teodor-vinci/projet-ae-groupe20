@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:3000
+@authToken = {{adminToken}}
+
+### CREATE A NEW SUPERVISOR
+POST {{baseUrl}}/supervisors/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "lastName": "Supervisor 1",
+    "firstName": "Supervisor 1",
+    "email": "super@sup@gmail.com",
+    "enterpriseId": 1,
+    "phoneNumber": "1234567890"
+}
+
+### CREATE A NEW SUPERVISOR WITH INVALID EMAIL THAT ALREADY EXISTS
+POST {{baseUrl}}/supervisors/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "lastName": "Supervisor 1",
+  "firstName": "Supervisor 1",
+  "email": "f.assal@assyst-europe.com",
+  "enterpriseId": 1,
+  "phoneNumber": "1234567890"
+}
+
+### CREATE A NEW SUPERVISOR WITH INVALID ENTERPRISE ID
+POST {{baseUrl}}/supervisors/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "lastName": "Supervisor 1",
+  "firstName": "Supervisor 1",
+  "email": "test2@gmail.com",
+  "enterpriseId": 99,
+  "phoneNumber": "1234567890"
+}
+
+### GET ALL SUPERVISORS
+GET {{baseUrl}}/supervisors/getAll
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+### GET SUPERVISOR BY ID = 1
+GET {{baseUrl}}/supervisors/getOne:1
+Content-Type: application/json
+Authorization: {{adminToken}}

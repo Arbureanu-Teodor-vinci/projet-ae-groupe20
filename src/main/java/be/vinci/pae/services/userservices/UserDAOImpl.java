@@ -58,8 +58,6 @@ public class UserDAOImpl implements UserDAO {
       ps.close();
       // catching exeptions
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getOneUserByID" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -84,13 +82,10 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-          //user.setAcademicYear(rs.getString("academic_year"));
         }
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getOneUserByEmail" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -118,8 +113,6 @@ public class UserDAOImpl implements UserDAO {
         ps.close();
       }
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getAllUsers" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -152,8 +145,6 @@ public class UserDAOImpl implements UserDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl addUser" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -181,8 +172,6 @@ public class UserDAOImpl implements UserDAO {
       ps.executeUpdate();
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl updateUser" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
