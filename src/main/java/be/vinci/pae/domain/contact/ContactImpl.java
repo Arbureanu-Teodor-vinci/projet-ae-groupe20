@@ -182,12 +182,22 @@ public class ContactImpl implements Contact {
       }
     } else {
       // on other states cant update interviewMethod from previous value when it was on taken state
-      if (!this.interviewMethod.equals(interviewMethodBeforeUpdate)) {
+      if (!Objects.equals(this.interviewMethod, interviewMethodBeforeUpdate)) {
         throw new BusinessException(
             "Cant update interview method from previous value when state is not taken");
 
       }
     }
+  }
+
+  @Override
+  public void checkContactToolUpdate() {
+    // tool cannot be null if interviewMethod is 'A distance'
+    if (Objects.equals(this.interviewMethod, "A distance") && (this.tool == null
+        || this.tool.isBlank())) {
+      throw new BusinessException("Tool cannot be null if interviewMethod is 'A distance'");
+    }
+
   }
 
   @Override
@@ -198,7 +208,7 @@ public class ContactImpl implements Contact {
         throw new BusinessException("Refusal reason needs to be not null on refused state");
       }
     } else {
-      if (this.refusalReason != null) {
+      if (this.refusalReason != null && !this.refusalReason.isBlank()) {
         throw new BusinessException("Refusal reason needs to be updatable only on refused state");
       }
     }

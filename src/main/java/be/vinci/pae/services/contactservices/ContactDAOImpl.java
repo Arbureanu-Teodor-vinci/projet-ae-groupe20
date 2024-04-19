@@ -157,6 +157,24 @@ public class ContactDAOImpl implements ContactDAO {
     return contact;
   }
 
+  @Override
+  public void updateAllContactsOfStudentToSuspended(int studentID) {
+    Logger.logEntry("Contact DAO - updateAllContactsOfStudentToSuspended" + studentID);
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "UPDATE InternshipManagement.contacts SET state_contact = 'suspendu'"
+              + " WHERE student = ? AND state_contact != 'accepté'"
+      );
+      ps.setInt(1, studentID);
+      ps.executeUpdate();
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+  }
+
   /**
    * Get the result set.
    *
