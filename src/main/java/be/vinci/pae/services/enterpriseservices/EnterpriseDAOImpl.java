@@ -1,5 +1,6 @@
 package be.vinci.pae.services.enterpriseservices;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
@@ -96,8 +97,8 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl addEnterprise");
-      throw new RuntimeException(e);
+
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }

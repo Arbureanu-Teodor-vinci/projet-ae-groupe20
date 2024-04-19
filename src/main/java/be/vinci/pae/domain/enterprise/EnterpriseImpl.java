@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.enterprise;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -76,7 +77,7 @@ public class EnterpriseImpl implements Enterprise {
   public void setCity(String city) {
     this.city = city;
   }
-  
+
   @Override
   public String getEmail() {
     return email;
@@ -139,10 +140,11 @@ public class EnterpriseImpl implements Enterprise {
   }
 
   @Override
-  public boolean checkEnterpriseAdd() {
-    if  (tradeName != null && designation != null && adresse != null 
-         && phoneNumber != null && city != null && email != null) {
-      return true;
+  public boolean checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise) {
+    for (EnterpriseDTO enterprise : listEnterprise) {
+      if (enterprise.getTradeName().equals(tradeName)) {
+        return true;
+      }
     }
     return false;
   }

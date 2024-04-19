@@ -1,5 +1,7 @@
 package be.vinci.pae.domain.enterprise;
 
+import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -11,6 +13,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Inject
   EnterpriseDAO enterpriseDS;
+
+  @Inject
+  private DALTransactionServices dalServices;
 
   @Override
   public EnterpriseDTO getOneEnterprise(int id) {
@@ -27,8 +32,16 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   }
 
   @Override
-  public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
-    return enterpriseDS.addEnterprise(enterprise);
+  public EnterpriseDTO addEnterprise(EnterpriseDTO enterpriseDTO) {
+    dalServices.startTransaction();
+    Enterprise enterprise = (Enterprise) enterpriseDTO;
+    List<EnterpriseDTO> enterprisesExisting = enterpriseDS.getAllEnterprises();
+    if (enterprise.checkTradeNameExists(enterprise.getTradeName(), enterprisesExisting)) {
+      dalServices.rollbackTransaction();
+      throw new BiznessException("Trade name already exists");
+    }
+
+
   }
 
 }
