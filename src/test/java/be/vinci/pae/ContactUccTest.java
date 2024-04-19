@@ -176,6 +176,7 @@ public class ContactUccTest {
         () -> {
           contactDTO2.setStateContact("pris");
           contactDTO2.setInterviewMethod("A distance");
+          contactDTO2.setTool("outil");
           contactDTO.setInterviewMethod("A distance");
           assertEquals("pris", contactUCC.updateContact(contactDTO2).getStateContact());
         },
@@ -218,6 +219,7 @@ public class ContactUccTest {
     contactDTO.setInterviewMethod("A distance");
     contactDTO2.setId(1);
     contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setTool("outil");
     assertAll(
         () -> {
           contactDTO2.setStateContact("suspendu");
@@ -430,6 +432,7 @@ public class ContactUccTest {
         () -> {
           contactDTO2.setStateContact("pris");
           contactDTO2.setInterviewMethod("A distance");
+          contactDTO2.setTool("outil");
           assertEquals("A distance", contactUCC.updateContact(contactDTO2).getInterviewMethod());
         }
     );
@@ -478,6 +481,7 @@ public class ContactUccTest {
     contactDTO.setStateContact("pris");
     contactDTO.setInterviewMethod("A distance");
     contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setTool("outil");
     contactDTO2.setId(1);
     assertAll(
         () -> {
