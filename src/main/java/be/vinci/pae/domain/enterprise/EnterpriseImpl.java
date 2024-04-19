@@ -17,6 +17,7 @@ public class EnterpriseImpl implements Enterprise {
   private String email;
   private boolean blackListed;
   private String blackListMotivation;
+  private int version; // version for optimistic lock
 
   @Override
   public int getId() {
@@ -106,6 +107,16 @@ public class EnterpriseImpl implements Enterprise {
   @Override
   public void setBlackListMotivation(String blackListMotivation) {
     this.blackListMotivation = blackListMotivation;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   @Override

@@ -126,16 +126,24 @@ public interface UserDTO {
    */
   void setRegistrationDateToNow();
 
+  /**
+   * Get version for optimistic lock.
+   *
+   * @return the version
+   */
+  int getVersion();
+
+  /**
+   * Set version for optimistic lock.
+   *
+   * @param version the version to set
+   */
+  void setVersion(int version);
 
   /**
    * Hash user password.
    */
   void hashPassword();
-
-  /**
-   * Set automatically role to student if email is @student.vinci.be.
-   */
-  void setRoleByEmail();
 
   @Override
   boolean equals(Object o);

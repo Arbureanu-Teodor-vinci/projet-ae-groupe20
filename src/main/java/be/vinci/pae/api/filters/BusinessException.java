@@ -4,14 +4,14 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 /**
- * BiznessException for business logic exceptions -> status 412.
+ * BusinessException for business logic exceptions -> status 412.
  */
-public class BiznessException extends WebApplicationException {
+public class BusinessException extends WebApplicationException {
 
   /**
    * Constructor.
    */
-  public BiznessException() {
+  public BusinessException() {
     super(Response.status(Response.Status.PRECONDITION_FAILED)
         .build());
   }
@@ -21,7 +21,7 @@ public class BiznessException extends WebApplicationException {
    *
    * @param message -> the message
    */
-  public BiznessException(String message) {
+  public BusinessException(String message) {
     super(Response.status(Response.Status.PRECONDITION_FAILED)
         .entity(message)
         .type("text/plain")
@@ -33,7 +33,7 @@ public class BiznessException extends WebApplicationException {
    *
    * @param cause -> the cause
    */
-  public BiznessException(Throwable cause) {
+  public BusinessException(Throwable cause) {
     super(Response.status(Response.Status.PRECONDITION_FAILED)
         .entity(cause.getMessage())
         .type("text/plain")

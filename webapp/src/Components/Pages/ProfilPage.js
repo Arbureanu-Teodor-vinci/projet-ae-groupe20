@@ -149,10 +149,11 @@ async function renderProfilPage() {
         ` : ''}
     </div>
 </section>`
+const linkContact = document.querySelector('#creationContact');
 
     contacts.forEach(contact => {
         const button = document.getElementById(`editButton${contact.id}`);
-        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivi') {
+        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
             button.disabled = true;
         }else{
             button.addEventListener('click', () => {
@@ -162,6 +163,8 @@ async function renderProfilPage() {
                 window.location.href = `/updateContact?contactId=${contact.id}`;
             });
         }
+        if(contact.stateContact === 'accepté')
+           linkContact.disabled = true;
         
     });
 
@@ -172,7 +175,7 @@ async function renderProfilPage() {
     });
 
     if (user.role === 'Etudiant') {
-    const linkContact = document.querySelector('#creationContact');
+    
     linkContact.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/creationContact');

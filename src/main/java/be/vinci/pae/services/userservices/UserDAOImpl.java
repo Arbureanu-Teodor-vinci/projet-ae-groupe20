@@ -58,8 +58,6 @@ public class UserDAOImpl implements UserDAO {
       ps.close();
       // catching exeptions
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getOneUserByID" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -84,13 +82,10 @@ public class UserDAOImpl implements UserDAO {
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
           user = getResultSet(rs);
-          //user.setAcademicYear(rs.getString("academic_year"));
         }
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getOneUserByEmail" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -118,8 +113,6 @@ public class UserDAOImpl implements UserDAO {
         ps.close();
       }
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl getAllUsers" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -134,8 +127,8 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.users "
               + " (lastname_user, firstname_user, email, phone_number, registration_date, "
-              + " role_user, password_user)"
-              + " VALUES (?, ?, ?, ?, ?, ?, ?) "
+              + " role_user, password_user, version)"
+              + " VALUES (?, ?, ?, ?, ?, ?, ?, 1) "
               + " RETURNING id_user, role_user, email, firstname_user, lastname_user, "
               + " phone_number, registration_date, password_user");
       ps.setString(1, user.getLastName());
@@ -152,8 +145,6 @@ public class UserDAOImpl implements UserDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl addUser" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -168,19 +159,19 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "UPDATE InternshipManagement.users SET "
               + " lastname_user = ?, firstname_user = ?, email = ?, phone_number = ?,"
-              + " password_user = ?"
-              + " WHERE id_user = ?");
+              + " password_user = ?, version = ?"
+              + " WHERE id_user = ? AND version = ?");
       ps.setString(1, user.getLastName());
       ps.setString(2, user.getFirstName());
       ps.setString(3, user.getEmail());
       ps.setString(4, user.getTelephoneNumber());
       ps.setString(5, user.getPassword());
-      ps.setInt(6, user.getId());
+      ps.setInt(6, user.getVersion() + 1);
+      ps.setInt(7, user.getId());
+      ps.setInt(8, user.getVersion());
       ps.executeUpdate();
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in UserDAOImpl updateUser" + e);
-      e.printStackTrace();
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
@@ -207,6 +198,7 @@ public class UserDAOImpl implements UserDAO {
     user.setRegistrationDate(resultSet.getDate("registration_date").toLocalDate());
     user.setRole(resultSet.getString("role_user"));
     user.setPassword(resultSet.getString("password_user"));
+    user.setVersion(resultSet.getInt("version"));
     return user;
   }
 

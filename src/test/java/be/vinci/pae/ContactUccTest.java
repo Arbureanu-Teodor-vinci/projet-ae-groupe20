@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import be.vinci.pae.api.filters.BiznessException;
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
@@ -21,6 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * ContactUccTest.
+ */
 public class ContactUccTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
@@ -75,7 +78,7 @@ public class ContactUccTest {
   @Test
   @DisplayName("Get one contact with id -1")
   void getOneContact2() {
-    assertThrows(BiznessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       contactUCC.getOneContact(-1);
     });
   }
@@ -130,10 +133,7 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 1")
   void addContact() {
-
-    ContactDTO actualContact = contactUCC.addContact(studentDTO, enterpriseDTO);
-
-    assertEquals(contactDTO, actualContact);
+    assertEquals(contactDTO, contactUCC.addContact(studentDTO, enterpriseDTO));
   }
 
   @Test
@@ -176,6 +176,7 @@ public class ContactUccTest {
         () -> {
           contactDTO2.setStateContact("pris");
           contactDTO2.setInterviewMethod("A distance");
+          contactDTO2.setTool("outil");
           contactDTO.setInterviewMethod("A distance");
           assertEquals("pris", contactUCC.updateContact(contactDTO2).getStateContact());
         },
@@ -198,13 +199,13 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("refusé");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -218,6 +219,7 @@ public class ContactUccTest {
     contactDTO.setInterviewMethod("A distance");
     contactDTO2.setId(1);
     contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setTool("outil");
     assertAll(
         () -> {
           contactDTO2.setStateContact("suspendu");
@@ -247,7 +249,7 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("initié");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -262,31 +264,31 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("initié");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("pris");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("refusé");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("non suivis");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -301,31 +303,31 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("initié");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("pris");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("suspendu");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("refusé");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("non suivis");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -340,31 +342,31 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("initié");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("pris");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("suspendu");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("non suivis");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -379,31 +381,31 @@ public class ContactUccTest {
     assertAll(
         () -> {
           contactDTO2.setStateContact("initié");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("pris");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("refusé");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("suspendu");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -416,7 +418,7 @@ public class ContactUccTest {
     contactDTO.setStateContact("initié");
     contactDTO2.setStateContact("état non valide");
     contactDTO2.setId(1);
-    assertThrows(BiznessException.class, () -> {
+    assertThrows(BusinessException.class, () -> {
       contactUCC.updateContact(contactDTO2);
     });
   }
@@ -430,6 +432,7 @@ public class ContactUccTest {
         () -> {
           contactDTO2.setStateContact("pris");
           contactDTO2.setInterviewMethod("A distance");
+          contactDTO2.setTool("outil");
           assertEquals("A distance", contactUCC.updateContact(contactDTO2).getInterviewMethod());
         }
     );
@@ -443,29 +446,29 @@ public class ContactUccTest {
     contactDTO2.setId(1);
     assertAll(
         () -> {
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
           contactDTO2.setStateContact("suspendu");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("non suivis");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("refusé");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }
@@ -478,6 +481,7 @@ public class ContactUccTest {
     contactDTO.setStateContact("pris");
     contactDTO.setInterviewMethod("A distance");
     contactDTO2.setInterviewMethod("A distance");
+    contactDTO2.setTool("outil");
     contactDTO2.setId(1);
     assertAll(
         () -> {
@@ -498,28 +502,28 @@ public class ContactUccTest {
           contactDTO2.setStateContact("pris");
           contactDTO2.setInterviewMethod("A distance");
           contactDTO2.setRefusalReason("raison de refus");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("suspendu");
           contactDTO2.setRefusalReason("raison de refus");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("non suivis");
           contactDTO2.setRefusalReason("raison de refus");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         },
         () -> {
           contactDTO2.setStateContact("accepté");
           contactDTO2.setRefusalReason("raison de refus");
-          assertThrows(BiznessException.class, () -> {
+          assertThrows(BusinessException.class, () -> {
             contactUCC.updateContact(contactDTO2);
           });
         }

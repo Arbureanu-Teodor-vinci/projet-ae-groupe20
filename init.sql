@@ -9,7 +9,8 @@ CREATE TABLE InternshipManagement.users(
                                            phone_number TEXT,
                                            registration_date DATE NOT NULL,
                                            role_user TEXT NOT NULL,
-                                           password_user TEXT NOT NULL
+                                           password_user TEXT NOT NULL,
+                                           version INT NOT NULL
 );
 
 CREATE TABLE InternshipManagement.academic_year(
@@ -31,7 +32,8 @@ CREATE TABLE InternshipManagement.enterprise(
                                                 city TEXT,
                                                 email TEXT,
                                                 black_listed BOOLEAN,
-                                                black_listed_motivation TEXT
+                                                black_listed_motivation TEXT,
+                                                version INT NOT NULL
 );
 
 
@@ -44,7 +46,8 @@ CREATE TABLE InternshipManagement.contacts(
                                               state_contact TEXT NOT NULL,
                                               student INT NOT NULL REFERENCES InternshipManagement.student (id_user),
                                               enterprise INT NOT NULL REFERENCES InternshipManagement.enterprise (id_enterprise),
-                                              academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year)
+                                              academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year),
+                                              version INT NOT NULL
 );
 
 CREATE TABLE InternshipManagement.internship_supervisor(
@@ -62,57 +65,58 @@ CREATE TABLE InternshipManagement.internship(
                                                 signature_date TEXT,
                                                 internship_supervisor INT NOT NULL REFERENCES InternshipManagement.internship_supervisor (id_internship_supervisor),
                                                 contact INT NOT NULL REFERENCES InternshipManagement.contacts(id_contacts),
-                                                academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year)
+                                                academic_year INT NOT NULL REFERENCES InternshipManagement.academic_year (id_academic_year),
+                                                version INT NOT NULL
 );
 INSERT INTO InternshipManagement.academic_year VALUES (DEFAULT,'2023-2024');
 
 
 --**************************DEMOOOO********************************************************************************************************************************************************************************
 --USERS & STUDENTS---------------------------------------------------------------------------
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Baroni', 'Raphaël', 'raphael.baroni@vinci.be', '0481 01 01 01', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Baroni', 'Raphaël', 'raphael.baroni@vinci.be', '0481 01 01 01', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm',1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Lehmann', 'Brigitte', 'brigitte.lehmann@vinci.be', '0482 02 02 02', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Lehmann', 'Brigitte', 'brigitte.lehmann@vinci.be', '0482 02 02 02', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm',1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Leleux', 'Laurent', 'laurent.leleux@vinci.be', '0483 03 03 03', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Leleux', 'Laurent', 'laurent.leleux@vinci.be', '0483 03 03 03', '2020-09-21', 'Professeur', '$2a$10$BjSQSRskV/sJ9VPFVit1DeVdyyLcnv810nEgReb44Gj4k9UxKhywm',1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Lancaster', 'Annouck', 'annouck.lancaster@vinci.be', '0484 04 04 04', '2020-09-21', 'Administratif', '$2a$10$k8qZQ.R25r5fm1/hXdp/N.DBJ/97eR8p2Yn/XTA7q10.Nuy1qTpaW');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Lancaster', 'Annouck', 'annouck.lancaster@vinci.be', '0484 04 04 04', '2020-09-21', 'Administratif', '$2a$10$k8qZQ.R25r5fm1/hXdp/N.DBJ/97eR8p2Yn/XTA7q10.Nuy1qTpaW',1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Line', 'Caroline', 'Caroline.line@student.vinci.be', '0486 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Line', 'Caroline', 'Caroline.line@student.vinci.be', '0486 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary',1);
 INSERT INTO InternshipManagement.student VALUES (5,1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Ile', 'Achille', 'Ach.ile@student.vinci.be', '0487 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Ile', 'Achille', 'Ach.ile@student.vinci.be', '0487 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary',1);
 INSERT INTO InternshipManagement.student VALUES (6,1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('Ile', 'Basile', 'Basile.Ile@student.vinci.be', '0488 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('Ile', 'Basile', 'Basile.Ile@student.vinci.be', '0488 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary',1);
 INSERT INTO InternshipManagement.student VALUES (7,1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('skile', 'Achille', 'Achille.skile@student.vinci.be', '0490 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('skile', 'Achille', 'Achille.skile@student.vinci.be', '0490 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary',1);
 INSERT INTO InternshipManagement.student VALUES (8,1);
 
-INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user)
-VALUES ('skile', 'Carole', 'Carole.skile@student.vinci.be', '0489 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary');
+INSERT INTO InternshipManagement.users (lastname_user, firstname_user, email, phone_number, registration_date, role_user, password_user, version)
+VALUES ('skile', 'Carole', 'Carole.skile@student.vinci.be', '0489 00 00 01', '2023-09-18', 'Etudiant', '$2a$10$5y4r5tE.EJpGaGoj09M8M.wlqTo9MKzVsbikNPevGXjAfGj686Ary',1);
 INSERT INTO InternshipManagement.student VALUES (9,1);
 
 --ENTERPRISES-----------------------------------------------------------------------
-INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation)
-VALUES ('Assyst Europe',NULL,'Avenue du Japon, 1/B9','02.609.25.00', '1420 Braine-l Alleud', NULL,NULL,NULL);
+INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation, version)
+VALUES ('Assyst Europe',NULL,'Avenue du Japon, 1/B9','02.609.25.00', '1420 Braine-l Alleud', NULL,NULL,NULL,1);
 
-INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation)
-VALUES ('LetsBuild',NULL,'Chaussée de Bruxelles, 135A','014 54 67 54', '1310 La Hulpe', NULL,NULL,NULL);
+INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation, version)
+VALUES ('LetsBuild',NULL,'Chaussée de Bruxelles, 135A','014 54 67 54', '1310 La Hulpe', NULL,NULL,NULL,1);
 
-INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation)
-VALUES ('Niboo',NULL,'Boulevard du Souverain, 24','0487 02 79 13', '1170 Watermael-Boisfort', NULL,NULL,NULL);
+INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation, version)
+VALUES ('Niboo',NULL,'Boulevard du Souverain, 24','0487 02 79 13', '1170 Watermael-Boisfort', NULL,NULL,NULL,1);
 
-INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation)
-VALUES ('Sopra Steria',NULL,'Avenue Arnaud Fraiteur, 15/23','02 566 66 66', '1050 Bruxelles', NULL,NULL,NULL);
+INSERT INTO InternshipManagement.enterprise(trade_name, designation, address, phone_number, city, email, black_listed, black_listed_motivation, version)
+VALUES ('Sopra Steria',NULL,'Avenue Arnaud Fraiteur, 15/23','02 566 66 66', '1050 Bruxelles', NULL,NULL,NULL,1);
 
 --INTERNSHIP SUPERVISORS-----------------------------------------------------------
 INSERT INTO InternshipManagement.internship_supervisor(last_name_supervisor, first_name_supervisor, phone_number, email, enterprise)
@@ -125,53 +129,67 @@ INSERT INTO InternshipManagement.internship_supervisor(last_name_supervisor, fir
 VALUES ('Assal','Farid','0474 39 69 09','f.assal@assyst-europe.com',1);
 
 --CONTACTS------------------------------------------------------------------------
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('A distance', NULL,'accepté',9,2,1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('A distance', NULL,'accepté',9,2,1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('Dans l entreprise', NULL, 'accepté', 6, 4, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('Dans l entreprise', NULL, 'accepté', 6, 4, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('A distance', 'N ont pas accepté d avoir un entretien', 'refusé', 6, 3, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('A distance', 'N ont pas accepté d avoir un entretien', 'refusé', 6, 3, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('Dans l entreprise', NULL, 'accepté', 7, 1, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('Dans l entreprise', NULL, 'accepté', 7, 1, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('A distance', NULL, 'suspendu', 7, 2, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('A distance', NULL, 'suspendu', 7, 2, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES (NULL, NULL, 'suspendu', 7, 4, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES (NULL, NULL, 'suspendu', 7, 4, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('Dans l entreprise', 'ne prennent qu un seul étudiant', 'refusé', 7, 3, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('Dans l entreprise', 'ne prennent qu un seul étudiant', 'refusé', 7, 3, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES ('A distance', NULL, 'pris', 5, 3, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES ('A distance', NULL, 'pris', 5, 3, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES (NULL, NULL, 'initié', 5, 4, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES (NULL, NULL, 'initié', 5, 4, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES (NULL, NULL, 'initié', 5, 2, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES (NULL, NULL, 'initié', 5, 2, 1,1);
 
-INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year)
-VALUES (NULL, NULL, 'initié', 8, 4, 1);
+INSERT INTO InternshipManagement.contacts(interview_method, refusal_reason, state_contact, student, enterprise, academic_year, version)
+VALUES (NULL, NULL, 'initié', 8, 4, 1,1);
 
 --INTERNSHIPS---------------------------------------------------------------------------
-INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year)
-VALUES ('Un ERP : Odoo','10/10/2023',1,1,1);
+INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year, version)
+VALUES ('Un ERP : Odoo','10/10/2023',1,1,1,1);
 
-INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year)
-VALUES ('sBMS project - a complex environment','13/11/2023',2,2,1);
+INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year, version)
+VALUES ('sBMS project - a complex environment','13/11/2023',2,2,1,1);
 
-INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year)
-VALUES ('CRM : Microsoft Dynamics 365 For Sales','12/10/2023',3,3,1);
+INSERT INTO InternshipManagement.internship(subject, signature_date, internship_supervisor, contact, academic_year, version)
+VALUES ('CRM : Microsoft Dynamics 365 For Sales','12/10/2023',3,3,1,1);
 
 --***************************OUR TESTS****************************************************************************************************************************************************************************
-INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Erismann','Matteo','matteo@student.vinci.be','+320470000001',CURRENT_DATE,'Etudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Erismann','Matteo','matteo@student.vinci.be','+320470000001',CURRENT_DATE,'Etudiant','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe',1);
 INSERT INTO InternshipManagement.student VALUES (10,1);
-INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Arbureanu','Teodor','teodor@vinci.be','+320470000002',CURRENT_DATE,'Professeur','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
-INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Admin', 'Admin','admin','+32470000000',CURRENT_DATE,'Administratif','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe');
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Arbureanu','Teodor','teodor@vinci.be','+320470000002',CURRENT_DATE,'Professeur','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe',1);
+INSERT INTO InternshipManagement.users VALUES (DEFAULT,'Admin', 'Admin','admin','+32470000000',CURRENT_DATE,'Administratif','$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe',1);
 --*****************************************************************************************************************************************************************************************************************
 
+
+/*SELECT COUNT(*) as nbr_users FROM InternshipManagement.users;
+SELECT COUNT(*) as nbr_entreprises FROM InternshipManagement.enterprise;
+SELECT COUNT(*) as nbr_internships, ay.academic_year FROM InternshipManagement.internship i, InternshipManagement.academic_year  ay
+WHERE i.academic_year= ay.id_academic_year
+GROUP BY ay.academic_year;
+
+SELECT COUNT(*) as nbr_contacts, ay.academic_year FROM InternshipManagement.contacts c, InternshipManagement.academic_year  ay
+WHERE c.academic_year= ay.id_academic_year
+GROUP BY ay.academic_year;
+
+SELECT c.state_contact, COUNT(*) as nbr_contacts_by_state
+FROM InternshipManagement.contacts c
+GROUP BY c.state_contact;*/

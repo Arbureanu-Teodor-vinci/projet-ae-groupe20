@@ -48,5 +48,12 @@ public interface ContactDAO {
    * @return contactDTO
    */
   ContactDTO updateContact(ContactDTO contact);
+
+  /**
+   * Update all contacts of a student to suspended in DB when a contact is accepted.
+   *
+   * @param studentID integer id of the student
+   */
+  void updateAllContactsOfStudentToSuspended(int studentID);
 }
 

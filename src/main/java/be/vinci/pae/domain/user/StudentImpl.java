@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
@@ -35,32 +36,42 @@ public class StudentImpl extends UserImpl implements Student {
   }
 
   @Override
-  public boolean checkUniqueStudent(StudentDTO studentDTO) {
-    return studentDTO.getId() == 0;
+  public void checkUniqueStudent(StudentDTO studentDTO) {
+    if (studentDTO != null) {
+      throw new BusinessException("Student already exists");
+    }
   }
 
   @Override
-  public boolean checkContactExists(EnterpriseDTO enterpriseDTO,
+  public void checkContactExists(EnterpriseDTO enterpriseDTO,
       List<ContactDTO> contactsExisting) {
+    boolean contactExists = false;
     for (ContactDTO contact : contactsExisting) {
       if (contact.getStudentId() == this.getId()
           && contact.getEnterpriseId() == enterpriseDTO.getId()
           && contact.getAcademicYear() == this.academicYear.getId()) {
-        return true;
+        contactExists = true;
       }
     }
-    return false;
+    if (contactExists) {
+      throw new BusinessException(
+          "Student already has a contact with this enterprise and academic year");
+    }
   }
 
-  public boolean checkContactAccepted(List<ContactDTO> contactsExisting) {
+  @Override
+  public void checkContactAccepted(List<ContactDTO> contactsExisting) {
+    boolean contactAccepted = false;
     for (ContactDTO contact : contactsExisting) {
       if (contact.getStudentId() == this.getId()
           && contact.getStateContact().equals("accepté")
           && contact.getAcademicYear() == this.academicYear.getId()) {
-        return true;
+        contactAccepted = true;
       }
     }
-    return false;
+    if (contactAccepted) {
+      throw new BusinessException("Student already has an accepted contact for this academic year");
+    }
   }
 
 

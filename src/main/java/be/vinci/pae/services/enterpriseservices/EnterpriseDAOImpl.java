@@ -30,7 +30,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     EnterpriseDTO enterprise = null;
 
     try {
-
       PreparedStatement ps = dalConn.getPS(
           "SELECT * FROM InternshipManagement.enterprise WHERE id_enterprise = ?"
       );
@@ -45,8 +44,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getOneEnterpriseByid");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -61,7 +59,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT * FROM InternshipManagement.enterprise"
       );
-
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
           enterprises.add(getResultSet(resultSet));
@@ -70,8 +67,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in EnterpriseDAOImpl getAllEnterprises");
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -84,7 +80,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.enterprise (trade_name, designation, address, "
-              + "phone_number, city, email) VALUES (?, ?, ?, ?, ?, ?)"
+              + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1)"
       );
       ps.setString(1, enterprise.getTradeName());
       ps.setString(2, enterprise.getDesignation());
@@ -125,6 +121,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     enterprise.setEmail(resultSet.getString(7));
     enterprise.setBlackListed(resultSet.getBoolean(8));
     enterprise.setBlackListMotivation(resultSet.getString(9));
+    enterprise.setVersion(resultSet.getInt("version"));
     return enterprise;
   }
 

@@ -6,6 +6,8 @@ import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactImpl;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseImpl;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorImpl;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.StudentImpl;
 import be.vinci.pae.domain.user.UserDTO;
@@ -40,6 +42,11 @@ public class DomainFactoryImpl implements DomainFactory {
   @Override
   public ContactDTO getContactDTO() {
     return new ContactImpl();
+  }
+
+  @Override
+  public SupervisorDTO getSupervisorDTO() {
+    return new SupervisorImpl();
   }
 
 }

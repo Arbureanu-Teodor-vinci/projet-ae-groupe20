@@ -1,5 +1,6 @@
 package be.vinci.pae.services.contactservices;
 
+import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALServices;
@@ -43,8 +44,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.close();
 
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getOneContactByid" + e.getMessage());
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -67,8 +67,7 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getAllContacts" + e.getMessage());
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -92,8 +91,7 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      Logger.logEntry("Error in ContactDAOImpl getContactsByUser" + e.getMessage());
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -106,8 +104,8 @@ public class ContactDAOImpl implements ContactDAO {
     ContactDTO contact = domainFactory.getContactDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.contacts (state_contact, student, academic_year, enterprise)"
-              + " VALUES ('initié', ?, ?, ?)"
+          "INSERT INTO InternshipManagement.contacts (state_contact, student, academic_year, enterprise, version)"
+              + " VALUES ('initié', ?, ?, ?, 1)"
               + " RETURNING *"
       );
       ps.setInt(1, studentID);
@@ -120,7 +118,7 @@ public class ContactDAOImpl implements ContactDAO {
       }
       ps.close();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
@@ -133,26 +131,48 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "UPDATE InternshipManagement.contacts SET interview_method = ?, tool = ?,"
-              + " refusal_reason = ?, state_contact = ?"
-              + " WHERE id_contacts = ? RETURNING *"
+              + " refusal_reason = ?, state_contact = ?, version = ?"
+              + " WHERE id_contacts = ? AND version = ? RETURNING *"
       );
       ps.setString(1, contact.getInterviewMethod());
       ps.setString(2, contact.getTool());
       ps.setString(3, contact.getRefusalReason());
       ps.setString(4, contact.getStateContact());
-      ps.setInt(5, contact.getId());
+      ps.setInt(5, contact.getVersion() + 1);
+      ps.setInt(6, contact.getId());
+      ps.setInt(7, contact.getVersion());
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
           contact = getResultSet(resultSet);
+        } else {
+          contact = null;
         }
       }
       ps.close();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
     return contact;
+  }
+
+  @Override
+  public void updateAllContactsOfStudentToSuspended(int studentID) {
+    Logger.logEntry("Contact DAO - updateAllContactsOfStudentToSuspended" + studentID);
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "UPDATE InternshipManagement.contacts SET state_contact = 'suspendu'"
+              + " WHERE student = ? AND state_contact != 'accepté'"
+      );
+      ps.setInt(1, studentID);
+      ps.executeUpdate();
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
   }
 
   /**
@@ -174,6 +194,7 @@ public class ContactDAOImpl implements ContactDAO {
     contact.setStudentId(resultSet.getInt(6));
     contact.setEnterpriseId(resultSet.getInt(7));
     contact.setAcademicYear(resultSet.getInt(8));
+    contact.setVersion(resultSet.getInt("version"));
     return contact;
   }
 }

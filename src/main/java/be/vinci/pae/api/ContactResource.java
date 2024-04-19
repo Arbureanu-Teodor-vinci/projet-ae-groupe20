@@ -203,31 +203,7 @@ public class ContactResource {
       throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
     }
 
-    /*int id = json.get("idContact").asInt();
-    ContactDTO contact = domainFactory.getContactDTO();
-    contact.setId(id);*/
-
-    int id = contactDTO.getId();
-    ContactDTO contact = contactUCC.getOneContact(id);
-
-    if (contact == null) {
-      Logger.logEntry("Contact not found.");
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
-    }
-    if (contactDTO.getInterviewMethod() != null) {
-      contact.setInterviewMethod(contactDTO.getInterviewMethod());
-    }
-    if (contactDTO.getTool() != null) {
-      contact.setTool(contactDTO.getTool());
-    }
-    if (contactDTO.getRefusalReason() != null) {
-      contact.setRefusalReason(contactDTO.getRefusalReason());
-    }
-    if (contactDTO.getStateContact() != null) {
-      contact.setStateContact(contactDTO.getStateContact());
-    }
-
-    ContactDTO updatedContact = contactUCC.updateContact(contact);
+    ContactDTO updatedContact = contactUCC.updateContact(contactDTO);
     return contactNodeMaker(updatedContact);
   }
 
@@ -248,7 +224,8 @@ public class ContactResource {
           .put("stateContact", contact.getStateContact())
           .put("studentId", contact.getStudentId())
           .put("enterpriseId", contact.getEnterpriseId())
-          .put("academicYear", contact.getAcademicYear());
+          .put("academicYear", contact.getAcademicYear())
+          .put("version", contact.getVersion());
       return contactNode;
     } catch (Exception e) {
       System.out.println("Can't create contact");
