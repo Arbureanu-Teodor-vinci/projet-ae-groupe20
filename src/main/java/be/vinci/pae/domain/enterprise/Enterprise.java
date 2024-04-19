@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.enterprise;
 
+import be.vinci.pae.api.filters.BusinessException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 
@@ -16,14 +17,17 @@ public interface Enterprise extends EnterpriseDTO {
    * @param listEnterprise List of EnterpriseDTO
    * @return true if the trade name already exists
    */
-  boolean checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise);
+  void checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise)
+      throws BusinessException;
 
   /**
    * Check if the designation already exists if the trade name already exists.
    *
+   * @param tradeName      String
    * @param designation    String
    * @param listEnterprise List of EnterpriseDTO
-   * @return true if the designation already exists
+   * @return true if the designation already exists for this trade name
    */
-  boolean checkDesignationExists(String designation, List<EnterpriseDTO> listEnterprise);
+  void checkDesignationExists(String tradeName, String designation,
+      List<EnterpriseDTO> listEnterprise) throws BusinessException;
 }

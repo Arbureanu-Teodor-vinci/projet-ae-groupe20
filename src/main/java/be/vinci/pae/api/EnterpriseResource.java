@@ -109,8 +109,7 @@ public class EnterpriseResource {
 
     // if the enterprise is null, throw an exception
     if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
-        || enterpriseDTO.getDesignation().trim().isEmpty() || enterpriseDTO.getAdresse().trim()
-        .isEmpty()
+        || enterpriseDTO.getAdresse().trim().isEmpty()
         || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
         .isEmpty()
         || enterpriseDTO.getEmail().trim().isEmpty()) {
