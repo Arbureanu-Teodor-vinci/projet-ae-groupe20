@@ -37,10 +37,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
       dalServices.startTransaction();
       List<EnterpriseDTO> enterprisesExisting = enterpriseDS.getAllEnterprises();
       Enterprise enterpriseCast = (Enterprise) enterpriseDTO;
-      enterpriseCast.checkDesignationExists(enterpriseDTO.getTradeName(),
+      enterpriseCast.checkDesignationExistsOrIsNull(enterpriseDTO.getTradeName(),
           enterpriseDTO.getDesignation(),
           enterprisesExisting);
-      enterpriseCast.checkTradeNameExists(enterpriseDTO.getTradeName(), enterprisesExisting);
       enterprise = enterpriseDS.addEnterprise(enterpriseDTO);
     } catch (Throwable e) {
       dalServices.rollbackTransaction();

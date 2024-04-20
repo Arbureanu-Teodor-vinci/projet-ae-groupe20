@@ -113,7 +113,7 @@ public class EnterpriseResource {
         || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
         .isEmpty()
         || enterpriseDTO.getEmail().trim().isEmpty()) {
-      Logger.logEntry("Enterprise is mi ssing.");
+      Logger.logEntry("Enterprise is missing.");
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
 

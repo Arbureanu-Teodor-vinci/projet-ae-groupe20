@@ -151,19 +151,16 @@ public class EnterpriseImpl implements Enterprise {
         + '}';
   }
 
-  @Override
-  public void checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise) {
-    for (EnterpriseDTO enterprise : listEnterprise) {
-      if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim())) {
-        throw new BusinessException("This trade name already exists.");
-      }
-    }
-  }
 
   @Override
-  public void checkDesignationExists(String tradeName, String designation,
+  public void checkDesignationExistsOrIsNull(String tradeName, String designation,
       List<EnterpriseDTO> listEnterprise) {
     for (EnterpriseDTO enterprise : listEnterprise) {
+      if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim()) && designation.trim()
+          .isEmpty()) {
+        throw new BusinessException(
+            "The designation can't be empty because this trade name already exists.");
+      }
       if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim())
           && enterprise.getDesignation().trim().equalsIgnoreCase(designation.trim())) {
         throw new BusinessException("This designation already exists for this trade name.");
