@@ -28,6 +28,10 @@ public interface Contact extends ContactDTO {
    */
   void checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) throws BusinessException;
 
+  /**
+   * check if tool is valid for interview method.
+   */
+  void checkContactToolUpdate() throws BusinessException;
 
   /**
    * Check if the refusal reason is updatable from state.
