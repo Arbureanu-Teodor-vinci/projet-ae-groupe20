@@ -15,10 +15,8 @@ public interface Enterprise extends EnterpriseDTO {
    *
    * @param tradeName      String
    * @param listEnterprise List of EnterpriseDTO
-   * @return true if the trade name already exists
    */
-  void checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise)
-      throws BusinessException;
+    void checkTradeNameExists(String tradeName, List<EnterpriseDTO> listEnterprise) throws BusinessException;
 
   /**
    * Check if the designation already exists if the trade name already exists.
@@ -26,8 +24,6 @@ public interface Enterprise extends EnterpriseDTO {
    * @param tradeName      String
    * @param designation    String
    * @param listEnterprise List of EnterpriseDTO
-   * @return true if the designation already exists for this trade name
    */
-  void checkDesignationExists(String tradeName, String designation,
-      List<EnterpriseDTO> listEnterprise) throws BusinessException;
+    void checkDesignationExists(String tradeName, String designation, List<EnterpriseDTO> listEnterprise) throws BusinessException;
 }

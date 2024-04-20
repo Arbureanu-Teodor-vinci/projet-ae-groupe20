@@ -161,8 +161,7 @@ public class ContactImpl implements Contact {
           "Cant update contact to not followed state from previous state");
     }
     // if updated state is accepted the previous state can only be taken
-    if (this.stateContact.equals(POSSIBLESTATES[5]) &&
-        !previousState.equals(POSSIBLESTATES[1])) {
+    if (this.stateContact.equals(POSSIBLESTATES[5]) && !previousState.equals(POSSIBLESTATES[1])) {
       throw new BusinessException("Cant update contact to accepted state from previous state");
     }
   }
