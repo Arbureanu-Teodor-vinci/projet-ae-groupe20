@@ -36,7 +36,7 @@ async function renderCreationContactPage() {
                         <div class="form-group row mb-3">
                             <label for="company" class="col-sm-2 col-form-label">Entreprise</label>
                             <div class="col-sm-10">
-                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise">
+                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise" required>
                                 <select id="company" name="company" class="form-control" required></select>
                                 <div class="d-flex justify-content-center">
                                     <a id="add-company" href="#" class="text-primary">Entreprise non présente? Ajouter la</a>
@@ -62,11 +62,13 @@ async function renderCreationContactPage() {
     const companyFilterInput = document.querySelector('#company-filter');
 
     // Filtrer les options lors de la saisie dans le champ de filtre
+    if (companyFilterInput){
     companyFilterInput.addEventListener('input', (event) => {
         const filterValue = event.target.value.toLowerCase();
         const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(filterValue));
         renderCompaniesOptions(filteredCompanies);
     });
+}
 
     const createButton = document.querySelector('#create');
     createButton.addEventListener('click', async (event) => {
