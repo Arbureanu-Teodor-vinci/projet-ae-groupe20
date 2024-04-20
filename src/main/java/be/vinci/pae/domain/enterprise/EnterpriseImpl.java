@@ -1,5 +1,7 @@
 package be.vinci.pae.domain.enterprise;
 
+import be.vinci.pae.api.filters.BusinessException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -149,4 +151,20 @@ public class EnterpriseImpl implements Enterprise {
         + '}';
   }
 
+
+  @Override
+  public void checkDesignationExistsOrIsNull(String tradeName, String designation,
+      List<EnterpriseDTO> listEnterprise) {
+    for (EnterpriseDTO enterprise : listEnterprise) {
+      if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim()) && designation.trim()
+          .isEmpty()) {
+        throw new BusinessException(
+            "The designation can't be empty because this trade name already exists.");
+      }
+      if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim())
+          && enterprise.getDesignation().trim().equalsIgnoreCase(designation.trim())) {
+        throw new BusinessException("This designation already exists for this trade name.");
+      }
+    }
+  }
 }

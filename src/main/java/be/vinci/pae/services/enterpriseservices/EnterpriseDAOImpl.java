@@ -127,6 +127,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.close();
 
     } catch (SQLException e) {
+
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();

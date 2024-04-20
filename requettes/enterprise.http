@@ -22,11 +22,11 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "tradeName": "Enterprise 1",
-    "designation": "Enterprise 1 designation",
-    "adresse": "Enterprise 1 address",
-    "email": "Enterprise 1 email",
-    "phoneNumber": "Enterprise 1 phone number",
-    "city": "Enterprise 1 city"
+    "tradeName": "Belfius",
+    "designation": "Belfius designation",
+    "adresse": "Belfius adresse",
+    "email": "Belfius email",
+    "phoneNumber": "Belfius phoneNumber",
+    "city": "Belfius city"
 
 }

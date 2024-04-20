@@ -62,6 +62,7 @@ async function renderCreationCompanyPage(){
                             <input type="tel" class="form-control" id="companyTel" required>
                         </div>
                         <button type="submit" class="btn btn-success float-right mt-3" id="create">Ajouter</button>
+                        <p class = "errorMessage"><p>
                     </form>
                 </div>
             </div>
@@ -157,7 +158,8 @@ async function renderCreationCompanyPage(){
             Navigate('/creationContact');
         }
         else{
-            main.innerHTML += `<div class="alert alert-danger" role="alert">Erreur lors de la création de l'entreprise</div>`;
+            const erreur = document.querySelector('.errorMessage');
+            erreur.innerText = "Un des champs est manquant ou incorrect";
         }
     });
 
