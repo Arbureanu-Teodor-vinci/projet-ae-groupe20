@@ -27,6 +27,11 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   }
 
   @Override
+  public int getNbInternships(int id) {
+    return enterpriseDS.getNbInternships(id);
+  }
+
+  @Override
   public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
     return enterpriseDS.addEnterprise(enterprise);
   }
