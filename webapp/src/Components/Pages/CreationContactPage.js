@@ -36,7 +36,7 @@ async function renderCreationContactPage() {
                         <div class="form-group row mb-3">
                             <label for="company" class="col-sm-2 col-form-label">Entreprise</label>
                             <div class="col-sm-10">
-                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise" required>
+                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise">
                                 <select id="company" name="company" class="form-control" required></select>
                                 <div class="d-flex justify-content-center">
                                     <a id="add-company" href="#" class="text-primary">Entreprise non présente? Ajouter la</a>

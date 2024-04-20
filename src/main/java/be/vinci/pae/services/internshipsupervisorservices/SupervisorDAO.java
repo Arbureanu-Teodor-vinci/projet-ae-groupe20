@@ -40,4 +40,11 @@ public interface SupervisorDAO {
   SupervisorDTO addSupervisor(SupervisorDTO supervisor);
 
 
+  /**
+   * Get supervisors by enterprise.
+   *
+   * @param idEnterprise the id of the enterprise
+   * @return List of SupervisorDTO
+   */
+  List<SupervisorDTO> getSupervisorsByEnterprise(int idEnterprise);
 }
