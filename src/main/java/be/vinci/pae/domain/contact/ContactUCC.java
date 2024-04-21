@@ -25,6 +25,14 @@ public interface ContactUCC {
   List<ContactDTO> getAllContacts();
 
   /**
+   * Get contacts by enterprise.
+   *
+   * @param id int
+   * @return List of ContactDTO
+   */
+  List<ContactDTO> getContactsByEnterprise(int id);
+
+  /**
    * Get contacts by user.
    *
    * @param id int

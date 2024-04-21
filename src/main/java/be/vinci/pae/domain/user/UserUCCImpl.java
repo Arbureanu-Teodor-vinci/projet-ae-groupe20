@@ -16,6 +16,11 @@ public class UserUCCImpl implements UserUCC {
   private DALTransactionServices dalServices;
 
   @Override
+  public UserDTO getUserById(int id) {
+    return userDAO.getOneUserByID(id);
+  }
+
+  @Override
   public List<UserDTO> getAll() {
     return userDAO.getAllUsers();
   }

@@ -75,6 +75,30 @@ public class ContactDAOImpl implements ContactDAO {
   }
 
   @Override
+  public List<ContactDTO> getContactsByEnterprise(int id) {
+    Logger.logEntry("Contact DAO - getContactsByEnterprise" + id);
+    List<ContactDTO> contacts = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT * FROM InternshipManagement.contacts WHERE enterprise = ?"
+      );
+      ps.setInt(1, id);
+
+      try (ResultSet resultSet = ps.executeQuery()) {
+        while (resultSet.next()) {
+          contacts.add(getResultSet(resultSet));
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return contacts;
+  }
+
+  @Override
   public List<ContactDTO> getContactsByUser(int id) {
     Logger.logEntry("Contact DAO - getContactsByUser" + id);
     List<ContactDTO> contacts = new ArrayList<>();

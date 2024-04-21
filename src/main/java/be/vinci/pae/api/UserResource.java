@@ -22,6 +22,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
@@ -158,6 +159,27 @@ public class UserResource {
   public ObjectNode getLoggedUser() {
     Logger.logEntry("GET /auths");
     return publicUser;
+  }
+
+  /**
+   * Get the user infos.
+   *
+   * @param id The user id.
+   * @return JSON object containing user infos.
+   */
+  @GET
+  @Path("user:{id}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public ObjectNode getUser(@PathParam("id") Integer id) {
+    Logger.logEntry("GET /auths/user:" + id);
+    UserDTO user = userController.getUserById(id);
+    if (user.getEmail().endsWith("@student.vinci.be")) {
+      StudentDTO student = studentController.getStudentById(user.getId());
+      return toJson(user, student.getStudentAcademicYear());
+    } else {
+      return toJson(user, null);
+    }
   }
 
   /**
