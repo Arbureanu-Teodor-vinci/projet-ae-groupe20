@@ -34,4 +34,8 @@ public interface Contact extends ContactDTO {
    */
   void checkContactRefusalReasonUpdate() throws BusinessException;
 
+  /**
+   * Check if the contact is taken.
+   */
+  void checkIfContactIsTaken() throws BusinessException;
 }

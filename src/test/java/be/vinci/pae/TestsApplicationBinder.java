@@ -8,6 +8,8 @@ import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.factory.DomainFactoryImpl;
+import be.vinci.pae.domain.internship.InternshipUCC;
+import be.vinci.pae.domain.internship.InternshipUCCImpl;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCCImpl;
 import be.vinci.pae.domain.user.StudentUCC;
@@ -18,6 +20,7 @@ import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
+import be.vinci.pae.services.internshipservices.InternshipDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import be.vinci.pae.services.userservices.StudentDAO;
 import be.vinci.pae.services.userservices.UserDAO;
@@ -48,5 +51,8 @@ public class TestsApplicationBinder extends AbstractBinder {
     bind(Mockito.mock(ContactDAO.class)).to(ContactDAO.class);
     bind(SupervisorUCCImpl.class).to(SupervisorUCC.class).in(Singleton.class);
     bind(Mockito.mock(SupervisorDAO.class)).to(SupervisorDAO.class);
+    bind(InternshipUCCImpl.class).to(InternshipUCC.class).in(Singleton.class);
+    bind(Mockito.mock(InternshipDAO.class)).to(InternshipDAO.class);
+    // bind(ContactImpl.class).to(ContactDTO.class).in(Singleton.class);
   }
 }
