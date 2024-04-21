@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@authToken ={{adminToken}}
+
 
 ### LOGIN WITH ADMIN USER
 POST {{baseUrl}}/auths/login
@@ -108,3 +108,8 @@ Authorization: {{adminToken}}
   "password": "group20",
   "version": 1
 }
+
+### GET USER BY ID
+GET {{baseUrl}}/auths/user:3
+Content-Type: application/json
+Authorization: {{adminToken}}

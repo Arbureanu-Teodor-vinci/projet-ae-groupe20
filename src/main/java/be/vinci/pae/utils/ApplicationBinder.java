@@ -8,6 +8,8 @@ import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseUCCImpl;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.factory.DomainFactoryImpl;
+import be.vinci.pae.domain.internship.InternshipUCC;
+import be.vinci.pae.domain.internship.InternshipUCCImpl;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCCImpl;
 import be.vinci.pae.domain.user.StudentUCC;
@@ -23,6 +25,8 @@ import be.vinci.pae.services.dal.DALServicesImpl;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAOImpl;
+import be.vinci.pae.services.internshipservices.InternshipDAO;
+import be.vinci.pae.services.internshipservices.InternshipDAOImpl;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAOImpl;
 import be.vinci.pae.services.userservices.StudentDAO;
@@ -56,5 +60,7 @@ public class ApplicationBinder extends AbstractBinder {
     bind(ContactDAOImpl.class).to(ContactDAO.class).in(Singleton.class);
     bind(SupervisorUCCImpl.class).to(SupervisorUCC.class).in(Singleton.class);
     bind(SupervisorDAOImpl.class).to(SupervisorDAO.class).in(Singleton.class);
+    bind(InternshipUCCImpl.class).to(InternshipUCC.class).in(Singleton.class);
+    bind(InternshipDAOImpl.class).to(InternshipDAO.class).in(Singleton.class);
   }
 }

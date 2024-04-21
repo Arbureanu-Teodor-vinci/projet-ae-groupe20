@@ -4,6 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
+import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,8 +18,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response.Status;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Resource route for the supervisors requests.
@@ -98,6 +101,42 @@ public class SupervisorResource {
   }
 
   /**
+   * Get supervisors by enterprise.
+   *
+   * @param idEnterprise The id of the enterprise.
+   * @param request      The request.
+   * @return JSON array containing all supervisors of the enterprise.
+   * @throws WebApplicationException If idEnterprise is null or the supervisors are not found.
+   */
+  @GET
+  @Path("getByEnterprise:{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public ArrayNode getSupervisorsByEnterprise(@PathParam("id") Integer idEnterprise,
+      @Context ContainerRequest request) {
+    Logger.logEntry("GET /supervisors/getByEnterprise:" + idEnterprise);
+    // verify the token
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    if (authentifiedUser == null) {
+      Logger.logEntry("tries to access without token.");
+      throw new WebApplicationException("Authorization header must be provided",
+          Status.UNAUTHORIZED);
+    }
+    // if the idEnterprise is null, throw an exception
+    if (idEnterprise == null) {
+      Logger.logEntry("idEnterprise is missing.");
+      throw new WebApplicationException("You must enter an idEnterprise.", Status.BAD_REQUEST);
+    }
+    // Try to get the supervisors by enterprise
+    ArrayNode supervisorsListNode = jsonMapper.createArrayNode();
+    for (SupervisorDTO supervisor : supervisorUCC.getSupervisorsByEnterprise(idEnterprise)) {
+      supervisorsListNode.add(toJson(supervisor));
+    }
+    return supervisorsListNode;
+  }
+
+  /**
    * Get all supervisors.
    *
    * @return JSON array containing all supervisors.
@@ -116,6 +155,7 @@ public class SupervisorResource {
     }
     return supervisorsListNode;
   }
+
 
   private ObjectNode toJson(SupervisorDTO supervisor) {
     ObjectNode node = jsonMapper.createObjectNode();

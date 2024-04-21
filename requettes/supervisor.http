@@ -49,3 +49,8 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/supervisors/getOne:1
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### GET ALL SUPERVISORS BY ENTERPRISE ID = 1
+GET {{baseUrl}}/supervisors/getByEnterprise:1
+Content-Type: application/json
+Authorization: {{adminToken}}

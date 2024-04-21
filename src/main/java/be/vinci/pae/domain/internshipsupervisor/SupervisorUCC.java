@@ -23,10 +23,20 @@ public interface SupervisorUCC {
   SupervisorDTO getOneSupervisorById(int id);
 
   /**
+   * Get supervisors by enterprise.
+   *
+   * @param idEnterprise the id of the enterprise
+   * @return List of SupervisorDTO
+   */
+  List<SupervisorDTO> getSupervisorsByEnterprise(int idEnterprise);
+
+  /**
    * Add a supervisor.
    *
    * @param supervisor the supervisor to add
    * @return SupervisorDTO
    */
   SupervisorDTO addSupervisor(SupervisorDTO supervisor);
+
+
 }

@@ -24,6 +24,14 @@ public interface ContactDAO {
   List<ContactDTO> getAllContacts();
 
   /**
+   * Get contacts by enterprise from DB.
+   *
+   * @param id integer
+   * @return List of ContactDTO
+   */
+  List<ContactDTO> getContactsByEnterprise(int id);
+
+  /**
    * Get contacts by user from DB.
    *
    * @param id integer
