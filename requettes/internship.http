@@ -1,0 +1,73 @@
+@baseUrl = http://localhost:3000
+@authToken = {{adminToken}}
+
+### GET ONE INTERNSHIP BY STUDENT ID = 6
+GET {{baseUrl}}/internships/getOneInternshipByStudentId:6
+Authorization: {{adminToken}}
+
+### GET ONE INTERNSHIP BY STUDENT ID < 0
+GET {{baseUrl}}/internships/getOneInternshipByStudentId:-1
+Authorization: {{adminToken}}
+
+### GET ONE INTERNSHIP BY STUDENT WHO DOES NOT HAVE AN INTERNSHIP
+GET {{baseUrl}}/internships/getOneInternshipByStudentId:1
+Authorization: {{adminToken}}
+
+### UPDATE INTERNSHIP SUBJECT
+PATCH {{baseUrl}}/internships/updateSubject
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "id": 1,
+    "subject": "New Subject",
+    "academicYear": 1,
+    "version": 1
+}
+
+### UPDATE INTERNSHIP SUBJECT WITH WRONG VERSION
+PATCH {{baseUrl}}/internships/updateSubject
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "id": 1,
+  "subject": "New Subject",
+  "academicYear": 1,
+  "version": 99
+}
+
+### ADD INTERNSHIP
+POST {{baseUrl}}/internships/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "signatureDate": "2024-01-01",
+    "supervisorId": 4,
+    "contactId": 8,
+    "academicYear": 1
+}
+
+### ADD INTERNSHIP WITH CONTACT NOT IT TAKEN STATE
+POST {{baseUrl}}/internships/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "signatureDate": "2024-01-01",
+    "supervisorId": 4,
+    "contactId": 3,
+    "academicYear": 1
+}
+
+### ADD INTERNSHIP WITHOUTH SIGNATURE DATE
+POST {{baseUrl}}/internships/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "supervisorId": 4,
+    "contactId": 8,
+    "academicYear": 1
+}
