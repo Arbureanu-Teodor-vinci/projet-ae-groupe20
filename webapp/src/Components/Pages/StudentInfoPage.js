@@ -21,7 +21,7 @@ async function renderStudentInfoPage() {
     const studentId = urlParams.get('userId');
     // eslint-disable-next-line no-console
     console.log(studentId);
-    // eslint-disable-next-line no-unused-vars
+
     const options = {
         method: 'GET',
         headers: {
@@ -30,6 +30,14 @@ async function renderStudentInfoPage() {
         },
     };
 
+    const response = await fetch(`/api/auths/user:${studentId}`, options);
+
+    if (response.ok) {
+        const student = await response.json();
+        // eslint-disable-next-line no-console
+        console.log(student);
+    }
+    
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
