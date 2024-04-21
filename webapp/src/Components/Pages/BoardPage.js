@@ -92,7 +92,7 @@ async function renderBoardPage() {
         // Add the event listener to the button
         button.addEventListener('click', (event) => {
             event.preventDefault();
-            Navigate('/enterprise');
+            Navigate(`/enterprise?enterpriseId=${enterprise.id}`);
         });
     
         // Create a new cell

@@ -3,6 +3,7 @@ package be.vinci.pae.domain.factory;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.UserDTO;
@@ -54,4 +55,11 @@ public interface DomainFactory {
    * @return a new Supervisor
    */
   SupervisorDTO getSupervisorDTO();
+
+  /**
+   * Method returning a new internship.
+   *
+   * @return a new InternshipDTO
+   */
+  InternshipDTO getInternshipDTO();
 }

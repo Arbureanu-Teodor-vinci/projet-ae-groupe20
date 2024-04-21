@@ -91,3 +91,8 @@ Content-Type: application/json
   "lastName": "Vinci2",
   "telephoneNumber": "0499999955"
 }
+
+### GET USER BY ID
+GET {{baseUrl}}/auths/user:3
+Content-Type: application/json
+Authorization: {{adminToken}}
