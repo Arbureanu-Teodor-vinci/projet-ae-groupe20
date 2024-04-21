@@ -68,10 +68,6 @@ async function renderUpdateContactPage() {
     if (contact.stateContact === 'refusé' || contact.stateContact === 'accepté' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
         nonUpdatable = 'disabled';
     }
-
-
-    
-
     
     main.innerHTML = `
     <section>
@@ -191,7 +187,9 @@ if(nonUpdatable === ''){
             body: JSON.stringify(body)
         };
         const responseUpdateContact = await fetch(`/api/contacts/update`, optionsUpdateContact);
-        if (responseUpdateContact.status === 200) {
+        if (responseUpdateContact.status === 200 && stateContact === 'accepté') {    
+            Navigate(`/creationStage?contactId=${contactId}`);
+        } else if (responseUpdateContact.status === 200) {
             Navigate('/profil');
         } else {
             const errorMessage = await responseUpdateContact.text();

@@ -130,12 +130,16 @@ public class EnterpriseResource {
   @Path("add")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Etudiant"})
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode addEnterprise(EnterpriseDTO enterpriseDTO) {
     Logger.logEntry("POST /enterprises/add");
 
     // if the enterprise is null, throw an exception
-    if (enterpriseDTO == null) {
+    if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
+        || enterpriseDTO.getAdresse().trim().isEmpty()
+        || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
+        .isEmpty()
+        || enterpriseDTO.getEmail().trim().isEmpty()) {
       Logger.logEntry("Enterprise is missing.");
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }

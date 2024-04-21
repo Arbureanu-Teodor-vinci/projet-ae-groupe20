@@ -69,6 +69,30 @@ public class SupervisorDAOImpl implements SupervisorDAO {
   }
 
   @Override
+  public List<SupervisorDTO> getSupervisorsByEnterprise(int idEnterprise) {
+    Logger.logEntry("Supervisor DAO - getSupervisorsByEnterprise" + idEnterprise);
+    List<SupervisorDTO> internshipSupervisors = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT * FROM InternshipManagement.internship_supervisor "
+              + "WHERE enterprise = ?"
+      );
+      ps.setInt(1, idEnterprise);
+      try (ResultSet resultSet = ps.executeQuery()) {
+        while (resultSet.next()) {
+          internshipSupervisors.add(getResultSet(resultSet));
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return internshipSupervisors;
+  }
+
+  @Override
   public SupervisorDTO getOneSupervisorByEmail(String email) {
     Logger.logEntry("Supervisor DAO - getOneSupervisorByEmail" + email);
     SupervisorDTO internshipSupervisor = null;
