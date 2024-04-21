@@ -153,10 +153,11 @@ public class UserImpl implements User {
   }
 
   @Override
-  public void checkPassword(String password) {
+  public boolean checkPassword(String password) {
     if (!BCrypt.checkpw(password, this.password)) {
       throw new BusinessException("Password is incorrect.");
     }
+    return true;
   }
 
   @Override
@@ -184,6 +185,15 @@ public class UserImpl implements User {
         && !(role.equals(POSSIBLE_ROLES[1]) && email.endsWith("@vinci.be"))
         && !(role.equals(POSSIBLE_ROLES[2]) && email.endsWith("@vinci.be"))) {
       throw new BusinessException("Role and email combination is not valid.");
+    }
+  }
+
+  @Override
+  public void checkNotNull() {
+    if (this.id == 0 && this.lastName == null && this.firstName == null && this.email == null
+        && this.telephoneNumber == null && this.role == null && this.password == null
+        && this.registrationDate == null) {
+      throw new BusinessException("User is null.");
     }
   }
 

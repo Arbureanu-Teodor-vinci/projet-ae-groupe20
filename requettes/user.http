@@ -92,6 +92,23 @@ Content-Type: application/json
   "telephoneNumber": "0499999955"
 }
 
+### UPDATE USER PROFILE
+PUT {{baseUrl}}/auths/updateProfile
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "id": 12,
+  "firstName": "test",
+  "lastName": "test",
+  "telephoneNumber": "0499999999",
+  "role": "Administratif",
+  "email": "admin",
+  "registrationDate": "2024-04-19",
+  "password": "group20",
+  "version": 1
+}
+
 ### GET USER BY ID
 GET {{baseUrl}}/auths/user:3
 Content-Type: application/json
