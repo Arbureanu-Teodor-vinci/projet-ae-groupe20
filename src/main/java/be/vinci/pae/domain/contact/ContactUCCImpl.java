@@ -64,16 +64,22 @@ public class ContactUCCImpl implements ContactUCC {
       dalServices.startTransaction();
       Contact contact = (Contact) contactDTO;
       ContactDTO contactBeforeUpdate = contactDS.getOneContactByid(contact.getId());
-    /*if (contactBeforeUpdate.getVersion() != contact.getVersion()) {
-      dalServices.rollbackTransaction();
-      throw new BiznessException(
-          "This contact was updated in the meantime, refresh and try again.");
-    }*/
+      /*   if (contactBeforeUpdate.getVersion() != contact.getVersion()) {
+       *  dalServices.rollbackTransaction();
+       *  throw new BiznessException(
+       *  "This contact was updated in the meantime, refresh and try again.");}
+       */
       contact.checkContactState();
       contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact());
       contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod());
       contact.checkContactRefusalReasonUpdate();
+      contact.checkContactToolUpdate();
       contactDTO = contactDS.updateContact(contact);
+
+      //if contact id updated to accepted, all other contacts of the student are suspended
+      if (contactDTO.getStateContact().equals("accepté")) {
+        contactDS.updateAllContactsOfStudentToSuspended(contactDTO.getStudentId());
+      }
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
       throw e;

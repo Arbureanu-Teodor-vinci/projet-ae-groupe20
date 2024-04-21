@@ -47,7 +47,7 @@ async function renderUpdateContactPage() {
     if (['initié', 'pris'].includes(contact.stateContact)) {
         stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivi">Non suivi</option>
+            <option value="non suivis">Non suivis</option>
             
         `;
     if (contact.stateContact === 'initié') {
@@ -60,18 +60,14 @@ async function renderUpdateContactPage() {
         `;
     }
 
-    } else if (['accepté', 'refusé', 'non suivi','suspendu'].includes(contact.stateContact)) {
+    } else if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
     }
 
     let nonUpdatable = '';
-    if (contact.stateContact === 'refusé' || contact.stateContact === 'accepté' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivi') {
+    if (contact.stateContact === 'refusé' || contact.stateContact === 'accepté' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
         nonUpdatable = 'disabled';
     }
-
-
-    
-
     
     main.innerHTML = `
     <section>
@@ -84,7 +80,7 @@ async function renderUpdateContactPage() {
                             <label for="enterpriseId"><B>Entreprise</B></label>
                             <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}" ${nonUpdatable}>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group interviewMethodDiv">
                             <label for="interViewMethod"><B>Moyen de contact</B></label>
                             <select id="interViewMethod" name="interViewMethod" class="form-control text-center" ${nonUpdatable}>
                                 <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
@@ -93,7 +89,7 @@ async function renderUpdateContactPage() {
                         </div>
                         <div class="form-group tool">
                             <label for="tool"><B>Outil de contact</B></label>
-                            <input type="text" id="toolInput" name="tool" class="form-control text-center" value="${contact.tool}" ${nonUpdatable}>
+                            <input type="text" id="toolInput" name="tool" class="form-control text-center" value="${contact.tool === null ? '' : contact.tool}" ${nonUpdatable}>
                         </div>
                         <div class="form-group">
                             <label for="stateContact"><B>Etat du contact</B></label>
@@ -103,9 +99,9 @@ async function renderUpdateContactPage() {
                         </div>
                         <div class="form-group refusalReason">
                             <label for="refusalReason"><B>Raison de refus</B></label>
-                            <input type="text" id="refusalReasonInput" name="refusalReason" class="form-control text-center" value="${contact.refusalReason || ''}" ${nonUpdatable}>
+                            <input type="text" id="refusalReasonInput" name="refusalReason" class="form-control text-center" value="${contact.refusalReason === null ? '' : contact.refusalReason}" ${nonUpdatable}>
                         </div>
-                        ${nonUpdatable ? '<p class="text-danger">Vous ne pouvez pas changer l\'état du contact une fois qu\'il est passé à "accepté", "refusé", "suspendu" ou "non suivi"</p>' :
+                        ${nonUpdatable ? '<p class="text-danger">Vous ne pouvez pas changer l\'état du contact une fois qu\'il est passé à "accepté", "refusé", "suspendu" ou "non suivis"</p>' :
                         '<button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>'}
                     </form>
                 </div>
@@ -113,12 +109,18 @@ async function renderUpdateContactPage() {
         </div>
     </section>`;
 
+const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
 const interViewMethodSelect = document.querySelector('#interViewMethod');
 const stateContactSelect = document.querySelector('#stateContact');
 const toolDiv = document.querySelector('.tool');
 const toolInput = document.querySelector('#toolInput');
 const refusalReasonDiv = document.querySelector('.refusalReason');
 const refusalReasonInput = document.querySelector('#refusalReasonInput');
+
+if (contact.interViewMethod === null) {
+    document.querySelector('#interViewMethod').value = '';
+}
+
 
 // Hide the tool input if the interview method is not "A distance"
 toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
@@ -136,6 +138,8 @@ interViewMethodSelect.addEventListener('change', (event) => {
 // Hide the refusal reason input if the state is not "refusé"
 refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
 
+interViewMethodSelectDiv.style.display = (stateContactSelect.value === 'initié' || stateContactSelect.value === 'non suivis') ? 'none' : 'block';
+
 stateContactSelect.addEventListener('change', (event) => {
     // If the state is "refusé", display the refusal reason input, otherwise hide it
     if (event.target.value === 'refusé') {
@@ -144,6 +148,10 @@ stateContactSelect.addEventListener('change', (event) => {
         refusalReasonDiv.style.display = 'none';
         refusalReasonInput.value = null;
     }
+    
+    interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
+    toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
+    
 });
 
     document.getElementById('contactForm').addEventListener('submit', (event) => {
@@ -153,10 +161,10 @@ stateContactSelect.addEventListener('change', (event) => {
 if(nonUpdatable === ''){
     document.getElementById("updateContactButton").addEventListener('click', async (event) => {
         event.preventDefault();
-        const interviewMethod = interViewMethodSelect.value;
-        const tool = toolInput.value;
+        const interviewMethod = (interViewMethodSelect.value === '' || interViewMethodSelect === "null") ? null  : interViewMethodSelect.value;
+        const tool = (toolInput.value === '' || toolInput.value === "null") ? null : toolInput.value;
         const stateContact = stateContactSelect.value;
-        const refusalReason = refusalReasonInput.value;
+        const refusalReason = (refusalReasonInput.value === '' || refusalReasonInput.value === "null") ? null : refusalReasonInput.value;
 
         const body = {
             id: contactId,
@@ -179,7 +187,9 @@ if(nonUpdatable === ''){
             body: JSON.stringify(body)
         };
         const responseUpdateContact = await fetch(`/api/contacts/update`, optionsUpdateContact);
-        if (responseUpdateContact.status === 200) {
+        if (responseUpdateContact.status === 200 && stateContact === 'accepté') {    
+            Navigate(`/creationStage?contactId=${contactId}`);
+        } else if (responseUpdateContact.status === 200) {
             Navigate('/profil');
         } else {
             const errorMessage = await responseUpdateContact.text();

@@ -104,7 +104,8 @@ public class ContactDAOImpl implements ContactDAO {
     ContactDTO contact = domainFactory.getContactDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.contacts (state_contact, student, academic_year, enterprise, version)"
+          "INSERT INTO "
+              + "InternshipManagement.contacts (state_contact, student, academic_year, enterprise, version)"
               + " VALUES ('initié', ?, ?, ?, 1)"
               + " RETURNING *"
       );
@@ -155,6 +156,24 @@ public class ContactDAOImpl implements ContactDAO {
       dalConn.closeConnection();
     }
     return contact;
+  }
+
+  @Override
+  public void updateAllContactsOfStudentToSuspended(int studentID) {
+    Logger.logEntry("Contact DAO - updateAllContactsOfStudentToSuspended" + studentID);
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "UPDATE InternshipManagement.contacts SET state_contact = 'suspendu'"
+              + " WHERE student = ? AND state_contact != 'accepté'"
+      );
+      ps.setInt(1, studentID);
+      ps.executeUpdate();
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
   }
 
   /**

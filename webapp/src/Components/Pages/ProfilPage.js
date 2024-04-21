@@ -126,6 +126,8 @@ async function renderProfilPage() {
                                 <th>Outil de contact</th>
                                 <th>Etat du contact</th>
                                 <th>Raison du refus</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,6 +141,9 @@ async function renderProfilPage() {
                             <td class="text-center">
                                 <button id="editButton${contact.id}" class="btn btn-primary">Modifier</button>
                             </td>
+                            <td class="text-center">
+                                ${contact.stateContact === 'accepté' ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>` : ''}
+                            </td>
                         </tr>
                         `).join('')}
                         </tbody>
@@ -149,35 +154,41 @@ async function renderProfilPage() {
         ` : ''}
     </div>
 </section>`
+    const linkContact = document.querySelector('#creationContact');
 
     contacts.forEach(contact => {
         const button = document.getElementById(`editButton${contact.id}`);
-        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivi') {
+        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
             button.disabled = true;
         }else{
             button.addEventListener('click', () => {
-                // Enregistrez l'ID du contact dans le localStorage
-                // localStorage.setItem('contactIdToEdit', contact.id);
-                // Redirigez l'utilisateur vers la page de modification
-                window.location.href = `/updateContact?contactId=${contact.id}`;
+                Navigate(`/updateContact?contactId=${contact.id}`);
             });
         }
-        
+        if(contact.stateContact === 'accepté')
+           linkContact.disabled = true;
     });
 
+    const addStageButtons = document.querySelector('.addStage');
+    if (addStageButtons){
+        addStageButtons.addEventListener('click', (e) => {
+            e.preventDefault();
+            Navigate(`/creationStage?contactId=${e.target.id}`);
+        });
+    }
+    
     const link = document.querySelector('#editButton');
     link.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/modification');
     });
 
-    if (user.role === 'Etudiant') {
-    const linkContact = document.querySelector('#creationContact');
-    linkContact.addEventListener('click', (e) => {
-        e.preventDefault();
-        Navigate('/creationContact');
-    });
-}
+        if (user.role === 'Etudiant') {
+        linkContact.addEventListener('click', (e) => {
+            e.preventDefault();
+            Navigate('/creationContact');
+            });
+        }
 }
 }
 

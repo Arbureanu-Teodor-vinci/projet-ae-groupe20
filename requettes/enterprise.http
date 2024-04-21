@@ -11,17 +11,22 @@ GET {{baseUrl}}/enterprises/getAll
 Content-Type: application/json
 Authorization: {{adminToken}}
 
+### Get number of interships for an enterprise
+GET {{baseUrl}}/enterprises/getNbInternships:2
+Content-Type: application/json
+Authorization: {{adminToken}}
+
 ### Add a new enterprise
 POST {{baseUrl}}/enterprises/add
 Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "tradeName": "Enterprise 1",
-    "designation": "Enterprise 1 designation",
-    "adresse": "Enterprise 1 address",
-    "email": "Enterprise 1 email",
-    "phoneNumber": "Enterprise 1 phone number",
-    "city": "Enterprise 1 city"
+    "tradeName": "Belfius",
+    "designation": "Belfius designation",
+    "adresse": "Belfius adresse",
+    "email": "Belfius email",
+    "phoneNumber": "Belfius phoneNumber",
+    "city": "Belfius city"
 
 }

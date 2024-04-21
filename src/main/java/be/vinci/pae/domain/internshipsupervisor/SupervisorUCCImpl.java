@@ -32,6 +32,14 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   }
 
   @Override
+  public List<SupervisorDTO> getSupervisorsByEnterprise(int idEnterprise) {
+    if (idEnterprise <= 0) {
+      throw new BusinessException("id must be positive");
+    }
+    return supervisorDS.getSupervisorsByEnterprise(idEnterprise);
+  }
+
+  @Override
   public SupervisorDTO addSupervisor(SupervisorDTO newSsupervisor) {
     Supervisor supervisor = (Supervisor) newSsupervisor;
     try {

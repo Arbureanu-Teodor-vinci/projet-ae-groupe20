@@ -92,6 +92,33 @@ public class EnterpriseResource {
     return enterprisesListNode;
   }
 
+  /**
+   * Get the number of internships in an enterprise.
+   *
+   * @return the number of interships in an enterprise
+   * @throws WebApplicationException If the token is invalid.
+   */
+  @GET
+  @Path("getNbInternships:{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public int getNbInternships(@PathParam("id") Integer id) {
+    Logger.logEntry("GET /enterprises/getNbInternships:" + id);
+
+    // if the id is null, throw an exception
+    if (id == null) {
+      Logger.logEntry("id is missing.");
+      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
+    }
+
+    // Try to get the enterprise
+    int nbInternships = enterpriseUCC.getNbInternships(id);
+
+    return nbInternships;
+
+  }
+
 
   /**
    * Add an enterprise.
@@ -103,12 +130,16 @@ public class EnterpriseResource {
   @Path("add")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Etudiant"})
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode addEnterprise(EnterpriseDTO enterpriseDTO) {
     Logger.logEntry("POST /enterprises/add");
 
     // if the enterprise is null, throw an exception
-    if (enterpriseDTO == null) {
+    if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
+        || enterpriseDTO.getAdresse().trim().isEmpty()
+        || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
+        .isEmpty()
+        || enterpriseDTO.getEmail().trim().isEmpty()) {
       Logger.logEntry("Enterprise is missing.");
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }

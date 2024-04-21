@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.enterprise;
 
+import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.enterpriseservices.EnterpriseDAO;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -11,6 +12,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Inject
   EnterpriseDAO enterpriseDS;
+
+  @Inject
+  private DALTransactionServices dalServices;
 
   @Override
   public EnterpriseDTO getOneEnterprise(int id) {
@@ -27,8 +31,27 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   }
 
   @Override
-  public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
-    return enterpriseDS.addEnterprise(enterprise);
+  public int getNbInternships(int id) {
+    return enterpriseDS.getNbInternships(id);
+  }
+
+  @Override
+  public EnterpriseDTO addEnterprise(EnterpriseDTO enterpriseDTO) {
+    EnterpriseDTO enterprise;
+    try {
+      dalServices.startTransaction();
+      List<EnterpriseDTO> enterprisesExisting = enterpriseDS.getAllEnterprises();
+      Enterprise enterpriseCast = (Enterprise) enterpriseDTO;
+      enterpriseCast.checkDesignationExistsOrIsNull(enterpriseDTO.getTradeName(),
+          enterpriseDTO.getDesignation(),
+          enterprisesExisting);
+      enterprise = enterpriseDS.addEnterprise(enterpriseDTO);
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    return enterprise;
   }
 
 }

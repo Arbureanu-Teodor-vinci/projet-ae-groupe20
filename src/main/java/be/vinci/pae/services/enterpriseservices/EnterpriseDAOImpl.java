@@ -75,12 +75,42 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
+  public int getNbInternships(int id) {
+    Logger.logEntry("Enterprise DAO - getNbInternships");
+    int nbInternships = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(*) FROM InternshipManagement.internship i "
+              + " JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + " WHERE c.enterprise = ?"
+      );
+      ps.setInt(1, id);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbInternships = rs.getInt(1);
+        }
+      }
+      ps.close();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbInternships;
+  }
+
+  @Override
   public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
     Logger.logEntry("Enterprise DAO - addEnterprise");
+    EnterpriseDTO Nenterprise = domainFactory.getEnterpriseDTO();
+
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.enterprise (trade_name, designation, address, "
-              + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1)"
+              + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1) "
+              + "RETURNING *"
       );
       ps.setString(1, enterprise.getTradeName());
       ps.setString(2, enterprise.getDesignation());
@@ -89,15 +119,20 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.setString(5, enterprise.getCity());
       ps.setString(6, enterprise.getEmail());
 
-      ps.executeUpdate();
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          Nenterprise = getResultSet(rs);
+        }
+      }
       ps.close();
 
     } catch (SQLException e) {
+
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
-    return enterprise;
+    return Nenterprise;
   }
 
   /**
