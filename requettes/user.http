@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-
+@authToken ={{adminToken}}
 
 ### LOGIN WITH ADMIN USER
 POST {{baseUrl}}/auths/login
@@ -90,4 +90,21 @@ Content-Type: application/json
   "firstName": "admin2",
   "lastName": "Vinci2",
   "telephoneNumber": "0499999955"
+}
+
+### UPDATE USER PROFILE
+PUT {{baseUrl}}/auths/updateProfile
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "id": 12,
+  "firstName": "test",
+  "lastName": "test",
+  "telephoneNumber": "0499999999",
+  "role": "Administratif",
+  "email": "admin",
+  "registrationDate": "2024-04-19",
+  "password": "group20",
+  "version": 1
 }

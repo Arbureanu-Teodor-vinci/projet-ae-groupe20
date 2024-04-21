@@ -160,7 +160,8 @@ public class UserDAOImpl implements UserDAO {
           "UPDATE InternshipManagement.users SET "
               + " lastname_user = ?, firstname_user = ?, email = ?, phone_number = ?,"
               + " password_user = ?, version = ?"
-              + " WHERE id_user = ? AND version = ?");
+              + " WHERE id_user = ? AND version = ?"
+              + " RETURNING *");
       ps.setString(1, user.getLastName());
       ps.setString(2, user.getFirstName());
       ps.setString(3, user.getEmail());
@@ -169,14 +170,20 @@ public class UserDAOImpl implements UserDAO {
       ps.setInt(6, user.getVersion() + 1);
       ps.setInt(7, user.getId());
       ps.setInt(8, user.getVersion());
-      ps.executeUpdate();
+      try (ResultSet resultSet = ps.executeQuery()) {
+        if (resultSet.next()) {
+          user = getResultSet(resultSet);
+        } else {
+          user = null;
+        }
+      }
       ps.close();
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
       dalConn.closeConnection();
     }
-    return getOneUserByID(user.getId());
+    return user;
   }
 
   /**

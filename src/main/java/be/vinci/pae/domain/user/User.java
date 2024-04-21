@@ -13,8 +13,9 @@ public interface User extends UserDTO {
    * Check if password is hashed.
    *
    * @param password -> password to check
+   * @return true if password is hashed
    */
-  void checkPassword(String password) throws BusinessException;
+  boolean checkPassword(String password) throws BusinessException;
 
   /**
    * Check if email is a vinci email.
@@ -36,5 +37,13 @@ public interface User extends UserDTO {
    * @param role -> role to check
    */
   void checkRole(String role) throws BusinessException;
+
+  /**
+   * Check if object is not null.
+   *
+   * @throws BusinessException -> if not null
+   */
+  void checkNotNull() throws BusinessException;
+
 
 }

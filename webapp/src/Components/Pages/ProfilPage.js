@@ -77,7 +77,7 @@ async function renderProfilPage() {
                     </tr>
                     <tr>
                         <th>Tel</th>
-                        <td>${user && user.phoneNumber}</td>
+                        <td>${user && user.telephoneNumber}</td>
                     </tr>
                 </tbody>
             </table>
@@ -171,7 +171,7 @@ const linkContact = document.querySelector('#creationContact');
     const link = document.querySelector('#editButton');
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        Navigate('/modification');
+        Navigate('/updateUserInfos');
     });
 
     if (user.role === 'Etudiant') {
