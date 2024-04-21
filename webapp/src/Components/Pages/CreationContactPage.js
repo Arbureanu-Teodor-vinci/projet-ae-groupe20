@@ -62,11 +62,13 @@ async function renderCreationContactPage() {
     const companyFilterInput = document.querySelector('#company-filter');
 
     // Filtrer les options lors de la saisie dans le champ de filtre
+    if (companyFilterInput){
     companyFilterInput.addEventListener('input', (event) => {
         const filterValue = event.target.value.toLowerCase();
         const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(filterValue));
         renderCompaniesOptions(filteredCompanies);
     });
+}
 
     const createButton = document.querySelector('#create');
     createButton.addEventListener('click', async (event) => {
