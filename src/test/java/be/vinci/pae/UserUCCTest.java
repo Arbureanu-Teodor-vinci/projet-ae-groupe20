@@ -249,7 +249,8 @@ public class UserUCCTest {
     updatedUser.setLastName("newLastName");
     updatedUser.setTelephoneNumber("0444444444");
 
-    assertThrows(NullPointerException.class, () -> userUCC.updateProfile(updatedUser));
+    assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
+    assertEquals(userUCC.updateProfile(updatedUser).getPassword(), userDTO.getPassword());
   }
 
 }
