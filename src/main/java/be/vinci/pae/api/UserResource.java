@@ -21,6 +21,7 @@ import jakarta.inject.Singleton;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -32,6 +33,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Represents the authentication route for the user to register and login.
@@ -211,6 +213,41 @@ public class UserResource {
     return usersJsonList;
   }
 
+  @PUT
+  @Path("updateProfile")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Etudiant", "Professeur", "Administratif"})
+  public ObjectNode updateProfile(UserDTO user, @Context ContainerRequest request) {
+    Logger.logEntry("PATCH /auths/updateProfile");
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    if (user == null) {
+      throw new WebApplicationException("You must be logged in.", Status.UNAUTHORIZED);
+    }
+    if (user.getId() != authentifiedUser.getId()) {
+      throw new WebApplicationException("You can't update another user's profile.",
+          Status.UNAUTHORIZED);
+    }
+    if (user.getFirstName() == null || user.getFirstName().isBlank() || user.getFirstName()
+        .isEmpty()) {
+      throw new WebApplicationException("You cant put your first name to null.",
+          Status.BAD_REQUEST);
+    }
+    if (user.getLastName() == null || user.getLastName().isBlank() || user.getLastName()
+        .isEmpty()) {
+      throw new WebApplicationException("You cant put your last name to null.", Status.BAD_REQUEST);
+    }
+    if (!user.getEmail().equals(authentifiedUser.getEmail()) || !user.getRole()
+        .equals(authentifiedUser.getRole()) || !user.getRegistrationDate()
+        .equals(authentifiedUser.getRegistrationDate())) {
+      throw new WebApplicationException("You can't change your email, role and registration date.",
+          Status.BAD_REQUEST);
+    }
+
+    UserDTO updatedUser = userController.updateProfile(user);
+
+    return toJson(updatedUser, null);
+  }
 
   private ObjectNode toJson(UserDTO user, AcademicYearDTO academicYear) {
     // StudentDTO student = (StudentDTO) user;
@@ -220,9 +257,9 @@ public class UserResource {
         .put("email", user.getEmail())
         .put("firstName", user.getFirstName())
         .put("lastName", user.getLastName())
-        .put("phoneNumber", user.getTelephoneNumber())
-        .put("registrationDate", user.getRegistrationDate().toString());
-    //.put("academicYear", user.getAcademicYearTEST());
+        .put("telephoneNumber", user.getTelephoneNumber())
+        .put("registrationDate", user.getRegistrationDate().toString())
+        .put("version", user.getVersion());
     if (academicYear != null) {
       json.put("academicYear", academicYear.toString());
     } else {

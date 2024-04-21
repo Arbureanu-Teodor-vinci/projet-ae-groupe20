@@ -67,4 +67,27 @@ public class UserUCCImpl implements UserUCC {
 
     return registeredUser;
   }
+
+  @Override
+  public UserDTO updateProfile(UserDTO userDTO) {
+    try {
+      dalServices.startTransaction();
+      User userFound = (User) userDAO.getOneUserByID(userDTO.getId());
+      userFound.checkNotNull();
+
+      if (userDTO.getPassword() == null || userDTO.getPassword().isEmpty()) {
+        userDTO.setPassword(userFound.getPassword());
+      } else {
+        userDTO.hashPassword();
+      }
+
+      userDTO = userDAO.updateUser(userDTO);
+
+      dalServices.commitTransaction();
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    return userDTO;
+  }
 }

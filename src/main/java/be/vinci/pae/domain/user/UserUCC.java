@@ -38,4 +38,12 @@ public interface UserUCC {
    * @return list of users
    */
   List<UserDTO> getAll();
+
+  /**
+   * Update user profile.
+   *
+   * @param user UserDTO
+   * @return UserDTO updated
+   */
+  UserDTO updateProfile(UserDTO user);
 }

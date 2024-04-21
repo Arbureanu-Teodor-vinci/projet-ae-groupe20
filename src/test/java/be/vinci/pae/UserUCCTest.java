@@ -12,6 +12,7 @@ import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.services.userservices.UserDAO;
+import java.time.LocalDate;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,13 +34,20 @@ public class UserUCCTest {
 
   @BeforeEach
   void initEach() {
+    userDTO.setId(1);
     userDTO.setEmail("admin");
     userDTO.setPassword("$2a$10$WYp2AihAECclbAeBQ9nwVu.8kw2yltBdJEwQTXKMI6qwOumku3bVy");
     userDTO.setFirstName("admin");
     userDTO.setLastName("admin");
     userDTO.setTelephoneNumber("09999999");
+    userDTO.setRole("Administratif");
+    userDTO.setRegistrationDate(LocalDate.now());
 
+    Mockito.when(userDAO.getOneUserByID(1)).thenReturn(userDTO);
     Mockito.when(userDAO.getOneUserByEmail("admin")).thenReturn(userDTO);
+
+    Mockito.when(userDAO.updateUser(Mockito.any(UserDTO.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
@@ -219,5 +227,31 @@ public class UserUCCTest {
 
     assertThrows(BusinessException.class, () -> userUCC.register(newUser));
   }
+
+  @Test
+  @DisplayName("Update profile with valid inputs")
+  void testUpdateProfile1() {
+    UserDTO updatedUser = userDTO;
+    updatedUser.setPassword("newPassword");
+    updatedUser.setFirstName("newFirstName");
+    updatedUser.setLastName("newLastName");
+    updatedUser.setTelephoneNumber("0444444444");
+
+    assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
+  }
+
+  @Test
+  @DisplayName("Update profile with null password")
+  void testUpdateProfile2() {
+    UserDTO updatedUser = userDTO;
+    updatedUser.setPassword(null);
+    updatedUser.setFirstName("newFirstName");
+    updatedUser.setLastName("newLastName");
+    updatedUser.setTelephoneNumber("0444444444");
+
+    assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
+    assertEquals(userUCC.updateProfile(updatedUser).getPassword(), userDTO.getPassword());
+  }
+
 }
 
