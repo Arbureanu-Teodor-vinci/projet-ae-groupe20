@@ -228,6 +228,17 @@ public class ContactImpl implements Contact {
     }
   }
 
+  @Override
+  public void checkIfContactIsTaken() {
+    boolean isTakenState = false;
+    if (stateContact.equals(POSSIBLESTATES[1])) {
+      isTakenState = true;
+    }
+    if (!isTakenState) {
+      throw new BusinessException("The contact has to be in taken state.");
+    }
+  }
+
 
   @Override
   public int hashCode() {
