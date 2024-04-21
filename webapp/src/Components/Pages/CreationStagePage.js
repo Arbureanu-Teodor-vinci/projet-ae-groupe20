@@ -13,6 +13,10 @@ const creationStagePage = async () => {
 };
 
 async function renderCreationStagePage() {
+    if (getAuthenticatedUser().role !== 'Etudiant'){
+        Navigate('/');
+        return;
+    }
     const main = document.querySelector('main');
     const urlParams = new URLSearchParams(window.location.search);
     const contactId = urlParams.get('contactId');
@@ -39,7 +43,7 @@ async function renderCreationStagePage() {
 
     main.innerHTML = `
         <section>
-            <div class="container h-100">
+            <div style="margin-top: 100px" class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12 text-center">
                         <h1>Création de mon stage</h1>

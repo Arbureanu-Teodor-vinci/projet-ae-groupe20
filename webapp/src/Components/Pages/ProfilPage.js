@@ -27,10 +27,8 @@ async function renderProfilPage() {
     if (response.ok) {
         const contacts = await response.json();
     
-        // Créez un tableau de promesses pour chaque contact
         const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
     
-        // Attendez que toutes les promesses soient résolues
         const entrepriseResponses = await Promise.all(entreprisePromises);
     
         // Récupérez les détails de l'entreprise pour chaque contact
@@ -50,7 +48,7 @@ async function renderProfilPage() {
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
-    <div class="container h-100">
+    <div style="margin-top: 100px" class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12 text-center">
                 <h1>Mon Profil</h1>
@@ -190,6 +188,9 @@ async function renderProfilPage() {
             });
         }
 }
+
 }
+
+
 
 export default ProfilPage;
