@@ -120,6 +120,35 @@ public class ContactResource {
   }
 
   /**
+   * Get contacts by enterprise.
+   *
+   * @param id The id of the enterprise.
+   * @return JSON object containing all contacts.
+   * @throws WebApplicationException If id is null or the token is invalid.
+   */
+  @GET
+  @Path("getByEnterprise:{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public ArrayNode getContactsByEnterprise(@PathParam("id") Integer id) {
+    Logger.logEntry("GET /contacts/getByEnterprise:" + id);
+
+    // if the id is null, throw an exception
+    if (id == null) {
+      Logger.logEntry("id is missing.");
+      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
+    }
+
+    // Try to get the contacts by enterprise
+    ArrayNode contactsListNode = jsonMapper.createArrayNode();
+    for (ContactDTO contact : contactUCC.getContactsByEnterprise(id)) {
+      contactsListNode.add(contactNodeMaker(contact));
+    }
+    return contactsListNode;
+  }
+
+  /**
    * Get contacts by user.
    *
    * @param request The request.

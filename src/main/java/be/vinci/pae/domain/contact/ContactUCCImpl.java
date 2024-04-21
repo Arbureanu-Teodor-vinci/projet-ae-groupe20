@@ -35,6 +35,11 @@ public class ContactUCCImpl implements ContactUCC {
   }
 
   @Override
+  public List<ContactDTO> getContactsByEnterprise(int id) {
+    return contactDS.getContactsByEnterprise(id);
+  }
+
+  @Override
   public List<ContactDTO> getContactsByUser(int id) {
     return contactDS.getContactsByUser(id);
   }

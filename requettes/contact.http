@@ -11,6 +11,11 @@ GET {{baseUrl}}/contacts/getAll
 Content-Type: application/json
 Authorization: {{adminToken}}
 
+### Get all contacts by enterprise
+GET {{baseUrl}}/contacts/getByEnterprise:3
+Content-Type: application/json
+Authorization: {{adminToken}}
+
 ### Get all contacts by user
 GET {{baseUrl}}/contacts/getByUser
 Content-Type: application/json

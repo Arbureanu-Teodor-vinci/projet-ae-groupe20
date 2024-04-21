@@ -25,6 +25,14 @@ public interface UserUCC {
   UserDTO register(UserDTO user);
 
   /**
+   * Get user by id.
+   *
+   * @param id int
+   * @return UserDTO
+   */
+  UserDTO getUserById(int id);
+
+  /**
    * Get all users.
    *
    * @return list of users
