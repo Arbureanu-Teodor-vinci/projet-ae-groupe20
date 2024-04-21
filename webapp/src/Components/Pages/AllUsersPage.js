@@ -62,11 +62,10 @@ async function renderPage() {
             <td>${user.phoneNumber}</td>
             <td>${user.role}</td>
             <td>${user.registrationDate}</td>
-            <td>${user.academicYear}</td>
+            <td>${user.role === 'Etudiant' ? user.academicYear.replace(/.*year=/, '').replace(']', '') : ' '}</td>
         </tr>
         `;
-    }
-    );
+    });
 
 };
 
