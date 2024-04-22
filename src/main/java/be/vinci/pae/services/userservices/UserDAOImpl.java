@@ -185,6 +185,91 @@ public class UserDAOImpl implements UserDAO {
     return user;
   }
 
+  @Override
+  public int getNumberOfStudentsWithInternship(String academicYear) {
+    Logger.logEntry("User DAO - getNumberOfStudentsWithInternship" + academicYear);
+    int nbStudents = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(DISTINCT s.id_user) as number_of_students, ay.academic_year "
+              + "FROM InternshipManagement.internship i "
+              + "JOIN InternshipManagement.contacts c "
+              + "ON i.contact = c.id_contacts "
+              + "JOIN InternshipManagement.student s "
+              + "ON c.student = s.id_user "
+              + "JOIN InternshipManagement.academic_year ay "
+              + "ON s.academic_year = ay.id_academic_year "
+              + "WHERE ay.academic_year = ? "
+              + "GROUP BY ay.academic_year;");
+      ps.setString(1, academicYear);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbStudents = rs.getInt(1);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbStudents;
+  }
+
+  @Override
+  public int getNumberOfStudentsWithoutInternship(String academicYear) {
+    Logger.logEntry("User DAO - getNumberOfStudentsWithoutInternship" + academicYear);
+    int nbStudents = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(*) as number_of_students_without_internship, ay.academic_year "
+              + "FROM InternshipManagement.student s "
+              + "JOIN InternshipManagement.academic_year ay "
+              + "ON s.academic_year = ay.id_academic_year "
+              + "WHERE ay.academic_year = ? "
+              + "AND s.id_user NOT IN ("
+              + "    SELECT DISTINCT c.student "
+              + "    FROM InternshipManagement.internship i "
+              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + ") "
+              + "GROUP BY ay.academic_year;");
+      ps.setString(1, academicYear);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbStudents = rs.getInt(1);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbStudents;
+  }
+
+  @Override
+  public List<String> getAllAcademicYears() {
+    Logger.logEntry("User DAO - getAcademicYears");
+    List<String> academicYears = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT academic_year FROM InternshipManagement.academic_year");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          academicYears.add(rs.getString(1));
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+
+    return academicYears;
+  }
+
   /**
    * Generalisation of the resultset treatment. Get the resultset of the calling method and create
    * an userDTO with the given information.

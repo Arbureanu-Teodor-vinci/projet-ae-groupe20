@@ -46,4 +46,20 @@ public interface UserUCC {
    * @return UserDTO updated
    */
   UserDTO updateProfile(UserDTO user);
+
+  /**
+   * Get number of students with an internship in a specific academic year.
+   *
+   * @param academicYear String
+   * @return integer number of students
+   */
+  int getNumberOfStudentsWithInternship(String academicYear);
+
+  /**
+   * Get number of students without an internship in a specific academic year.
+   *
+   * @param academicYear String
+   * @return integer number of students
+   */
+  int getNumberOfStudentsWithoutInternship(String academicYear);
 }

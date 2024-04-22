@@ -7,12 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.User;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.services.userservices.UserDAO;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -251,6 +255,111 @@ public class UserUCCTest {
 
     assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
     assertEquals(userUCC.updateProfile(updatedUser).getPassword(), userDTO.getPassword());
+  }
+
+  @Test
+  @DisplayName("Get number of students with internships for a specific academic year")
+  void testGetNumberOfStudentsWithInternship() {
+    String academicYear = "2023-2024";
+    int mockNumberOfStudents = 2;
+
+    // Mock the behavior of UserDAO
+    Mockito.when(userDAO.getAllAcademicYears()).thenReturn(
+        Arrays.asList("2021-2022", "2022-2023", "2023-2024"));
+    Mockito.when(userDAO.getNumberOfStudentsWithInternship(academicYear))
+        .thenReturn(mockNumberOfStudents);
+
+    // Call the method under test
+    int actualNumberOfStudents = userUCC.getNumberOfStudentsWithInternship(academicYear);
+
+    // Assert that the returned number matches the mock number
+    assertEquals(mockNumberOfStudents, actualNumberOfStudents);
+  }
+
+  @Test
+  @DisplayName("Get number of students with internships for a non-existent academic year")
+  void testGetNumberOfStudentsWithInternshipWithNonExistentYear() {
+    List<String> list = new ArrayList<>();
+    list.add("2021-2022");
+    list.add("2022-2023");
+    list.add("2023-2024");
+
+    Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
+    
+    String academicYear = "2099-2100"; // This academic year is not in the database
+    // Call the method under test and expect a BusinessException
+    assertThrows(BusinessException.class, () -> {
+      userUCC.getNumberOfStudentsWithInternship(academicYear);
+    });
+  }
+
+  @Test
+  @DisplayName("Get number of students with internships for an existing academic year")
+  void testGetNumberOfStudentsWithInternshipWithExistingYear() {
+    AcademicYearDTO year1 = domainFactory.getAcademicYearDTO();
+    year1.setId(1);
+    year1.setYear("2023-2024");
+
+    AcademicYearDTO year2 = domainFactory.getAcademicYearDTO();
+    year2.setId(2);
+    year2.setYear("2022-2023");
+
+    List<String> list = new ArrayList<>();
+    list.add(year1.getYear());
+    list.add(year2.getYear());
+
+    String academicYear = "2023-2024"; // This academic year exists in the database
+
+    Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
+
+    // Call the method under test
+    int actualNumberOfStudents = userUCC.getNumberOfStudentsWithInternship(academicYear);
+
+    // Assert that the returned number is greater than or equal to 0
+    assertTrue(actualNumberOfStudents >= 0);
+  }
+
+  @Test
+  @DisplayName("Get number of students without internships for a specific academic year")
+  void testGetNumberOfStudentsWithoutInternship() {
+    List<String> list = new ArrayList<>();
+    list.add("2021-2022");
+    list.add("2022-2023");
+    list.add("2023-2024");
+
+    Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
+
+    String academicYear = "2099-2100"; // This academic year is not in the database
+    // Call the method under test and expect a BusinessException
+    assertThrows(BusinessException.class, () -> {
+      userUCC.getNumberOfStudentsWithoutInternship(academicYear);
+    });
+  }
+
+  @Test
+  @DisplayName("Get number of students without internships for an existing academic year")
+  void testGetNumberOfStudentsWithoutInternshipWithExistingYear() {
+    AcademicYearDTO year1 = domainFactory.getAcademicYearDTO();
+    year1.setId(1);
+    year1.setYear("2023-2024");
+
+    AcademicYearDTO year2 = domainFactory.getAcademicYearDTO();
+    year2.setId(2);
+    year2.setYear("2022-2023");
+
+    List<String> list = new ArrayList<>();
+    list.add(year1.getYear());
+    list.add(year2.getYear());
+
+    String academicYear = "2023-2024"; // This academic year exists in the database
+
+    Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
+
+    // Call the method under test
+    int actualNumberOfStudents = userUCC.getNumberOfStudentsWithoutInternship(academicYear);
+
+    // Assert that the returned number is greater than or equal to 0
+    assertTrue(actualNumberOfStudents >= 0);
   }
 
 }

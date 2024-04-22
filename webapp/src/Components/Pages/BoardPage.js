@@ -1,3 +1,4 @@
+import Chart from 'chart.js/auto';
 import { clearPage } from "../../utils/render";
 import { getAuthenticatedUser } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
@@ -20,7 +21,11 @@ async function renderBoardPage() {
 
     const enterprises = await response.json();
 
+    const response3 = await fetch(`/api/auths/studentsWithInternship:2023-2024`, options);
+    const NbWithInternships = await response3.json();
     
+    const response4 = await fetch(`/api/auths/studentsWithoutInternship:2023-2024`, options);
+    const NbWithoutInternships = await response4.json();
 
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -30,8 +35,43 @@ async function renderBoardPage() {
                 <div class="col-12 text-center">
                     <h1>Tableau de bord</h1>
                 </div>
-                <p>Voici la liste de tout les entreprises :</p>
+                
             </div>
+
+            <style>
+                #myChart {
+                    max-width: 400px;
+                    max-height: 400px;
+                }
+            </style>
+            <div class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-md-6 text-center">
+                        <canvas id="myChart" width="400" height="400"></canvas> <!-- Canvas element for the chart -->
+                    </div>
+                    <div class="col-md-6">
+                        <table class="tableOfInternships">
+                            <tbody>
+                                <tr>
+                                    <th>Total d'étudiants: </th>
+                                    <td>${NbWithInternships + NbWithoutInternships}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre d'étudiants avec stage:</th>
+                                    <td>${NbWithInternships}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre d'étudiants sans stage:</th>
+                                    <td>${NbWithoutInternships}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <p>Voici la liste de tout les entreprises :</p>
+
             <table class="table">
                 <thead>
                     <tr>
@@ -52,6 +92,24 @@ async function renderBoardPage() {
             </table>
         </div>
     </section>`;
+
+
+
+    // Create a new chart
+    const ctx = document.getElementById('myChart').getContext('2d');
+    // eslint-disable-next-line no-new
+    new Chart(ctx, {
+        type: 'pie', // type of chart
+        data: {
+            labels: ['Étudiants avec stage', 'Étudiants sans stage'],
+            datasets: [{
+                label: '# ', // the label
+                data: [NbWithInternships, NbWithoutInternships], // the data
+            }]
+        },
+        options: {
+        }
+    });
     
     
     const enterprisesTable = document.querySelector('.table tbody');
