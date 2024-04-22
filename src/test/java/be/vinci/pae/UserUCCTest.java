@@ -279,15 +279,14 @@ public class UserUCCTest {
   @Test
   @DisplayName("Get number of students with internships for a non-existent academic year")
   void testGetNumberOfStudentsWithInternshipWithNonExistentYear() {
-    String academicYear = "2099-2100"; // This academic year is not in the database
-
     List<String> list = new ArrayList<>();
     list.add("2021-2022");
     list.add("2022-2023");
     list.add("2023-2024");
 
     Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
-
+    
+    String academicYear = "2099-2100"; // This academic year is not in the database
     // Call the method under test and expect a BusinessException
     assertThrows(BusinessException.class, () -> {
       userUCC.getNumberOfStudentsWithInternship(academicYear);
@@ -297,8 +296,6 @@ public class UserUCCTest {
   @Test
   @DisplayName("Get number of students with internships for an existing academic year")
   void testGetNumberOfStudentsWithInternshipWithExistingYear() {
-    String academicYear = "2023-2024"; // This academic year exists in the database
-
     AcademicYearDTO year1 = domainFactory.getAcademicYearDTO();
     year1.setId(1);
     year1.setYear("2023-2024");
@@ -310,6 +307,8 @@ public class UserUCCTest {
     List<String> list = new ArrayList<>();
     list.add(year1.getYear());
     list.add(year2.getYear());
+
+    String academicYear = "2023-2024"; // This academic year exists in the database
 
     Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
 
@@ -323,8 +322,6 @@ public class UserUCCTest {
   @Test
   @DisplayName("Get number of students without internships for a specific academic year")
   void testGetNumberOfStudentsWithoutInternship() {
-    String academicYear = "2099-2100"; // This academic year is not in the database
-
     List<String> list = new ArrayList<>();
     list.add("2021-2022");
     list.add("2022-2023");
@@ -332,6 +329,7 @@ public class UserUCCTest {
 
     Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
 
+    String academicYear = "2099-2100"; // This academic year is not in the database
     // Call the method under test and expect a BusinessException
     assertThrows(BusinessException.class, () -> {
       userUCC.getNumberOfStudentsWithoutInternship(academicYear);
@@ -341,8 +339,6 @@ public class UserUCCTest {
   @Test
   @DisplayName("Get number of students without internships for an existing academic year")
   void testGetNumberOfStudentsWithoutInternshipWithExistingYear() {
-    String academicYear = "2023-2024"; // This academic year exists in the database
-
     AcademicYearDTO year1 = domainFactory.getAcademicYearDTO();
     year1.setId(1);
     year1.setYear("2023-2024");
@@ -354,6 +350,8 @@ public class UserUCCTest {
     List<String> list = new ArrayList<>();
     list.add(year1.getYear());
     list.add(year2.getYear());
+
+    String academicYear = "2023-2024"; // This academic year exists in the database
 
     Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
 
