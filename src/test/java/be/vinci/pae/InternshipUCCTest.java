@@ -8,8 +8,10 @@ import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internship.InternshipUCC;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.internshipservices.InternshipDAO;
+import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +27,10 @@ public class InternshipUCCTest {
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
   private InternshipDTO internshipDTO = domainFactory.getInternshipDTO();
   private ContactDTO validContact = domainFactory.getContactDTO();
+  private SupervisorDTO supervisor = domainFactory.getSupervisorDTO();
   private InternshipDAO internshipDS = locator.getService(InternshipDAO.class);
   private ContactDAO contactDS = locator.getService(ContactDAO.class);
+  private SupervisorDAO supervisorDS = locator.getService(SupervisorDAO.class);
 
   @BeforeEach
   void setUp() {
@@ -34,6 +38,8 @@ public class InternshipUCCTest {
     validContact.setStateContact("pris");
 
     internshipDTO.setContactId(1);
+
+    supervisor.setEnterpriseId(8);
 
     Mockito.when(internshipDS.getOneInternshipByStudentId(3)).thenReturn(internshipDTO);
   }
@@ -74,7 +80,11 @@ public class InternshipUCCTest {
     internship.setAcademicYear(2021);
     internship.setVersion(1);
 
+    validContact.setEnterpriseId(8);
+
     Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
+    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+        .thenReturn(supervisor);
     Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
 
     InternshipDTO actualInternship = internshipUCC.addInternship(internship);
@@ -88,11 +98,14 @@ public class InternshipUCCTest {
     ContactDTO contactDTO = domainFactory.getContactDTO();
     contactDTO.setStateContact("suspendu");
     contactDTO.setId(2);
+    contactDTO.setEnterpriseId(8);
 
     InternshipDTO internship = domainFactory.getInternshipDTO();
     internship.setContactId(2);
 
     Mockito.when(contactDS.getOneContactByid(2)).thenReturn(contactDTO);
+    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+        .thenReturn(supervisor);
     Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
@@ -110,6 +123,26 @@ public class InternshipUCCTest {
 
     Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
     Mockito.when(internshipDS.getOneInternshipByStudentId(6)).thenReturn(internshipExisting);
+    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+        .thenReturn(supervisor);
+    Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
+
+    assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
+  }
+
+  @Test
+  @DisplayName("Trying to add a an internship while the supervisor is not from the enterprise")
+  void addInternship4() {
+    InternshipDTO internship = domainFactory.getInternshipDTO();
+    internship.setContactId(1);
+
+    validContact.setStudentId(6);
+    validContact.setEnterpriseId(8);
+    supervisor.setEnterpriseId(9);
+
+    Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
+    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+        .thenReturn(supervisor);
     Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
