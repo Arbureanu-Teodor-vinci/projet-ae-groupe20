@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import Chart from 'chart.js/auto';
 import { clearPage } from "../../utils/render";
 import { getAuthenticatedUser } from '../../utils/auths';
@@ -21,10 +22,11 @@ async function renderBoardPage() {
 
     const enterprises = await response.json();
 
-    const response3 = await fetch(`/api/auths/studentsWithInternship:2023-2024`, options);
+    // Fetch data for all academic years by default
+    const response3 = await fetch(`/api/auths/studentsWithInternship`, options);
     const NbWithInternships = await response3.json();
-    
-    const response4 = await fetch(`/api/auths/studentsWithoutInternship:2023-2024`, options);
+
+    const response4 = await fetch(`/api/auths/studentsWithoutInternship`, options);
     const NbWithoutInternships = await response4.json();
 
     const main = document.querySelector('main');
@@ -50,6 +52,12 @@ async function renderBoardPage() {
                         <canvas id="myChart" width="400" height="400"></canvas> <!-- Canvas element for the chart -->
                     </div>
                     <div class="col-md-6">
+                        <select id="academicYear">
+                            <option value="All Years">Tous les années</option>
+                            <option value="2023-2024">2023-2024</option>
+                            <option value="2022-2023">2022-2023</option>
+                            <option value="2021-2022">2021-2022</option>
+                        </select>
                         <table class="tableOfInternships">
                             <tbody>
                                 <tr>
@@ -91,14 +99,14 @@ async function renderBoardPage() {
                 </tbody>
             </table>
         </div>
-    </section>`;
-
-
+    </section>`;           
 
     // Create a new chart
     const ctx = document.getElementById('myChart').getContext('2d');
-    // eslint-disable-next-line no-new
-    new Chart(ctx, {
+
+    let myChart = null; // Declare the 'myChart' variable
+
+    myChart = new Chart(ctx, {
         type: 'pie', // type of chart
         data: {
             labels: ['Étudiants avec stage', 'Étudiants sans stage'],
@@ -110,7 +118,52 @@ async function renderBoardPage() {
         options: {
         }
     });
-    
+
+
+    // Add an event listener to the academic year dropdown
+    const academicYearSelect = document.getElementById('academicYear');
+    academicYearSelect.addEventListener('change', async () => {
+        const selectedYear = academicYearSelect.value;
+
+        let NbWithInternships2;
+        let NbWithoutInternships2;
+
+        if (selectedYear === "All Years") {
+            // Fetch data for all years
+            const responseAll1 = await fetch(`/api/auths/studentsWithInternship`, options);
+            NbWithInternships2 = await responseAll1.json();
+        
+            const responseAll2 = await fetch(`/api/auths/studentsWithoutInternship`, options);
+            NbWithoutInternships2 = await responseAll2.json();
+        } else{
+            // Fetch data for the selected academic year
+            const response5 = await fetch(`/api/auths/studentsWithInternship:${selectedYear}`, options);
+            NbWithInternships2 = await response5.json();
+
+            const response6 = await fetch(`/api/auths/studentsWithoutInternship:${selectedYear}`, options);
+            NbWithoutInternships2 = await response6.json();
+        }
+
+        // Update the chart data
+        myChart.data.datasets[0].data = [NbWithInternships2, NbWithoutInternships2];
+        myChart.update();
+
+        // Update the table data
+        document.querySelector('.tableOfInternships tbody').innerHTML = `
+            <tr>
+                <th>Total d'étudiants: </th>
+                <td>${NbWithInternships2 + NbWithoutInternships2}</td>
+            </tr>
+            <tr>
+                <th>Nombre d'étudiants avec stage:</th>
+                <td>${NbWithInternships2}</td>
+            </tr>
+            <tr>
+                <th>Nombre d'étudiants sans stage:</th>
+                <td>${NbWithoutInternships2}</td>
+            </tr>
+        `;
+    });
     
     const enterprisesTable = document.querySelector('.table tbody');
 

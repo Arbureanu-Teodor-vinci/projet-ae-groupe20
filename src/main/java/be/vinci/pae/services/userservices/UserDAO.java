@@ -48,6 +48,20 @@ public interface UserDAO {
   UserDTO updateUser(UserDTO userDTO);
 
   /**
+   * Get number of students with an internship in all academic years from DB.
+   *
+   * @return integer
+   */
+  int getNumberOfStudentsWithInternshipAllAcademicYears();
+
+  /**
+   * Get number of students without an internship in all academic years from DB.
+   *
+   * @return integer
+   */
+  int getNumberOfStudentsWithoutInternshipAllAcademicYears();
+
+  /**
    * Get number of students with an internship in a specific academic year from DB.
    *
    * @param academicYear String
