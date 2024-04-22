@@ -151,6 +151,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       ps.setString(4, enterprise.getPhoneNumber());
       ps.setString(5, enterprise.getCity());
       ps.setString(6, enterprise.getEmail());
+
       ps.setBoolean(7, enterprise.isBlackListed());
       ps.setString(8, enterprise.getBlackListMotivation());
       ps.setInt(9, enterprise.getVersion() + 1);
@@ -160,7 +161,11 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
         if (rs.next()) {
           enterprise = getResultSet(rs);
         } else {
-          enterprise = null;
+          if (getOneEnterpriseByid(enterprise.getId()) == null) {
+            throw new NullPointerException("Enterprise not found");
+          } else {
+            throw new FatalException("This enterprise has been updated by another user");
+          }
         }
       }
       ps.close();

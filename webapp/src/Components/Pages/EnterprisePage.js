@@ -46,6 +46,7 @@ async function renderEnterprisePage(enterpriseId) {
                 <div style="width: 10px;"></div>
                 <button id="blacklistButton" class="btn btn-danger">Blacklister</button>
             </div>
+            <p class="errorMessage"></p>
         </div>
         </div>
         <p>Voici la liste de tous les contacts :</p>
@@ -73,7 +74,7 @@ async function renderEnterprisePage(enterpriseId) {
         id: enterprise.id,
         blackListed: true,
         blackListMotivation: document.getElementById('blacklistReason').value,
-        version: 1,
+        version: enterprise.version,
         tradeName: enterprise.tradeName,
         address: enterprise.address,
         phoneNumber: enterprise.phoneNumber,
@@ -90,6 +91,10 @@ async function renderEnterprisePage(enterpriseId) {
       const responseBlackList = await fetch(`/api/enterprises/blacklist`, optionsBlacklist);
       if (responseBlackList.status === 200) {
         Navigate('/board');
+      }else{
+        const errorMessage = await responseBlackList.text();
+        alert(`${responseBlackList.status} : ${errorMessage}`);
+        Navigate(`/enterprise?enterpriseId=${enterprise.id}`);
       }
     });
   }else{
