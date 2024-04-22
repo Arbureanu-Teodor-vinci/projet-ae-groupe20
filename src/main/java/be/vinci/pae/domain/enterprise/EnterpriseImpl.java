@@ -12,7 +12,7 @@ public class EnterpriseImpl implements Enterprise {
   private int id;
   private String tradeName;
   private String designation;
-  private String adresse;
+  private String address;
   private String phoneNumber;
   private String city;
   private String email;
@@ -51,13 +51,13 @@ public class EnterpriseImpl implements Enterprise {
   }
 
   @Override
-  public String getAdresse() {
-    return adresse;
+  public String getAddress() {
+    return address;
   }
 
   @Override
-  public void setAdresse(String adresse) {
-    this.adresse = adresse;
+  public void setAddress(String address) {
+    this.address = address;
   }
 
   @Override
@@ -143,7 +143,7 @@ public class EnterpriseImpl implements Enterprise {
         + "id=" + id
         + ", tradeName='" + tradeName + '\''
         + ", designation='" + designation + '\''
-        + ", adresse='" + adresse + '\''
+        + ", adresse='" + address + '\''
         + ", phoneNumber='" + phoneNumber + '\''
         + ", email='" + email + '\''
         + ", blackListed=" + blackListed
@@ -165,6 +165,34 @@ public class EnterpriseImpl implements Enterprise {
           && enterprise.getDesignation().trim().equalsIgnoreCase(designation.trim())) {
         throw new BusinessException("This designation already exists for this trade name.");
       }
+    }
+  }
+
+  @Override
+  public void checkIsBlackListed() {
+    if (blackListed) {
+      throw new BusinessException("This enterprise is blacklisted.");
+    }
+  }
+
+  @Override
+  public void checkBlackListMotivation() {
+    if (blackListed && blackListMotivation.trim().isEmpty()) {
+      throw new BusinessException("This enterprise is blacklisted but has no motivation.");
+    }
+  }
+
+  @Override
+  public void checkUpdateBlacklist(EnterpriseDTO enterprise) {
+    if (enterprise.getId() != id
+        || !Objects.equals(enterprise.getTradeName(), tradeName)
+        || !Objects.equals(enterprise.getDesignation(), designation)
+        || !Objects.equals(enterprise.getAddress(), address)
+        || !Objects.equals(enterprise.getPhoneNumber(), phoneNumber)
+        || !Objects.equals(enterprise.getCity(), city)
+        || !Objects.equals(enterprise.getEmail(), email)) {
+      throw new BusinessException(
+          "You can't update other data than the blacklisted status and the motivation.");
     }
   }
 }

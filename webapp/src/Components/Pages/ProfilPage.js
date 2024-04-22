@@ -133,7 +133,7 @@ async function renderProfilPage() {
                         <tbody>
                         ${contactsWithEnterprise.map(contact => `
                         <tr>
-                            <td class="text-center">${contact.entreprise.tradeName}</td>
+                            <td class="text-center" style="color: ${contact.entreprise.blackListed ? 'red' : 'black'}">${contact.entreprise.tradeName}</td>
                             <td class="text-center">${contact.interViewMethod || ' - '}</td>
                             <td class="text-center">${contact.tool || ' - '}</td>
                             <td class="text-center">${contact.stateContact || ' - '}</td>
@@ -155,7 +155,7 @@ async function renderProfilPage() {
     </div>
 </section>`
     const linkContact = document.querySelector('#creationContact');
-
+    let acceptedContact = false;
     contacts.forEach(contact => {
         const button = document.getElementById(`editButton${contact.id}`);
         if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
@@ -165,9 +165,20 @@ async function renderProfilPage() {
                 Navigate(`/updateContact?contactId=${contact.id}`);
             });
         }
-        if(contact.stateContact === 'accepté')
-           linkContact.disabled = true;
+        if(contact.stateContact === 'accepté'){
+            linkContact.disabled = true;
+            acceptedContact = true;
+        }
+           
     });
+
+    if(acceptedContact){
+        linkContact.disabled = true;
+        contacts.forEach(contact => {
+                const button = document.getElementById(`editButton${contact.id}`);
+                button.disabled = true;
+        });
+    }
 
     const addStageButtons = document.querySelector('.addStage');
     if (addStageButtons){

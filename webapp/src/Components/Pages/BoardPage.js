@@ -80,8 +80,9 @@ async function renderBoardPage() {
                         <th>Adresse</th>
                         <th>Numéro de téléphone</th>
                         <th>Ville</th>
-                        <th>Nombre d'étudiant en stage</th>
+                        <th>Nombre d'étudiants en stage</th>
                         <th>Email</th>
+                        <th>Raison de blacklist</th>
                         <th>Black-listée</th>
                         <th>Profil</th>
                     </tr>
@@ -130,17 +131,17 @@ async function renderBoardPage() {
     
         // Add the enterprise data to the row
         row.innerHTML = `
-            <td>${enterprise.tradeName}</td>
-            <td>${enterprise.designation}</td>
-            <td>${enterprise.adresse}</td>
-            <td>${enterprise.phoneNumber}</td>
-            <td>${enterprise.city}</td>
-            <td>${internshipCount}</td>
-            <td>${enterprise.email}</td>
-            <td>${enterprise.blackListed}</td>
-            <td></td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.tradeName}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.designation}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.address}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.phoneNumber}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.city}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${internshipCount}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.email}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListMotivation == null ? '-' : enterprise.blackListMotivation}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListed ? 'X' : 'V'}</td>
         `;
-    
+
         // Create a new button
         const button = document.createElement('button');
         button.id = `profilButton${enterprise.id}`;
