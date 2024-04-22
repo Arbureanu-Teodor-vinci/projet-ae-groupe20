@@ -17,7 +17,7 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 ### Get all contacts by user
-GET {{baseUrl}}/contacts/getByUser
+GET {{baseUrl}}/contacts/getByUser:5
 Content-Type: application/json
 Authorization: {{adminToken}}
 

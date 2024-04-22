@@ -80,10 +80,16 @@ function renderNavbar() {
                 Tous les utilisateurs
               </a>
             </li>
+            <li>
+              <a href="#" class="nav-link text-white">
+                <img src="${usersLogo}" class="bi d-block mx-auto mb-1" width="24" height="24" data-uri="/allStudents">
+                Tous les étudiants
+              </a>
+            </li>
             <li style="margin-top: 15px;">
               <form class="d-flex" id="searchForm">
                 <input class="form-control me-2" type="search" id="searchInput" placeholder="Rechercher" aria-label="Recherche">
-                <button class="btn btn-outline-success" type="submit">Rechercher</button>
+                <button class="btn btn-outline-success" type="submit" id="searchSubmit">Rechercher</button>
               </form>
             </li>
             <li>
@@ -98,8 +104,24 @@ function renderNavbar() {
     </div>
   `
     };
-
-  
+    /*
+    const searchForm = document.querySelector('#searchForm');
+    */
+    const searchInput = document.querySelector('#searchInput');
+    
+    const searchButton = document.querySelector('#searchSubmit');
+    if(searchButton){
+      searchButton.addEventListener('click', (e) => {
+          if(searchInput.value.trim() === ""){
+          e.preventDefault();
+          Navigate('/allStudents');
+          }
+          else{
+          e.preventDefault();
+          Navigate(`/allStudents?search=${searchInput.value}`);
+          }
+        });
+    }
   
   const logoutButton = document.querySelector('#logout');
     if (logoutButton) {

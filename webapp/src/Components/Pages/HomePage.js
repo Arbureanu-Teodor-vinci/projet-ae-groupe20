@@ -12,9 +12,9 @@ const  HomePage = async () => {
 };
 
 async function renderHomePage(){
-  
+  const user = getAuthenticatedUser();
   const main = document.querySelector('main');
-  if(getAuthenticatedUser().role === 'Etudiant'){
+  if(user.role === 'Etudiant'){
     const options = {
     method: 'GET',
     headers: {
@@ -23,7 +23,8 @@ async function renderHomePage(){
     },
   };
   
-  const response = await fetch(`/api/contacts/getByUser`, options);  
+
+  const response = await fetch(`/api/contacts/getByUser:${user.id}`, options);
   if(response.ok){
     const contacts = await response.json();
     // Verifiy if the student has accepted contacts
@@ -35,7 +36,7 @@ async function renderHomePage(){
     main.innerHTML = `
       <section class="d-flex justify-content-center align-items-center" style="height: 50vh;">
         <div class="d-grid gap-2 col-6 mx-auto">
-          <button id="profil" class="btn btn-primary mb-3" type="button">Visualiser mon profil</button>
+          <button id="profil" class="btn btn-primary mb-3" type="button">Voir mon profil</button>
           <button id="modifDataPerso" class="btn btn-primary mb-3" type="button">Modifier mes données personnelles</button>
           ${isContactAccepted ? '<button id="modifSubjectStage" class="btn btn-primary mb-3" type="button">Modifier mon sujet de stage</button>' : ''}
           ${isContactAccepted ? '' : '<button id="addContact" class="btn btn-primary mb-3" type="button">Ajouter un nouveau contact</button>'}
@@ -67,7 +68,6 @@ async function renderHomePage(){
     });
     }
   };
-
   if(getAuthenticatedUser().role === 'Professeur' || getAuthenticatedUser().role === 'Administratif'){
     main.innerHTML = `
       <section class="d-flex justify-content-center align-items-center mt-5" style="height: 50vh;">
@@ -91,7 +91,7 @@ async function renderHomePage(){
         e.preventDefault();
         Navigate('/allUsers');
       });
-  }
+  };
 
   
 
@@ -101,10 +101,11 @@ async function renderHomePage(){
       Navigate('/profil');
     });
 
+
     const modifDataPersoButton = document.querySelector('#modifDataPerso');
     modifDataPersoButton.addEventListener('click', (e) => {
       e.preventDefault();
-      Navigate('/modification');
+      Navigate('/updateUserInfos');
     });
 
     

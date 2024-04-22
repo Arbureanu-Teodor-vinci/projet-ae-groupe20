@@ -12,6 +12,7 @@ import BoardPage from '../Pages/BoardPage';
 import EnterprisePage from '../Pages/EnterprisePage';
 import CreationSupervisorPage from '../Pages/CreationSupervisorPage';
 import StudentInfoPage from '../Pages/StudentInfoPage';
+import AllStudentsPage from '../Pages/AllStudentsPage';
 
 const routes = {
     '/': HomePage,
@@ -27,7 +28,8 @@ const routes = {
     '/board': BoardPage,
     '/enterprise': EnterprisePage,
     '/creationSupervisor': CreationSupervisorPage,
-    '/studentInfo': StudentInfoPage
+    '/studentInfo': StudentInfoPage,
+    '/allStudents': AllStudentsPage
 };
 
 export default routes;

@@ -22,13 +22,15 @@ async function renderProfilPage() {
         },
     };
     
-    const response = await fetch(`/api/contacts/getByUser`, options);
+    const response = await fetch(`/api/contacts/getByUser:${user.id}`, options);
     
     if (response.ok) {
         const contacts = await response.json();
     
+        // Récupérez les détails de l'entreprise pour chaque contact
         const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
     
+        // Recupérez les réponses de chaque requête
         const entrepriseResponses = await Promise.all(entreprisePromises);
     
         // Récupérez les détails de l'entreprise pour chaque contact
@@ -67,20 +69,20 @@ async function renderProfilPage() {
                     </tr>
                     <tr>
                         <th>Prénom</th>
-                        <td>${user && user.firstName}</td>
+                        <td>${user.firstName}</td>
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>${user && user.email}</td>
+                        <td>${user.email}</td>
                     </tr>
                     <tr>
                         <th>Tel</th>
-                        <td>${user && user.telephoneNumber}</td>
+                        <td>${user.telephoneNumber}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        ${user && user.role === 'Etudiant' ? `
+        ${user.role === 'Etudiant' ? `
         <div class="row mt-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>
@@ -91,19 +93,19 @@ async function renderProfilPage() {
                     <tbody>
                         <tr>
                             <th>Entreprise</th>
-                            <td class="text-center">${user && user.internship && user.internship.company || ' - '}</td>
+                            <td class="text-center">${user.internship && user.internship.company || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Responsable de stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipManager || ' - '}</td>
+                            <td class="text-center">${user.internship && user.internship.internshipManager || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Sujet du stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipSubject || ' - '}</td>
+                            <td class="text-center">${user.internship && user.internship.internshipSubject || ' - '}</td>
                         </tr>
                         <tr>
                             <th>Date de signature du stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipSignatureDate || ' - '}</td>
+                            <td class="text-center">${user.internship && user.internship.internshipSignatureDate || ' - '}</td>
                         </tr>
                     </tbody>
                 </table>

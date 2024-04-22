@@ -151,21 +151,33 @@ public class ContactResource {
   /**
    * Get contacts by user.
    *
+   * @param id      The id of the user.
    * @param request The request.
    * @return JSON object containing all contacts.
    * @throws WebApplicationException If id is null or the token is invalid.
    */
   @GET
-  @Path("getByUser")
+  @Path("getByUser:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Etudiant"})
-  public ArrayNode getContactsByUser(@Context ContainerRequest request) {
-    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
-    int id = authentifiedUser.getId();
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public ArrayNode getContactsByUser(@PathParam("id") Integer id,
+      @Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getByUser:" + id);
 
-    // Try to get the contacts by user
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    if (authentifiedUser.getRole().equals("Etudiant") && !id.equals(authentifiedUser.getId())) {
+      Logger.logEntry("Tried to access another student's contacts.");
+      throw new WebApplicationException("You can only access your own contacts.", Status.FORBIDDEN);
+    }
+
+    // if the id is null, throw an exception
+    if (id == null) {
+      Logger.logEntry("id is missing.");
+      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
+    }
+
+    // Try to get the contacts by user id
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
     for (ContactDTO contact : contactUCC.getContactsByUser(id)) {
       contactsListNode.add(contactNodeMaker(contact));

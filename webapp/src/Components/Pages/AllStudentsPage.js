@@ -24,16 +24,21 @@ async function renderPage() {
         },
       };
       const response = await fetch('/api/auths/users', options);
-      const users = await response.json();
+      let users = await response.json();
 
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const search = urlParams.get('search');
+    if(search){
+        const filteredUsers = users.filter(user => user.firstName.toLowerCase().includes(search.toLowerCase()) || user.lastName.toLowerCase().includes(search.toLowerCase()));
+        users = filteredUsers;
+    }
     const main = document.querySelector('main');
     main.innerHTML = `
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tout les utilisateurs</h1>
-                <p>Voici la liste de tout les utilisateurs :</p>
+                <p>Voici la liste de tout les étudiants :</p>
             <table class="table">
                 <thead>
                     <tr>
@@ -41,7 +46,6 @@ async function renderPage() {
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Numéro de téléphone</th>
-                        <th>Rôle</th>
                         <th>Date de création</th>
                         <th>Année académique</th>
                     </tr>
@@ -54,18 +58,19 @@ async function renderPage() {
         `;
     const usersTable = document.querySelector('.table tbody');
     users.forEach(user => {
+        if(user.role === 'Etudiant'){
         usersTable.innerHTML += `
           <tr>
             <td>${user.email}</td>
             <td>${user.firstName}</td>
             <td>${user.lastName}</td>
             <td>${user.telephoneNumber}</td>
-            <td>${user.role}</td>
             <td>${user.registrationDate}</td>
-            <td>${user.role === 'Etudiant' ? user.academicYear.replace(/.*year=/, '').replace(']', '') : ' - '}</td>
-            <td>${user.role === 'Etudiant' ? `<button id="${user.id}" class="btn btn-primary viewInfo">Voir les informations de cet(tte) étudiant(e)</button>` : ''}</td>
+            <td>${user.academicYear.replace(/.*year=/, '').replace(']', '')}</td>
+            <td><button id="${user.id}" class="btn btn-primary viewInfo">Voir les informations de cet(tte) étudiant(e)</button></td>
         </tr>
         `;
+        }
     });
 
     
@@ -78,6 +83,7 @@ async function renderPage() {
     }
     });
 }
+
 
 
 export default AllUsersPage;
