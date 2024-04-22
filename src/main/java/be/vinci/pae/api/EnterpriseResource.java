@@ -200,7 +200,8 @@ public class EnterpriseResource {
           .put("city", enterprise.getCity())
           .put("email", enterprise.getEmail())
           .put("blackListed", enterprise.isBlackListed())
-          .put("blackListMotivation", enterprise.getBlackListMotivation());
+          .put("blackListMotivation", enterprise.getBlackListMotivation())
+          .put("version", enterprise.getVersion());
       return enterpriseNode;
     } catch (Exception e) {
       Logger.logEntry("Can't create enterprise", e, 2);
