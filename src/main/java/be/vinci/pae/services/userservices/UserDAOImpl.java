@@ -129,8 +129,7 @@ public class UserDAOImpl implements UserDAO {
               + " (lastname_user, firstname_user, email, phone_number, registration_date, "
               + " role_user, password_user, version)"
               + " VALUES (?, ?, ?, ?, ?, ?, ?, 1) "
-              + " RETURNING id_user, role_user, email, firstname_user, lastname_user, "
-              + " phone_number, registration_date, password_user");
+              + " RETURNING *");
       ps.setString(1, user.getLastName());
       ps.setString(2, user.getFirstName());
       ps.setString(3, user.getEmail());

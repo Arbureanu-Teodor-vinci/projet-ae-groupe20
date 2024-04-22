@@ -1,22 +1,23 @@
+/* eslint-disable no-alert */
 import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { getAuthenticatedUser } from '../../utils/auths';
 import Navbar from '../Navbar/Navbar';
 
 const RegisterPage = async () => {
-    if (getAuthenticatedUser()) {
-        Navigate('/');
-        return;
-      };
-    clearPage();
-    await renderRegisterPage();
-    const form = document.querySelector('form');
-    form.addEventListener('submit', register);
-}
+  if (getAuthenticatedUser()) {
+    Navigate('/');
+    return;
+  }
+  clearPage();
+  await renderRegisterPage();
+  const form = document.querySelector('form');
+  form.addEventListener('submit', register);
+};
 
 async function renderRegisterPage() {
-    const main = document.querySelector('main');
-    main.innerHTML = `
+  const main = document.querySelector('main');
+  main.innerHTML = `
     <div id="privacyPolicyWrapper"></div>
     <section>
         <div class="container h-100">
@@ -120,79 +121,80 @@ async function renderRegisterPage() {
     </section>
     `;
 
-    // Get the role row and email domain select elements
-    const roleRow = document.querySelector('#roleRow');
-    const emailDomainSelect = document.querySelector('#emailDomainSelect');
+  // Get the role row and email domain select elements
+  const roleRow = document.querySelector('#roleRow');
+  const emailDomainSelect = document.querySelector('#emailDomainSelect');
 
-    // Hide the role row if the initial selected email domain is '@student.vinci.be'
-    if (emailDomainSelect.value === '@student.vinci.be') {
-        roleRow.style.display = 'none';
-    }
+  // Hide the role row if the initial selected email domain is '@student.vinci.be'
+  if (emailDomainSelect.value === '@student.vinci.be') {
+    roleRow.style.display = 'none';
+  }
 
-    document.querySelector('#emailDomainSelect').addEventListener('change', function handleDomainChange() {
-        const selectedDomain = this.value;
+  document
+    .querySelector('#emailDomainSelect')
+    .addEventListener('change', function handleDomainChange() {
+      const selectedDomain = this.value;
 
-        if (selectedDomain === '@student.vinci.be') {
-            roleRow.style.display = 'none'; // hide the role input
-        } else if (selectedDomain === '@vinci.be') {
-            roleRow.style.display = 'flex'; // show the role input
-        }
+      if (selectedDomain === '@student.vinci.be') {
+        roleRow.style.display = 'none'; // hide the role input
+      } else if (selectedDomain === '@vinci.be') {
+        roleRow.style.display = 'flex'; // show the role input
+      }
     });
 
-    const toConnexionButton = document.querySelector('#toLogin');
-    toConnexionButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        Navigate('/login');
-    });
-};
-
-async function register (e) {
+  const toConnexionButton = document.querySelector('#toLogin');
+  toConnexionButton.addEventListener('click', (e) => {
     e.preventDefault();
+    Navigate('/login');
+  });
+}
 
-    const main = document.querySelector('main');
+async function register(e) {
+  e.preventDefault();
+  const email =
+    document.querySelector('#emailInput').value +
+    document.querySelector('#emailDomainSelect').value;
+  const password = document.querySelector('#passwordInput').value;
+  const firstName = document.querySelector('#firstNameInput').value;
+  const lastName = document.querySelector('#lastNameInput').value;
+  const telephoneNumber = document.querySelector('#phoneNumberInput').value;
+  const userRole = document.querySelector('#role').value;
 
-    const email = document.querySelector('#emailInput').value + document.querySelector('#emailDomainSelect').value;
-    const password = document.querySelector('#passwordInput').value;
-    const firstName = document.querySelector('#firstNameInput').value;
-    const lastName = document.querySelector('#lastNameInput').value;
-    const telephoneNumber = document.querySelector('#phoneNumberInput').value;
-    const userRole = document.querySelector('#role').value;
+  let role;
+  if (userRole === 'option1') {
+    role = 'Professeur';
+  } else if (userRole === 'option2') {
+    role = 'Administratif';
+  } else {
+    role = 'Etudiant';
+  }
 
-    let role;
-    if (userRole === 'option1') {
-        role = 'Professeur';
-    } else if (userRole === 'option2') {
-        role = 'Admin';
-    } else {
-        role = 'Etudiant';
-    }
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-        role,
-        firstName,
-        lastName,
-        telephoneNumber,
-      }),
-      headers : {
-        'Content-Type': 'application/json',
-      },
-    };
-    
-    const response = await fetch(`/api/auths/register`, options);
-
-    if (!response.ok) {
-        main.innerText = `${response.statusText} ; Status : ${response.status}`;
-    } else {
-        Navigate('/login');
-        Navbar();
-    };
-
-    return null;
-  
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      role,
+      firstName,
+      lastName,
+      telephoneNumber,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   };
+
+  const response = await fetch(`/api/auths/register`, options);
+
+  if (!response.ok) {
+    const errorMessage = await response.text();
+    alert(`${response.status} : ${errorMessage}`);
+  } else {
+    Navigate('/login');
+    Navbar();
+  }
+
+  return null;
+}
 
 export default RegisterPage;
