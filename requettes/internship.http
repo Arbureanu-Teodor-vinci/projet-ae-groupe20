@@ -56,8 +56,8 @@ Authorization: {{adminToken}}
 
 {
     "signatureDate": "2024-01-01",
-    "supervisorId": 4,
-    "contactId": 3,
+    "supervisorId": 3,
+    "contactId": 4,
     "academicYear": 1
 }
 
@@ -67,7 +67,19 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "supervisorId": 4,
+    "supervisorId": 3,
+    "contactId": 4,
+    "academicYear": 1
+}
+
+### ADD INTERNSHIP WITH A SUPERVISOR NOT FROM THE SAME ENTERPRISE AS THE CONTACT
+POST {{baseUrl}}/internships/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "signatureDate": "2024-01-01",
+    "supervisorId": 2,
     "contactId": 8,
     "academicYear": 1
 }
