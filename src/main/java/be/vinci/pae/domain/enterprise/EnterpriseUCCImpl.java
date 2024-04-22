@@ -54,4 +54,22 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
     return enterprise;
   }
 
+  @Override
+  public EnterpriseDTO blacklistEnterprise(EnterpriseDTO enterprise) {
+    Enterprise enterpriseUpdated = (Enterprise) enterprise;
+    try {
+      dalServices.startTransaction();
+      Enterprise enterpriseFound = (Enterprise) enterpriseDS.getOneEnterpriseByid(
+          enterprise.getId());
+      enterpriseFound.checkIsBlackListed();
+      enterpriseUpdated.checkBlackListMotivation();
+      enterprise = enterpriseDS.updateEnterprise(enterprise);
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
+    return enterprise;
+  }
+
 }

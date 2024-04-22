@@ -170,7 +170,12 @@ public class ContactDAOImpl implements ContactDAO {
         if (resultSet.next()) {
           contact = getResultSet(resultSet);
         } else {
-          contact = null;
+          if (getOneContactByid(contact.getId()) == null) {
+            throw new NullPointerException("Contact not found");
+          } else {
+            throw new FatalException(
+                "Contact has already been updated by someone else. Please try again.");
+          }
         }
       }
       ps.close();

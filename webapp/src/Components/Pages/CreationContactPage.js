@@ -104,10 +104,12 @@ async function renderCreationContactPage() {
 
         // Ajouter les options filtrées ou toutes les options
         companiesToRender.forEach(company => {
+            if(company.blackListed === false){
             const option = document.createElement('option');
             option.text = company.tradeName;
             option.setAttribute('data-idEnterprise', company.id);
             companySelect.appendChild(option);
+            }
         });
     }
 }

@@ -38,4 +38,12 @@ public interface EnterpriseDAO {
    * @return EnterpriseDTO
    */
   EnterpriseDTO addEnterprise(EnterpriseDTO enterprise);
+
+  /**
+   * Update an enterprise.
+   *
+   * @param enterprise EnterpriseDTO
+   * @return boolean
+   */
+  EnterpriseDTO updateEnterprise(EnterpriseDTO enterprise);
 }

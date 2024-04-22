@@ -98,13 +98,11 @@ public class InternshipDAOImpl implements InternshipDAO {
         if (resultSet.next()) {
           internship = getResultSet(resultSet);
         } else {
-          PreparedStatement ps2 = dalConn.getPS(
-              "SELECT * FROM InternshipManagement.internship WHERE id_internship = ?"
-          );
-          try (ResultSet resultSet2 = ps2.executeQuery()) {
-            if (!resultSet2.next()) {
-              throw new FatalException("Internship not found");
-            }
+          if (getOneInternshipById(internshipToUpdate.getId()) != null) {
+            throw new NullPointerException("Internship not found");
+          } else {
+            throw new FatalException(
+                "Internship has already been updated by someone else. Please try again.");
           }
         }
       }

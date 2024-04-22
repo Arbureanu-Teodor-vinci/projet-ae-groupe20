@@ -193,6 +193,8 @@ if(nonUpdatable === ''){
             Navigate('/profil');
         } else {
             const errorMessage = await responseUpdateContact.text();
+            alert(`${responseUpdateContact.status} : ${errorMessage}`);
+            Navigate(`/updateContact?contactId=${contactId}`);
             main.innerHTML = `
             <section>
                 <div class="container h-100">
