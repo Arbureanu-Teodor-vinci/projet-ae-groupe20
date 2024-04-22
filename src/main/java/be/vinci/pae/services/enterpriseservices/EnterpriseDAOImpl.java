@@ -114,7 +114,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
       );
       ps.setString(1, enterprise.getTradeName());
       ps.setString(2, enterprise.getDesignation());
-      ps.setString(3, enterprise.getAdresse());
+      ps.setString(3, enterprise.getAddress());
       ps.setString(4, enterprise.getPhoneNumber());
       ps.setString(5, enterprise.getCity());
       ps.setString(6, enterprise.getEmail());
@@ -135,6 +135,44 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     return Nenterprise;
   }
 
+  @Override
+  public EnterpriseDTO updateEnterprise(EnterpriseDTO enterprise) {
+    Logger.logEntry("Enterprise DAO - updateEnterprise");
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "UPDATE InternshipManagement.enterprise SET trade_name = ?, designation = ?,"
+              + " address = ?, phone_number = ?, city = ?, email = ?, black_listed = ?,"
+              + " black_listed_motivation = ?, version = ?"
+              + " WHERE id_enterprise = ? AND version = ? RETURNING *"
+      );
+      ps.setString(1, enterprise.getTradeName());
+      ps.setString(2, enterprise.getDesignation());
+      ps.setString(3, enterprise.getAddress());
+      ps.setString(4, enterprise.getPhoneNumber());
+      ps.setString(5, enterprise.getCity());
+      ps.setString(6, enterprise.getEmail());
+      ps.setBoolean(7, enterprise.isBlackListed());
+      ps.setString(8, enterprise.getBlackListMotivation());
+      ps.setInt(9, enterprise.getVersion() + 1);
+      ps.setInt(10, enterprise.getId());
+      ps.setInt(11, enterprise.getVersion());
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          enterprise = getResultSet(rs);
+        } else {
+          enterprise = null;
+        }
+      }
+      ps.close();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return enterprise;
+  }
+
   /**
    * Get the result set.
    *
@@ -149,7 +187,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     enterprise.setId(resultSet.getInt(1));
     enterprise.setTradeName(resultSet.getString(2));
     enterprise.setDesignation(resultSet.getString(3));
-    enterprise.setAdresse(resultSet.getString(4));
+    enterprise.setAddress(resultSet.getString(4));
     enterprise.setPhoneNumber(resultSet.getString(5));
     enterprise.setCity(resultSet.getString(6));
     enterprise.setEmail(resultSet.getString(7));

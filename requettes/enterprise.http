@@ -30,3 +30,20 @@ Authorization: {{adminToken}}
     "city": "Belfius city"
 
 }
+
+### Blacklist an enterprise
+POST {{baseUrl}}/enterprises/blacklist
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+    "id": 1,
+      "blackListed": true,
+      "blackListMotivation": "Blacklist reason",
+      "version": 1,
+      "tradeName": "Assyst Europe",
+      "address": "Avenue du Japon, 1/B9",
+      "phoneNumber": "02.609.25.00",
+      "city": "1420 Braine-l'Alleud"
+
+}

@@ -19,4 +19,27 @@ public interface Enterprise extends EnterpriseDTO {
    */
   void checkDesignationExistsOrIsNull(String tradeName, String designation,
       List<EnterpriseDTO> listEnterprise) throws BusinessException;
+
+  /**
+   * Check if the enterprise is blacklisted.
+   *
+   * @throws BusinessException if the enterprise is blacklisted.
+   */
+  void checkIsBlackListed() throws BusinessException;
+
+  /**
+   * Check if the enterprise is blacklisted and has a motivation.
+   *
+   * @throws BusinessException if the enterprise is blacklisted and has no motivation.
+   */
+  void checkBlackListMotivation() throws BusinessException;
+
+  /**
+   * Check if the enterprise can be updated to blacklisted.
+   *
+   * @param enterprise EnterpriseDTO
+   * @throws BusinessException if other data are changed than the blacklisted status and the
+   *                           motivation.
+   */
+  void checkUpdateBlacklist(EnterpriseDTO enterprise) throws BusinessException;
 }
