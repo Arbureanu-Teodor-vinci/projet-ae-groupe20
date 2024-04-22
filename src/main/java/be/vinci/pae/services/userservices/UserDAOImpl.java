@@ -249,6 +249,28 @@ public class UserDAOImpl implements UserDAO {
     return nbStudents;
   }
 
+  @Override
+  public List<String> getAllAcademicYears() {
+    Logger.logEntry("User DAO - getAcademicYears");
+    List<String> academicYears = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT academic_year FROM InternshipManagement.academic_year");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          academicYears.add(rs.getString(1));
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+
+    return academicYears;
+  }
+
   /**
    * Generalisation of the resultset treatment. Get the resultset of the calling method and create
    * an userDTO with the given information.

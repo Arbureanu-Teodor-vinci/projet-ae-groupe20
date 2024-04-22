@@ -62,4 +62,11 @@ public interface UserDAO {
    * @return integer
    */
   int getNumberOfStudentsWithoutInternship(String academicYear);
+
+  /**
+   * Get all academic years from DB.
+   *
+   * @return list of academic years
+   */
+  List<String> getAllAcademicYears();
 }

@@ -261,6 +261,10 @@ public class UserResource {
   @Authorize(rolesAllowed = {"Administratif", "Professeur"})
   public int getNumberOfStudentsWithInternship(@PathParam("academicYear") String academicYear) {
     Logger.logEntry("GET /auths/studentsWithInternship:" + academicYear);
+    if (academicYear == null || academicYear.isEmpty()) {
+      throw new WebApplicationException("You must enter an academic year.", Status.BAD_REQUEST);
+    }
+
     return userController.getNumberOfStudentsWithInternship(academicYear);
   }
 

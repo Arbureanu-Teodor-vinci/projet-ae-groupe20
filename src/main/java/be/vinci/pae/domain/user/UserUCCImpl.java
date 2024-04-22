@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.userservices.UserDAO;
 import jakarta.inject.Inject;
@@ -14,6 +15,8 @@ public class UserUCCImpl implements UserUCC {
   private UserDAO userDAO;
   @Inject
   private DALTransactionServices dalServices;
+  @Inject
+  private DomainFactory domainFactory;
 
   @Override
   public UserDTO getUserById(int id) {
@@ -93,12 +96,26 @@ public class UserUCCImpl implements UserUCC {
 
   @Override
   public int getNumberOfStudentsWithInternship(String academicYear) {
-    return userDAO.getNumberOfStudentsWithInternship(academicYear);
+    int count = 0;
+
+    List<String> academicYears = userDAO.getAllAcademicYears();
+    User user = (User) domainFactory.getUserDTO();
+    user.checkAcademicYear(academicYear, academicYears);
+    count = userDAO.getNumberOfStudentsWithInternship(academicYear);
+
+    return count;
   }
 
   @Override
   public int getNumberOfStudentsWithoutInternship(String academicYear) {
-    return userDAO.getNumberOfStudentsWithoutInternship(academicYear);
+    int count = 0;
+
+    List<String> academicYears = userDAO.getAllAcademicYears();
+    User user = (User) domainFactory.getUserDTO();
+    user.checkAcademicYear(academicYear, academicYears);
+    count = userDAO.getNumberOfStudentsWithoutInternship(academicYear);
+
+    return count;
   }
-  
+
 }
