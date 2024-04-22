@@ -2,6 +2,7 @@ package be.vinci.pae.domain.academicyear;
 
 import be.vinci.pae.api.filters.BusinessException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -97,5 +98,12 @@ public class AcademicYearImpl implements AcademicYear {
   @Override
   public int hashCode() {
     return Objects.hash(id, year);
+  }
+
+  @Override
+  public void checkAcademicYear(String academicYear, List<String> academicYears) {
+    if (!academicYears.contains(academicYear)) {
+      throw new BusinessException("Academic year is not valid.");
+    }
   }
 }
