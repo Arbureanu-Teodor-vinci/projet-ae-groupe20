@@ -71,7 +71,7 @@ async function renderUpdateContactPage() {
     
     main.innerHTML = `
     <section>
-        <div class="container h-100">
+        <div style="margin-top: 100px" class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 text-center">
                     <h1>Modifier un contact</h1>
