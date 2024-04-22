@@ -37,4 +37,12 @@ public interface EnterpriseUCC {
    * @return EnterpriseDTO
    */
   EnterpriseDTO addEnterprise(EnterpriseDTO enterprise);
+
+  /**
+   * Blacklist an enterprise.
+   *
+   * @param enterprise EnterpriseDTO
+   * @return boolean
+   */
+  EnterpriseDTO blacklistEnterprise(EnterpriseDTO enterprise);
 }

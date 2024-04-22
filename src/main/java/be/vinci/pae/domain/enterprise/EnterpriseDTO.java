@@ -51,18 +51,18 @@ public interface EnterpriseDTO {
   void setDesignation(String designation);
 
   /**
-   * Get adresse.
+   * Get address.
    *
    * @return adresse String
    */
-  String getAdresse();
+  String getAddress();
 
   /**
-   * Set adresse.
+   * Set address.
    *
-   * @param adresse String
+   * @param address String
    */
-  void setAdresse(String adresse);
+  void setAddress(String address);
 
   /**
    * Get phoneNumber.
