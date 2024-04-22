@@ -90,4 +90,15 @@ public class UserUCCImpl implements UserUCC {
     }
     return userDTO;
   }
+
+  @Override
+  public int getNumberOfStudentsWithInternship(String academicYear) {
+    return userDAO.getNumberOfStudentsWithInternship(academicYear);
+  }
+
+  @Override
+  public int getNumberOfStudentsWithoutInternship(String academicYear) {
+    return userDAO.getNumberOfStudentsWithoutInternship(academicYear);
+  }
+  
 }

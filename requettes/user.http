@@ -113,3 +113,13 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/auths/user:3
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### GET NUMBER OF STUDENTS WITH INTERNSHIPS IN A SPECIFIC ACADEMIC YEAR
+GET {{baseUrl}}/auths/studentsWithInternship:2023-2024
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+### GET NUMBER OF STUDENTS WITHOUT INTERNSHIPS IN A SPECIFIC ACADEMIC YEAR
+GET {{baseUrl}}/auths/studentsWithoutInternship:2023-2024
+Content-Type: application/json
+Authorization: {{adminToken}}

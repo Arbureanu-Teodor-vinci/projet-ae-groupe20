@@ -249,6 +249,37 @@ public class UserResource {
     return toJson(updatedUser, null);
   }
 
+  /**
+   * Get number of students with internships for an academic year.
+   *
+   * @param academicYear String of the academic year.
+   * @return int number of students with internships
+   */
+  @GET
+  @Path("studentsWithInternship:{academicYear}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public int getNumberOfStudentsWithInternship(@PathParam("academicYear") String academicYear) {
+    Logger.logEntry("GET /auths/studentsWithInternship:" + academicYear);
+    return userController.getNumberOfStudentsWithInternship(academicYear);
+  }
+
+  /**
+   * Get number of students without internships for an academic year.
+   *
+   * @param academicYear String of the academic year.
+   * @return int number of students without internships
+   */
+  @GET
+  @Path("studentsWithoutInternship:{academicYear}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public int getNumberOfStudentsWithoutInternship(@PathParam("academicYear") String academicYear) {
+    Logger.logEntry("GET /auths/studentsWithoutInternship:" + academicYear);
+    return userController.getNumberOfStudentsWithoutInternship(academicYear);
+  }
+
+
   private ObjectNode toJson(UserDTO user, AcademicYearDTO academicYear) {
     // StudentDTO student = (StudentDTO) user;
     ObjectNode json = jsonMapper.createObjectNode()
