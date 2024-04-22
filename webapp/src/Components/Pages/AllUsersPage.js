@@ -59,7 +59,7 @@ async function renderPage() {
             <td>${user.email}</td>
             <td>${user.firstName}</td>
             <td>${user.lastName}</td>
-            <td>${user.phoneNumber}</td>
+            <td>${user.telephoneNumber}</td>
             <td>${user.role}</td>
             <td>${user.registrationDate}</td>
             <td>${user.role === 'Etudiant' ? user.academicYear.replace(/.*year=/, '').replace(']', '') : ' '}</td>

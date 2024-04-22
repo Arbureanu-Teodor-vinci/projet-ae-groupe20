@@ -136,7 +136,7 @@ public class EnterpriseResource {
 
     // if the enterprise is null, throw an exception
     if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
-        || enterpriseDTO.getAdresse().trim().isEmpty()
+        || enterpriseDTO.getAddress().trim().isEmpty()
         || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
         .isEmpty()
         || enterpriseDTO.getEmail().trim().isEmpty()) {
@@ -155,6 +155,33 @@ public class EnterpriseResource {
     return enterpriseNodeMaker(enterprise);
   }
 
+  @POST
+  @Path("blacklist")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public EnterpriseDTO blacklist(EnterpriseDTO enterpriseDTO) {
+    Logger.logEntry("POST /enterprises/blacklist");
+
+    // if the enterprise is null, throw an exception
+    if (enterpriseDTO == null || enterpriseDTO.getId() == 0) {
+      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+    }
+    if (enterpriseDTO.getBlackListMotivation().trim().isEmpty()
+        || enterpriseDTO.getBlackListMotivation() == null) {
+      throw new WebApplicationException("You must enter a black list motivation.",
+          Status.BAD_REQUEST);
+    }
+    // Try to add the enterprise
+    EnterpriseDTO enterpriseUpdated = enterpriseUCC.blacklistEnterprise(enterpriseDTO);
+    // if the enterprise is null, throw an exception
+    if (enterpriseUpdated == null) {
+      Logger.logEntry("Can't blacklist enterprise");
+      throw new WebApplicationException("Can't blacklist enterprise", Status.NOT_FOUND);
+    }
+    return enterpriseUpdated;
+  }
+
   /**
    * Create a JSON object with the enterprise infos.
    *
@@ -168,7 +195,7 @@ public class EnterpriseResource {
           .put("id", enterprise.getId())
           .put("tradeName", enterprise.getTradeName())
           .put("designation", enterprise.getDesignation())
-          .put("adresse", enterprise.getAdresse())
+          .put("address", enterprise.getAddress())
           .put("phoneNumber", enterprise.getPhoneNumber())
           .put("city", enterprise.getCity())
           .put("email", enterprise.getEmail())
