@@ -194,9 +194,12 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(DISTINCT s.id_user) as number_of_students, ay.academic_year "
               + "FROM InternshipManagement.internship i "
-              + "JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
-              + "JOIN InternshipManagement.student s ON c.student = s.id_user "
-              + "JOIN InternshipManagement.academic_year ay ON s.academic_year = ay.id_academic_year "
+              + "JOIN InternshipManagement.contacts c "
+              + "ON i.contact = c.id_contacts "
+              + "JOIN InternshipManagement.student s "
+              + "ON c.student = s.id_user "
+              + "JOIN InternshipManagement.academic_year ay "
+              + "ON s.academic_year = ay.id_academic_year "
               + "WHERE ay.academic_year = ? "
               + "GROUP BY ay.academic_year;");
       ps.setString(1, academicYear);
@@ -222,7 +225,8 @@ public class UserDAOImpl implements UserDAO {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(*) as number_of_students_without_internship, ay.academic_year "
               + "FROM InternshipManagement.student s "
-              + "JOIN InternshipManagement.academic_year ay ON s.academic_year = ay.id_academic_year "
+              + "JOIN InternshipManagement.academic_year ay "
+              + "ON s.academic_year = ay.id_academic_year "
               + "WHERE ay.academic_year = ? "
               + "AND s.id_user NOT IN ("
               + "    SELECT DISTINCT c.student "
