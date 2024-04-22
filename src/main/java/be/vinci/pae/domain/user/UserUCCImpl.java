@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.user;
 
+import be.vinci.pae.domain.academicyear.AcademicYear;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.userservices.UserDAO;
@@ -99,8 +100,8 @@ public class UserUCCImpl implements UserUCC {
     int count = 0;
 
     List<String> academicYears = userDAO.getAllAcademicYears();
-    User user = (User) domainFactory.getUserDTO();
-    user.checkAcademicYear(academicYear, academicYears);
+    AcademicYear yearCheck = (AcademicYear) domainFactory.getAcademicYearDTO();
+    yearCheck.checkAcademicYear(academicYear, academicYears);
     count = userDAO.getNumberOfStudentsWithInternship(academicYear);
 
     return count;
@@ -111,8 +112,8 @@ public class UserUCCImpl implements UserUCC {
     int count = 0;
 
     List<String> academicYears = userDAO.getAllAcademicYears();
-    User user = (User) domainFactory.getUserDTO();
-    user.checkAcademicYear(academicYear, academicYears);
+    AcademicYear yearCheck = (AcademicYear) domainFactory.getAcademicYearDTO();
+    yearCheck.checkAcademicYear(academicYear, academicYears);
     count = userDAO.getNumberOfStudentsWithoutInternship(academicYear);
 
     return count;

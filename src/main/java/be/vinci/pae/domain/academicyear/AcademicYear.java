@@ -1,5 +1,7 @@
 package be.vinci.pae.domain.academicyear;
 
+import java.util.List;
+
 /**
  * Interface of academic year with Business methods.
  */
@@ -27,4 +29,10 @@ public interface AcademicYear extends AcademicYearDTO {
    */
   boolean checkAcademicYear(String academicYear);
 
+  /**
+   * Check if the academic year is valid.
+   *
+   * @param academicYear -> academic year to check
+   */
+  void checkAcademicYear(String academicYear, List<String> academicYears);
 }

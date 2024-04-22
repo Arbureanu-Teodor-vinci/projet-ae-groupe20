@@ -2,7 +2,6 @@ package be.vinci.pae.domain.user;
 
 import be.vinci.pae.api.filters.BusinessException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.List;
 
 /**
  * Interface of user for checking methods.
@@ -45,13 +44,6 @@ public interface User extends UserDTO {
    * @throws BusinessException -> if not null
    */
   void checkNotNull() throws BusinessException;
-
-  /**
-   * Check if the academic year is valid.
-   *
-   * @param academicYear -> academic year to check
-   */
-  void checkAcademicYear(String academicYear, List<String> academicYears) throws BusinessException;
 
 
 }
