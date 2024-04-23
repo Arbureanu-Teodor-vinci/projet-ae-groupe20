@@ -33,7 +33,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   public InternshipDTO updateSubject(InternshipDTO internshipUpdated) {
     try {
       dalServices.startTransaction();
-      internshipDS.updateSubject(internshipUpdated);
+      internshipUpdated = internshipDS.updateSubject(internshipUpdated);
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
       throw e;

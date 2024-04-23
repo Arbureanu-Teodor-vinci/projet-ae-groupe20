@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+// eslint-disable-next-line import/no-unresolved
 import Chart from 'chart.js/auto';
 import { clearPage } from "../../utils/render";
 import { getAuthenticatedUser } from '../../utils/auths';

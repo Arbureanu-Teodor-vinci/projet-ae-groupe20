@@ -46,7 +46,7 @@ async function renderProfilPage() {
                 return contacts[i];
             
         }));
-      
+
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
@@ -58,7 +58,7 @@ async function renderProfilPage() {
         </div>
         <div class="d-flex justify-content-between align-items-center">
             <h3>Mes données personnelles</h3>
-            <button id="editButton" class="btn btn-primary">Modifier</button>
+            <button id="editUserInfos" class="btn btn-primary">Modifier mes données</button>
         </div>
         <div class="col-12 mt-3">
             <table class="table table-bordered">
@@ -86,26 +86,26 @@ async function renderProfilPage() {
         <div class="row mt-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>
-                <button id="editButton" class="btn btn-primary">Modifier mon sujet de stage</button>
+                <button id="editInternshipSubject" class="btn btn-primary">Modifier mon sujet de stage</button>
             </div>
             <div class="col-12 mt-3">
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
                             <th>Entreprise</th>
-                            <td class="text-center">${user.internship && user.internship.company || ' - '}</td>
+                            <td class="text-center" id ="internshipEnterprise"> - </td>
                         </tr>
                         <tr>
                             <th>Responsable de stage</th>
-                            <td class="text-center">${user.internship && user.internship.internshipManager || ' - '}</td>
+                            <td class="text-center" id="internshipSupervisor"> - </td>
                         </tr>
                         <tr>
                             <th>Sujet du stage</th>
-                            <td class="text-center">${user.internship && user.internship.internshipSubject || ' - '}</td>
+                            <td class="text-center" id="internshipSubject"> - </td>
                         </tr>
                         <tr>
                             <th>Date de signature du stage</th>
-                            <td class="text-center">${user.internship && user.internship.internshipSignatureDate || ' - '}</td>
+                            <td class="text-center" id="signatureDate"> - </td>
                         </tr>
                     </tbody>
                 </table>
@@ -133,7 +133,7 @@ async function renderProfilPage() {
                         <tbody>
                         ${contactsWithEnterprise.map(contact => `
                         <tr>
-                            <td class="text-center" style="color: ${contact.entreprise.blackListed ? 'red' : 'black'}">${contact.entreprise.tradeName}</td>
+                            <td class="text-center" style="color: ${contact.entreprise.blackListed ? 'red' : 'black'}; font-weight: ${contact.entreprise.blackListed ? 'bold' : 'normal'}">${contact.entreprise.tradeName}</td>
                             <td class="text-center">${contact.interViewMethod || ' - '}</td>
                             <td class="text-center">${contact.tool || ' - '}</td>
                             <td class="text-center">${contact.stateContact || ' - '}</td>
@@ -155,6 +155,9 @@ async function renderProfilPage() {
     </div>
 </section>`
     const linkContact = document.querySelector('#creationContact');
+    const internshipSubject = document.getElementById('internshipSubject');
+    const editInternshipSubjectButton = document.getElementById('editInternshipSubject');
+
     let acceptedContact = false;
     contacts.forEach(contact => {
         const button = document.getElementById(`editButton${contact.id}`);
@@ -178,7 +181,73 @@ async function renderProfilPage() {
                 const button = document.getElementById(`editButton${contact.id}`);
                 button.disabled = true;
         });
+        const responseInternship = await fetch(`/api/internships/getOneInternshipByStudentId:${user.id}`, options);
+        let internship = null;
+        if(responseInternship.ok){
+            internship = await responseInternship.json();
+            if(internship){
+                const responseInternshipSupervisor = await fetch(`/api/supervisors/getOne:${internship.supervisorId}`, options);
+                const internshiptSupervisor = await responseInternshipSupervisor.json();
+                internshipSubject.textContent = internship.subject;
+                document.getElementById('signatureDate').textContent = internship.signatureDate;
+                const enterprise = contactsWithEnterprise.find(contact => contact.id === internship.contactId).entreprise;
+                const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
+                internshipEnterpriseTableLine.textContent = enterprise.tradeName;
+                if (enterprise.blackListed) {
+                    internshipEnterpriseTableLine.style.color = 'red';
+                    internshipEnterpriseTableLine.style.fontWeight = 'bold';
+                    internshipEnterpriseTableLine.textContent += ' (blacklisted)';
+                }
+                document.getElementById('internshipSupervisor').textContent = `${internshiptSupervisor.firstName  } ${  internshiptSupervisor.lastName}`;
+                const addStageButtons = document.querySelector('.addStage');
+                addStageButtons.disabled = true;
+            }
+        }
+
+        editInternshipSubjectButton.addEventListener('click', async () => {
+            // Si le bouton dit 'Modifier mon sujet de stage', changez le sujet de stage en un champ de saisie
+          // et changez le texte du bouton en 'Envoyer modification'
+          if (editInternshipSubjectButton.textContent === 'Modifier mon sujet de stage') {
+              const subjectText = internshipSubject.textContent;
+              internshipSubject.innerHTML = `<input type="text" id="subjectInput" value="${subjectText}">`;
+              editInternshipSubjectButton.textContent = 'Envoyer modification';
+              document.getElementById('subjectInput').focus();
+          } 
+          // Si le bouton dit 'Envoyer modification', changez le champ de saisie en texte
+          // et changez le texte du bouton en 'Modifier mon sujet de stage'
+          else if (editInternshipSubjectButton.textContent === 'Envoyer modification') {
+              const subjectInput = document.getElementById('subjectInput');
+              const responseUpdateInternship = await fetch(`/api/internships/updateSubject`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `${getAuthenticatedUser().token}`,
+                },
+                body: JSON.stringify({ 
+                  id: internship.id,
+                  subject: subjectInput.value,
+                  academicYear: internship.academicYear,
+                  version: internship.version,
+                  contactId: internship.contactId,
+                  supervisorId: internship.supervisorId,
+                  signatureDate: internship.signatureDate, }),
+            });
+            if (responseUpdateInternship.ok) {
+                internshipSubject.textContent = document.getElementById('subjectInput').value;
+                internship = await responseUpdateInternship.json();
+            }else{
+              alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
+              Navigate('/profil');
+            }
+              editInternshipSubjectButton.textContent = 'Modifier mon sujet de stage';
+          }
+      
+          });
+
+         
     }
+
+    
 
     const addStageButtons = document.querySelector('.addStage');
     if (addStageButtons){
@@ -188,7 +257,7 @@ async function renderProfilPage() {
         });
     }
     
-    const link = document.querySelector('#editButton');
+    const link = document.querySelector('#editUserInfos');
     link.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/updateUserInfos');
