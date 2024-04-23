@@ -38,7 +38,7 @@ public class InternshipUCCTest {
     validContact.setStateContact("pris");
 
     internshipDTO.setContactId(1);
-
+    internshipDTO.setVersion(1);
     supervisor.setEnterpriseId(8);
 
     Mockito.when(internshipDS.getOneInternshipByStudentId(3)).thenReturn(internshipDTO);
@@ -62,11 +62,13 @@ public class InternshipUCCTest {
   @Test
   @DisplayName("Update subject of an internship")
   void updateSubject() {
-    InternshipDTO internshipUpdated = domainFactory.getInternshipDTO();
-    internshipUpdated.setSubject("new subject");
-    InternshipDTO actualInternship = internshipUCC.updateSubject(internshipUpdated);
+    InternshipDTO internshipUpdate = internshipDTO;
+    internshipUpdate.setSubject("new subject");
 
-    assertEquals(internshipUpdated.getSubject(), actualInternship.getSubject());
+    Mockito.when(internshipDS.updateSubject(internshipUpdate)).thenReturn(internshipUpdate);
+
+    assertEquals(internshipUCC.updateSubject(internshipUpdate),
+        internshipUpdate);
   }
 
   @Test

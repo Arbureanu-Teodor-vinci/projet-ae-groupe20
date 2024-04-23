@@ -31,14 +31,7 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO updateSubject(InternshipDTO internshipUpdated) {
-    try {
-      dalServices.startTransaction();
-      internshipUpdated = internshipDS.updateSubject(internshipUpdated);
-    } catch (Throwable e) {
-      dalServices.rollbackTransaction();
-      throw e;
-    }
-    dalServices.commitTransaction();
+    internshipUpdated = internshipDS.updateSubject(internshipUpdated);
     return internshipUpdated;
   }
 
