@@ -35,7 +35,7 @@ public class InternshipUCCTest {
   @BeforeEach
   void setUp() {
     validContact.setId(1);
-    validContact.setStateContact("pris");
+    validContact.setStateContact("accepté");
 
     internshipDTO.setContactId(1);
 

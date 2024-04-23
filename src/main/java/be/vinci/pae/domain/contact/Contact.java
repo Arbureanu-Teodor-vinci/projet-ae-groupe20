@@ -41,5 +41,5 @@ public interface Contact extends ContactDTO {
   /**
    * Check if the contact is taken.
    */
-  void checkIfContactIsTaken() throws BusinessException;
+  void checkIfContactIsAccepted() throws BusinessException;
 }
