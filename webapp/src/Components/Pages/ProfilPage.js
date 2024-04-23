@@ -82,8 +82,10 @@ async function renderProfilPage() {
                 </tbody>
             </table>
         </div>
-        ${user.role === 'Etudiant' ? `
-        <div class="row mt-5">
+        ${
+          user.role === 'Etudiant'
+            ? `
+        <div class="row mt-5 internshipTable">
             <div class="d-flex justify-content-between align-items-center">
                 <h3>Mon Stage</h3>
                 <button id="editInternshipSubject" class="btn btn-primary">Modifier mon sujet de stage</button>
@@ -131,29 +133,45 @@ async function renderProfilPage() {
                             </tr>
                         </thead>
                         <tbody>
-                        ${contactsWithEnterprise.map(contact => `
+                        ${contactsWithEnterprise
+                          .map(
+                            (contact) => `
                         <tr>
-                            <td class="text-center" style="color: ${contact.entreprise.blackListed ? 'red' : 'black'}; font-weight: ${contact.entreprise.blackListed ? 'bold' : 'normal'}">${contact.entreprise.tradeName}</td>
+                            <td class="text-center" style="color: ${
+                              contact.entreprise.blackListed ? 'red' : 'black'
+                            }; font-weight: ${
+                              contact.entreprise.blackListed ? 'bold' : 'normal'
+                            }">${contact.entreprise.tradeName}</td>
                             <td class="text-center">${contact.interViewMethod || ' - '}</td>
                             <td class="text-center">${contact.tool || ' - '}</td>
                             <td class="text-center">${contact.stateContact || ' - '}</td>
                             <td class="text-center">${contact.refusalReason || ' - '}</td>
                             <td class="text-center">
-                                <button id="editButton${contact.id}" class="btn btn-primary">Modifier</button>
+                                <button id="editButton${
+                                  contact.id
+                                }" class="btn btn-primary">Modifier</button>
                             </td>
                             <td class="text-center">
-                                ${contact.stateContact === 'accepté' ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>` : ''}
+                                ${
+                                  contact.stateContact === 'accepté'
+                                    ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>`
+                                    : ''
+                                }
                             </td>
                         </tr>
-                        `).join('')}
+                        `,
+                          )
+                          .join('')}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        ` : ''}
+        `
+            : ''
+        }
     </div>
-</section>`
+</section>`;
     const linkContact = document.querySelector('#creationContact');
     const internshipSubject = document.getElementById('internshipSubject');
     const editInternshipSubjectButton = document.getElementById('editInternshipSubject');
@@ -245,6 +263,8 @@ async function renderProfilPage() {
           });
 
          
+    }else{
+        document.querySelector('.internshipTable').style.display = 'none';
     }
 
     
