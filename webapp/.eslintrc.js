@@ -11,6 +11,6 @@ module.exports = {
   rules: {
     'linebreak-style': 0,
     'no-use-before-define': ['error', 'nofunc'],
-    "import/no-extraneous-dependencies": ["error", {"dependencies": ["chart.js"]}],
+    "import/no-extraneous-dependencies": "error",
   },
 };

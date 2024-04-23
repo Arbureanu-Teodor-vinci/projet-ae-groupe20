@@ -1,9 +1,18 @@
 package be.vinci.pae.domain.academicyear;
 
+import java.util.List;
+
 /**
  * Interface of academic year with Business methods.
  */
 public interface AcademicYearUCC {
+
+  /**
+   * Get all academic years.
+   *
+   * @return list of academic years.
+   */
+  List<String> getAllAcademicYears();
 
   /**
    * Get the actual academic year.

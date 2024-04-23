@@ -186,6 +186,59 @@ public class UserDAOImpl implements UserDAO {
   }
 
   @Override
+  public int getNumberOfStudentsWithInternshipAllAcademicYears() {
+    Logger.logEntry("User DAO - getNumberOfStudentsWithInternshipAllAcademicYears");
+    int nbStudents = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(DISTINCT s.id_user) as number_of_students "
+              + "FROM InternshipManagement.internship i "
+              + "JOIN InternshipManagement.contacts c "
+              + "ON i.contact = c.id_contacts "
+              + "JOIN InternshipManagement.student s "
+              + "ON c.student = s.id_user;");
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbStudents = rs.getInt(1);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbStudents;
+  }
+
+  @Override
+  public int getNumberOfStudentsWithoutInternshipAllAcademicYears() {
+    Logger.logEntry("User DAO - getNumberOfStudentsWithoutInternshipAllAcademicYears");
+    int nbStudents = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(*) as number_of_students_without_internship "
+              + "FROM InternshipManagement.student s "
+              + "WHERE s.id_user NOT IN ("
+              + "    SELECT DISTINCT c.student "
+              + "    FROM InternshipManagement.internship i "
+              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + ")");
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbStudents = rs.getInt(1);
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbStudents;
+  }
+
+  @Override
   public int getNumberOfStudentsWithInternship(String academicYear) {
     Logger.logEntry("User DAO - getNumberOfStudentsWithInternship" + academicYear);
     int nbStudents = 0;

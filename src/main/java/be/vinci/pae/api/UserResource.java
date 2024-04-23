@@ -250,6 +250,34 @@ public class UserResource {
   }
 
   /**
+   * Get number of students with internships for all academic years.
+   *
+   * @return int number of students with internships
+   */
+  @GET
+  @Path("studentsWithInternship")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public int getNumberOfStudentsWithInternshipAllAcademicYears() {
+    Logger.logEntry("GET /auths/studentsWithInternship");
+    return userController.getNumberOfStudentsWithInternshipAllAcademicYears();
+  }
+
+  /**
+   * Get number of students without internships for all academic years.
+   *
+   * @return int number of students without internships
+   */
+  @GET
+  @Path("studentsWithoutInternship")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur"})
+  public int getNumberOfStudentsWithoutInternshipAllAcademicYears() {
+    Logger.logEntry("GET /auths/studentsWithoutInternship");
+    return userController.getNumberOfStudentsWithoutInternshipAllAcademicYears();
+  }
+
+  /**
    * Get number of students with internships for an academic year.
    *
    * @param academicYear String of the academic year.

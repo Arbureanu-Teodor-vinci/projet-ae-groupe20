@@ -4,6 +4,7 @@ import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * AcademicYearUCCImpl class.
@@ -15,6 +16,11 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
 
   @Inject
   DALTransactionServices dalServices;
+
+  @Override
+  public List<String> getAllAcademicYears() {
+    return academicYearDAO.getAllAcademicYears();
+  }
 
   @Override
   public AcademicYearDTO getOrAddActualAcademicYear() {

@@ -3,3 +3,8 @@
 ###GET
 GET {{baseUrl}}/academicYear
 Content-Type: application/json
+
+### GET ALL ACADEMIC YEAR
+GET {{baseUrl}}/academicYear/all
+Content-Type: application/json
+Authorization: {{adminToken}}
