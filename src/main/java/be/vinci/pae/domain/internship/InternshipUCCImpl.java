@@ -42,7 +42,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       Internship internshipToAdd = (Internship) internshipDTO;
       Contact contact = (Contact) contactDS.getOneContactByid(internshipToAdd.getContactId());
-      contact.checkIfContactIsTaken();
+      contact.checkIfContactIsAccepted();
 
       Supervisor supervisor = (Supervisor) supervisorDS.getOneSupervisorById(
           internshipDTO.getSupervisorId());

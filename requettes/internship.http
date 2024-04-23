@@ -49,7 +49,7 @@ Authorization: {{adminToken}}
     "academicYear": 1
 }
 
-### ADD INTERNSHIP WITH CONTACT NOT IT TAKEN STATE
+### ADD INTERNSHIP WITH CONTACT NOT IT ACCEPTED STATE
 POST {{baseUrl}}/internships/add
 Content-Type: application/json
 Authorization: {{adminToken}}
