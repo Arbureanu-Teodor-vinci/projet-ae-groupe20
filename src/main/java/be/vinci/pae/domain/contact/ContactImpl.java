@@ -231,11 +231,11 @@ public class ContactImpl implements Contact {
   @Override
   public void checkIfContactIsTaken() {
     boolean isTakenState = false;
-    if (stateContact.equals(POSSIBLESTATES[1])) {
+    if (stateContact.equals(POSSIBLESTATES[5])) {
       isTakenState = true;
     }
     if (!isTakenState) {
-      throw new BusinessException("The contact has to be in taken state.");
+      throw new BusinessException("The contact has to be in acceptade state.");
     }
   }
 

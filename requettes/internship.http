@@ -44,8 +44,8 @@ Authorization: {{adminToken}}
 
 {
     "signatureDate": "2024-01-01",
-    "supervisorId": 4,
-    "contactId": 8,
+    "supervisorId": 3,
+    "contactId": 12,
     "academicYear": 1
 }
 

@@ -65,6 +65,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.rollbackTransaction();
       throw e;
     }
+    dalServices.commitTransaction();
     return internship;
   }
 }
