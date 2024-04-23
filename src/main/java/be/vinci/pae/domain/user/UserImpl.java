@@ -2,7 +2,6 @@ package be.vinci.pae.domain.user;
 
 import be.vinci.pae.api.filters.BusinessException;
 import java.time.LocalDate;
-import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
@@ -198,11 +197,5 @@ public class UserImpl implements User {
     }
   }
 
-  @Override
-  public void checkAcademicYear(String academicYear, List<String> academicYears) {
-    if (!academicYears.contains(academicYear)) {
-      throw new BusinessException("Academic year is not valid.");
-    }
-  }
 
 }
