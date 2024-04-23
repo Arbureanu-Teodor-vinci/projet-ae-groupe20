@@ -37,7 +37,7 @@ async function renderBoardPage() {
     const main = document.querySelector('main');
     main.innerHTML = `
     <section>
-        <div style="margin-top: 40px" class="container h-100">
+        <div style="margin-top: 100px" class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 text-center">
                     <h1>Tableau de bord</h1>
