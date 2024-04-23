@@ -9,6 +9,8 @@ import jakarta.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * AcademicYearDAOImpl class.
@@ -19,6 +21,28 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
   private DomainFactory domainFactory;
   @Inject
   private DALServices dalConn;
+
+  @Override
+  public List<String> getAllAcademicYears() {
+    Logger.logEntry("AcademicYear DAO - getAcademicYears");
+    List<String> academicYears = new ArrayList<>();
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT academic_year FROM InternshipManagement.academic_year");
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          academicYears.add(rs.getString(1));
+        }
+      }
+      ps.close();
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+
+    return academicYears;
+  }
 
   @Override
   public AcademicYearDTO getActualAcademicYear() {

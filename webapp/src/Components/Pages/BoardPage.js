@@ -18,6 +18,10 @@ async function renderBoardPage() {
         },
     };
 
+    // Fetch all academic years
+    const responseAcademicYears = await fetch('/api/academicYear/all', options);
+    const academicYears = await responseAcademicYears.json();
+
     const response = await fetch(`/api/enterprises/getAll`, options);
 
     const enterprises = await response.json();
@@ -54,9 +58,7 @@ async function renderBoardPage() {
                     <div class="col-md-6">
                         <select id="academicYear">
                             <option value="All Years">Tous les années</option>
-                            <option value="2023-2024">2023-2024</option>
-                            <option value="2022-2023">2022-2023</option>
-                            <option value="2021-2022">2021-2022</option>
+                            ${academicYears.reverse().map(year => `<option value="${year}">${year}</option>`).join('')}
                         </select>
                         <table class="tableOfInternships">
                             <tbody>

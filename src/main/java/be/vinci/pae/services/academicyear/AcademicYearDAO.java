@@ -1,11 +1,19 @@
 package be.vinci.pae.services.academicyear;
 
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import java.util.List;
 
 /**
  * Interface of academic year with Business methods.
  */
 public interface AcademicYearDAO {
+
+  /**
+   * Get all academic years from DB.
+   *
+   * @return list of academic years
+   */
+  List<String> getAllAcademicYears();
 
   /**
    * Get the actual academic year.
