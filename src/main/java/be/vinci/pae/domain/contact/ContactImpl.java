@@ -229,13 +229,13 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public void checkIfContactIsTaken() {
+  public void checkIfContactIsAccepted() {
     boolean isTakenState = false;
     if (stateContact.equals(POSSIBLESTATES[5])) {
       isTakenState = true;
     }
     if (!isTakenState) {
-      throw new BusinessException("The contact has to be in acceptade state.");
+      throw new BusinessException("The contact has to be in accepted state.");
     }
   }
 

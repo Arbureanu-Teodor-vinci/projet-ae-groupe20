@@ -31,14 +31,7 @@ public class InternshipUCCImpl implements InternshipUCC {
 
   @Override
   public InternshipDTO updateSubject(InternshipDTO internshipUpdated) {
-    try {
-      dalServices.startTransaction();
-      internshipDS.updateSubject(internshipUpdated);
-    } catch (Throwable e) {
-      dalServices.rollbackTransaction();
-      throw e;
-    }
-    dalServices.commitTransaction();
+    internshipUpdated = internshipDS.updateSubject(internshipUpdated);
     return internshipUpdated;
   }
 
@@ -49,7 +42,7 @@ public class InternshipUCCImpl implements InternshipUCC {
       dalServices.startTransaction();
       Internship internshipToAdd = (Internship) internshipDTO;
       Contact contact = (Contact) contactDS.getOneContactByid(internshipToAdd.getContactId());
-      contact.checkIfContactIsTaken();
+      contact.checkIfContactIsAccepted();
 
       Supervisor supervisor = (Supervisor) supervisorDS.getOneSupervisorById(
           internshipDTO.getSupervisorId());
