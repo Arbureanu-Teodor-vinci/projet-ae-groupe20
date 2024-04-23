@@ -19,9 +19,9 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "id": 1,
+    "id": 15,
     "subject": "New Subject",
-    "academicYear": 1,
+    "academicYear": 3,
     "version": 1
 }
 
