@@ -38,7 +38,6 @@ async function renderHomePage(){
         <div class="d-grid gap-2 col-6 mx-auto">
           <button id="profil" class="btn btn-primary mb-3" type="button">Voir mon profil</button>
           <button id="modifDataPerso" class="btn btn-primary mb-3" type="button">Modifier mes données personnelles</button>
-          ${isContactAccepted ? '<button id="modifSubjectStage" class="btn btn-primary mb-3" type="button">Modifier mon sujet de stage</button>' : ''}
           ${isContactAccepted ? '' : '<button id="addContact" class="btn btn-primary mb-3" type="button">Ajouter un nouveau contact</button>'}
           ${isContactAccepted ? '' : '<button id="addCompany" class="btn btn-primary mb-3" type="button">Ajouter une nouvelle entreprise</button>'}
         </div>

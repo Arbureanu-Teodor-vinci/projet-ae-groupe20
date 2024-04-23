@@ -34,7 +34,7 @@ async function renderEnterprisePage(enterpriseId) {
   const main = document.querySelector('main');
   main.innerHTML = `
 <section>
-<div class="container h-100">
+<div style="margin-top: 100px" class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 d-flex justify-content-between align-items-center">
             <h1 id="enterpriseTitle">${enterprise.tradeName}</h1>
