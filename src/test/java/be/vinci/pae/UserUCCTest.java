@@ -270,7 +270,7 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Register with first name that doesn't stat with a capital letter")
+  @DisplayName("Register with first name that doesn't start with a capital letter")
   void testRegister11() {
     UserDTO newUser = domainFactory.getUserDTO();
     newUser.setFirstName("alina");
@@ -283,7 +283,7 @@ public class UserUCCTest {
   }
 
   @Test
-  @DisplayName("Register with last name that doesn't stat with a capital letter")
+  @DisplayName("Register with last name that doesn't start with a capital letter")
   void testRegister12() {
     UserDTO newUser = domainFactory.getUserDTO();
     newUser.setFirstName("Alina");
