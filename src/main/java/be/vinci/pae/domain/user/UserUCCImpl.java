@@ -50,6 +50,11 @@ public class UserUCCImpl implements UserUCC {
       user.checkVinciEmail(registeredUser.getEmail());
       // check if role is valid
       user.checkRole(registeredUser.getRole());
+      // check if phone number is valid
+      user.checkPhoneNumberFormat(registeredUser.getTelephoneNumber());
+      // check if names are valid
+      user.checkNamesFormat(registeredUser.getFirstName());
+      user.checkNamesFormat(registeredUser.getLastName());
 
       dalServices.startTransaction(); //START TRANSACTION
       // check if email exists already
@@ -75,6 +80,10 @@ public class UserUCCImpl implements UserUCC {
   @Override
   public UserDTO updateProfile(UserDTO userDTO) {
     try {
+      User user = (User) userDTO;
+      user.checkNamesFormat(userDTO.getFirstName());
+      user.checkNamesFormat(userDTO.getLastName());
+      user.checkPhoneNumberFormat(userDTO.getTelephoneNumber());
       dalServices.startTransaction();
       User userFound = (User) userDAO.getOneUserByID(userDTO.getId());
       userFound.checkNotNull();

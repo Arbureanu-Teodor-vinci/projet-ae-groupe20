@@ -25,7 +25,8 @@ async function renderBoardPage() {
 
     const response = await fetch(`/api/enterprises/getAll`, options);
 
-    const enterprises = await response.json();
+    const enterprises = await response.json()
+
 
     // Fetch data for all academic years by default
     const response3 = await fetch(`/api/auths/studentsWithInternship`, options);
@@ -86,16 +87,16 @@ async function renderBoardPage() {
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Entreprise</th>
-                        <th>Appelation</th>
-                        <th>Adresse</th>
-                        <th>Numéro de téléphone</th>
-                        <th>Ville</th>
-                        <th>Nombre d'étudiants en stage</th>
-                        <th>Email</th>
-                        <th>Raison de blacklist</th>
-                        <th>Black-listée</th>
-                        <th>Profil</th>
+                        <th data-column="tradeName" data-sort-order="asc">Entreprise</th>
+                        <th data-column="designation" data-sort-order="asc">Appelation</th>
+                        <th data-column="address" data-sort-order="asc">Adresse</th>
+                        <th data-column="phoneNumber" data-sort-order="asc">Numéro de téléphone</th>
+                        <th data-column="city" data-sort-order="asc">Ville</th>
+                        <th data-column="internshipCount" data-sort-order="asc">Nombre d'étudiants en stage</th>
+                        <th data-column="email" data-sort-order="asc">Email</th>
+                        <th data-column="blackListReason" data-sort-order="asc">Raison de blacklist</th>
+                        <th data-column="blackList" data-sort-order="asc">Black-listée</th>
+                        <th data-column="profile" data-sort-order="asc">Profil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -167,24 +168,12 @@ async function renderBoardPage() {
             </tr>
         `;
     });
-    
-    const enterprisesTable = document.querySelector('.table tbody');
 
-    enterprises.forEach( async enterprise => {
-        const options2 = {
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                "Authorization": `${getAuthenticatedUser().token}`,
-            },
-        };
-        // Fetch the number of internships for this enterprise
-        const response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
-        const internshipCount = await response2.text();
-    
+    // Function to create a row for an enterprise
+    async function createRow(enterprise) {
         // Create a new row
         const row = document.createElement('tr');
-    
+
         // Add the enterprise data to the row
         row.innerHTML = `
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.tradeName}</td>
@@ -192,7 +181,7 @@ async function renderBoardPage() {
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.address}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.phoneNumber}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.city}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${internshipCount}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.internshipCount}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.email}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListMotivation == null ? '-' : enterprise.blackListMotivation}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListed ? 'X' : 'V'}</td>
@@ -219,11 +208,114 @@ async function renderBoardPage() {
         // Add the cell to the row
         row.appendChild(cell);
 
-        // Add the row to the table
-        enterprisesTable.appendChild(row);
+        return row;
+    }
+
+    // Sort the enterprises by trade name
+    enterprises.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
+
+    const enterprisesTable = document.querySelector('.table tbody');
+
+    // Fetch the internshipCount for all enterprises
+    const enterprisesWithInternshipCount = await Promise.all(enterprises.map(async (enterprise) => {
+        const options2 = {
+            method: 'GET',
+            headers : {
+                'Content-Type': 'application/json',
+                "Authorization": `${getAuthenticatedUser().token}`,
+            },
+        };
+        const response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
+        const internshipCount = await response2.json();
+        return { ...enterprise, internshipCount };
+    }));
+
+    // Create an array to store the rows
+    const rows = [];
+
+    await Promise.all(enterprisesWithInternshipCount.map( async (enterprise, index) => {
+        // Create the row
+        const row = await createRow(enterprise);
+
+        // Store the row in the array
+        rows[index] = row;
+    }));
+
+    // Append the rows to the table in the correct order
+    rows.forEach(row => enterprisesTable.appendChild(row));
+
+    // Get the table headers
+    const headers = document.querySelectorAll('.table thead th');
+
+    // Define the sorting functions for each column
+    const sortFunctions = {
+        tradeName: (a, b) => a.tradeName.localeCompare(b.tradeName),
+        designation: (a, b) => (a.designation || '').localeCompare(b.designation || ''),
+        address: (a, b) => a.address.localeCompare(b.address),
+        phoneNumber: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber),
+        city: (a, b) => a.city.localeCompare(b.city),
+        internshipCount: (a, b) => a.internshipCount - b.internshipCount,
+        email: (a, b) => {
+            if (a.email && b.email) {
+                return a.email.localeCompare(b.email);
+            }
+            if (a.email) {
+                return -1;
+            }
+            if (b.email) {
+                return 1;
+            }
+            return 0;
+        },
+        blackListReason: (a, b) => (a.blackListMotivation || '').localeCompare(b.blackListMotivation || ''),
+        blackList: (a, b) => (a.blackListed === true ? 1 : 0) - (b.blackListed === true ? 1 : 0),
+    };
+
+    // Create a sortOrder object to keep track of the sort order for each header
+    const sortOrder = {};
+
+    // Add the event listeners to the headers
+    headers.forEach(header => {
+        header.addEventListener('click', () => {
+            // Get the sort function for this column
+            const sortFunction = sortFunctions[header.dataset.column];
+
+            // Get the current sort order
+            sortOrder[header.dataset.column] = sortOrder[header.dataset.column] || 'asc';
+
+            // Flip the sort order
+            const newSortOrder = sortOrder[header.dataset.column] === 'asc' ? 'desc' : 'asc';
+
+            // Sort the enterprises
+            enterprisesWithInternshipCount.sort((a, b) => {
+                const sortValue = sortFunction(a, b);
+                // Reverse the sort order if necessary
+                return sortOrder[header.dataset.column] === 'asc' ? sortValue : -sortValue;
+            });
+
+
+            // Clear the table
+            while (enterprisesTable.firstChild) {
+                enterprisesTable.removeChild(enterprisesTable.firstChild);
+            }
+
+            // Rebuild the table
+            Promise.all(enterprisesWithInternshipCount.map(async (enterprise, index) => {
+                // Create the row
+                const row = await createRow(enterprise);
+
+                // Store the row in the array
+                rows[index] = row;
+            })).then(() => {
+                // Append the rows to the table in the correct order
+                rows.forEach(row => enterprisesTable.appendChild(row));
+            });
+
+            // Update the sort order
+            sortOrder[header.dataset.column] = newSortOrder;
+        });
     });
 
-    
 };
 
 export default BoardPage;
