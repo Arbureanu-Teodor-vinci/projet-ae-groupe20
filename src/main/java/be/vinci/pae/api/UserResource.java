@@ -137,6 +137,13 @@ public class UserResource {
       throw new WebApplicationException("You must enter a vinci email address.",
           Status.BAD_REQUEST);
     }
+    // check if last and firstname start with a capital letter
+    checkNameFormat(user.getFirstName());
+    checkNameFormat(user.getLastName());
+
+    // check if phone number is valid
+    checkPhoneNumberFormat(user.getTelephoneNumber());
+
     StudentDTO studentDTO = domainFactory.getStudentDTO();
     // Try to register
     UserDTO newUser = userController.register(user);
@@ -228,6 +235,10 @@ public class UserResource {
       throw new WebApplicationException("You can't update another user's profile.",
           Status.UNAUTHORIZED);
     }
+    checkNameFormat(user.getFirstName());
+    checkNameFormat(user.getLastName());
+    checkPhoneNumberFormat(user.getTelephoneNumber());
+
     if (user.getFirstName() == null || user.getFirstName().isBlank() || user.getFirstName()
         .isEmpty()) {
       throw new WebApplicationException("You cant put your first name to null.",
@@ -330,6 +341,29 @@ public class UserResource {
     }
 
     return json;
+  }
+
+  /**
+   * Check if names are valid, they need to start with a capital letter.
+   *
+   * @param name -> name to check
+   */
+  private void checkNameFormat(String name) {
+    if (!Character.isUpperCase(name.charAt(0))) {
+      throw new WebApplicationException("First and last name need to start with a capital letter.",
+          Status.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Check if phone number is valid.
+   *
+   * @param phoneNumber -> phone number to check
+   */
+  private void checkPhoneNumberFormat(String phoneNumber) {
+    if (!phoneNumber.matches("^[0-9]{10}$")) {
+      throw new WebApplicationException("Phone number is not valid.", Status.BAD_REQUEST);
+    }
   }
 
 }

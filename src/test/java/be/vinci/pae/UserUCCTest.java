@@ -125,6 +125,8 @@ public class UserUCCTest {
   @DisplayName("Register with valid student credentials")
   void testRegister1() {
     UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("George-leonidas");
+    newUser.setLastName("Papadopoulos");
     newUser.setEmail("test@student.vinci.be");
     newUser.setPassword("testPassword");
     newUser.setRole("Etudiant");
@@ -139,6 +141,8 @@ public class UserUCCTest {
   @DisplayName("Register with valid teacher credentials")
   void testRegister2() {
     UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("Patrik");
+    newUser.setLastName("Laine");
     newUser.setEmail("test@vinci.be");
     newUser.setPassword("testPassword");
     newUser.setRole("Professeur");
@@ -153,6 +157,8 @@ public class UserUCCTest {
   @DisplayName("Register with valid administrator credentials")
   void testRegister3() {
     UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("Alina");
+    newUser.setLastName("Koval");
     newUser.setEmail("test@vinci.be");
     newUser.setPassword("testPassword");
     newUser.setRole("Administratif");
@@ -167,6 +173,8 @@ public class UserUCCTest {
   @DisplayName("Register with wrong email")
   void testRegister4() {
     UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("Alina");
+    newUser.setLastName("Koval");
     newUser.setEmail("test");
     newUser.setPassword("testPassword");
     newUser.setRole("Professeur");
@@ -233,12 +241,68 @@ public class UserUCCTest {
   }
 
   @Test
+  @DisplayName("Register with a phone number in a incorrect froamat")
+  void testRegister9() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Etudiant");
+    newUser.setTelephoneNumber("test");
+
+    assertThrows(BusinessException.class, () -> userUCC.register(newUser));
+  }
+
+  @Test
+  @DisplayName("Register with a phone number in a correct format")
+  void testRegister10() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("Radu");
+    newUser.setLastName("Popescu");
+    newUser.setEmail("test@student.vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Etudiant");
+    newUser.setTelephoneNumber("0499999999");
+
+    Mockito.when(userDAO.getOneUserByEmail(newUser.getEmail())).thenReturn(null);
+    Mockito.when(userDAO.addUser(newUser)).thenReturn(newUser);
+
+    assertEquals(userUCC.register(newUser), newUser);
+  }
+
+  @Test
+  @DisplayName("Register with first name that doesn't stat with a capital letter")
+  void testRegister11() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("alina");
+    newUser.setLastName("Koval");
+    newUser.setEmail("test@vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Administratif");
+
+    assertThrows(BusinessException.class, () -> userUCC.register(newUser));
+  }
+
+  @Test
+  @DisplayName("Register with last name that doesn't stat with a capital letter")
+  void testRegister12() {
+    UserDTO newUser = domainFactory.getUserDTO();
+    newUser.setFirstName("Alina");
+    newUser.setLastName("koval");
+    newUser.setEmail("test@vinci.be");
+    newUser.setPassword("testPassword");
+    newUser.setRole("Administratif");
+
+    assertThrows(BusinessException.class, () -> userUCC.register(newUser));
+
+  }
+
+  @Test
   @DisplayName("Update profile with valid inputs")
   void testUpdateProfile1() {
     UserDTO updatedUser = userDTO;
+    updatedUser.setFirstName("Lina");
+    updatedUser.setLastName("Koval");
     updatedUser.setPassword("newPassword");
-    updatedUser.setFirstName("newFirstName");
-    updatedUser.setLastName("newLastName");
     updatedUser.setTelephoneNumber("0444444444");
 
     assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
@@ -249,12 +313,36 @@ public class UserUCCTest {
   void testUpdateProfile2() {
     UserDTO updatedUser = userDTO;
     updatedUser.setPassword(null);
-    updatedUser.setFirstName("newFirstName");
-    updatedUser.setLastName("newLastName");
+    updatedUser.setFirstName("Lina");
+    updatedUser.setLastName("Koval");
     updatedUser.setTelephoneNumber("0444444444");
 
     assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
     assertEquals(userUCC.updateProfile(updatedUser).getPassword(), userDTO.getPassword());
+  }
+
+  @Test
+  @DisplayName("Update profile with first name that doesn't start with a capital letter")
+  void testUpdateProfile3() {
+    UserDTO updatedUser = userDTO;
+    updatedUser.setFirstName("lina");
+    updatedUser.setLastName("Koval");
+    updatedUser.setPassword("newPassword");
+    updatedUser.setTelephoneNumber("0444444444");
+
+    assertThrows(BusinessException.class, () -> userUCC.updateProfile(updatedUser));
+  }
+
+  @Test
+  @DisplayName("Update profile with last name that doesn't start with a capital letter")
+  void testUpdateProfile4() {
+    UserDTO updatedUser = userDTO;
+    updatedUser.setFirstName("Lina");
+    updatedUser.setLastName("koval");
+    updatedUser.setPassword("newPassword");
+    updatedUser.setTelephoneNumber("0444444444");
+
+    assertThrows(BusinessException.class, () -> userUCC.updateProfile(updatedUser));
   }
 
   @Test
@@ -285,7 +373,7 @@ public class UserUCCTest {
     list.add("2023-2024");
 
     Mockito.when(userDAO.getAllAcademicYears()).thenReturn(list);
-    
+
     String academicYear = "2099-2100"; // This academic year is not in the database
     // Call the method under test and expect a BusinessException
     assertThrows(BusinessException.class, () -> {
