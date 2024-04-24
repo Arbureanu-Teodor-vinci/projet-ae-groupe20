@@ -6,7 +6,7 @@ import UpdateUserInfosPage from '../Pages/UpdateUserInfosPage';
 import AllUsersPage from '../Pages/AllUsersPage';
 import CreationContactPage from '../Pages/CreationContactPage';
 import CreationCompanyPage from '../Pages/CreationCompanyPage';
-import CreationStagePage from '../Pages/CreationStagePage';
+import CreationInternshipPage from '../Pages/CreationInternshipPage';
 import UpdateContactPage from '../Pages/UpdateContactPage';
 import BoardPage from '../Pages/BoardPage';
 import EnterprisePage from '../Pages/EnterprisePage';
@@ -23,7 +23,7 @@ const routes = {
     '/allUsers': AllUsersPage,
     '/creationContact': CreationContactPage,
     '/creationCompany': CreationCompanyPage,
-    '/creationStage': CreationStagePage,
+    '/creationStage': CreationInternshipPage,
     '/updateContact': UpdateContactPage,
     '/board': BoardPage,
     '/enterprise': EnterprisePage,
