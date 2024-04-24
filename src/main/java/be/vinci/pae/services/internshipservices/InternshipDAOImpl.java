@@ -98,7 +98,7 @@ public class InternshipDAOImpl implements InternshipDAO {
         if (resultSet.next()) {
           internship = getResultSet(resultSet);
         } else {
-          if (getOneInternshipById(internshipToUpdate.getId()) != null) {
+          if (getOneInternshipById(internshipToUpdate.getId()) == null) {
             throw new NullPointerException("Internship not found");
           } else {
             throw new FatalException(

@@ -34,12 +34,10 @@ async function renderEnterprisePage(enterpriseId) {
   const main = document.querySelector('main');
   main.innerHTML = `
 <section>
-<div class="container h-100">
+<div style="margin-top: 100px" class="container h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-12 d-flex justify-content-between align-items-center">
-            <h1 id="enterpriseTitle">${enterprise.tradeName}</h1>
-        
-      
+          <h1 id="enterpriseTitle">${enterprise.tradeName}${enterprise.designation ? ` - ${enterprise.designation}` : ''}</h1>
         <div id="blacklistReasonDiv" >
             <div style="display: flex; align-items: center;">
                 <input type="text" id="blacklistReason" name="blacklistReason" style="width: 700px;" placeholder="Raison de blacklist">

@@ -19,9 +19,9 @@ async function renderCreationStagePage() {
     }
     const main = document.querySelector('main');
     const urlParams = new URLSearchParams(window.location.search);
-    const contactId = urlParams.get('contactId');
+    const contactIdParam = urlParams.get('contactId');
     // eslint-disable-next-line no-console
-    console.log(contactId);
+    console.log(contactIdParam);
     const options = {
         method: 'GET',
         headers : {
@@ -29,7 +29,7 @@ async function renderCreationStagePage() {
             "Authorization": `${getAuthenticatedUser().token}`,
         },
     };
-    const response = await fetch(`/api/contacts/getOne:${contactId}`, options);
+    const response = await fetch(`/api/contacts/getOne:${contactIdParam}`, options);
     const contact = await response.json();
     
     const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
@@ -55,7 +55,7 @@ async function renderCreationStagePage() {
                             <div class="form-group">
                                 <label for="supervisor">Responsable de stage</label>
                                 <select id="supervisor" class="form-control" required>
-                                    <option value="">Choisissez un responsable de stage</option>
+                                    <option>Choisissez un responsable de stage</option>
                                     ${supervisors.map((supervisor) => `<option value="${supervisor.id}">${supervisor.firstName} ${supervisor.lastName}</option>`).join('')}
                                 </select>
                                 <div class="d-flex justify-content-center">
@@ -68,9 +68,10 @@ async function renderCreationStagePage() {
                             </div>
                             <div class="form-group">
                                 <label for="signatureDate">Date de signature</label>
-                                <input type="date" class="form-control" id="signatureDate">
+                                <input type="date" class="form-control" id="signatureDate" required>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3" id="create">Créer</button>
+                            <p class = "errorMessage"><p>
                         </form>
                     </div>
                 </div>
@@ -80,6 +81,42 @@ async function renderCreationStagePage() {
     const addSupervisor = document.getElementById('add-supervisor');
     addSupervisor.addEventListener('click', () => {
         Navigate('/creationSupervisor');
+    });
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+        const supervisorParam = document.getElementById('supervisor').value;
+        const subjectParam = document.getElementById('subject').value;
+        // eslint-disable-next-line no-console
+        console.log(subjectParam);
+        const signatureDateParam = document.getElementById('signatureDate').value;
+        event.preventDefault();
+        
+        const optionsCreateInternship = {
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json',
+                "Authorization": `${getAuthenticatedUser().token}`,
+            },
+            body: JSON.stringify({
+                subject: subjectParam,
+                signatureDate: signatureDateParam,
+                supervisorId: supervisorParam,
+                contactId: contactIdParam,
+                academicYear: 1
+            }),
+        };
+        const responseCreateInternship = await fetch(`/api/internships/add`, optionsCreateInternship);
+        if(responseCreateInternship.ok){
+            event.preventDefault();
+            Navigate('/profil');
+        }
+        else{
+            const errorMessage = document.querySelector('.errorMessage');
+            errorMessage.innerHTML = 'Erreur lors de la création du stage';
+        }
+    
+
     });
 }
 

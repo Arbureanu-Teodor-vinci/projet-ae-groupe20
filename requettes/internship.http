@@ -19,9 +19,9 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "id": 1,
+    "id": 15,
     "subject": "New Subject",
-    "academicYear": 1,
+    "academicYear": 3,
     "version": 1
 }
 
@@ -44,12 +44,12 @@ Authorization: {{adminToken}}
 
 {
     "signatureDate": "2024-01-01",
-    "supervisorId": 4,
-    "contactId": 8,
+    "supervisorId": 3,
+    "contactId": 12,
     "academicYear": 1
 }
 
-### ADD INTERNSHIP WITH CONTACT NOT IT TAKEN STATE
+### ADD INTERNSHIP WITH CONTACT NOT IT ACCEPTED STATE
 POST {{baseUrl}}/internships/add
 Content-Type: application/json
 Authorization: {{adminToken}}
