@@ -265,7 +265,10 @@ async function renderProfilPage() {
 
          
     }else{
-        document.querySelector('.internshipTable').style.display = 'none';
+        const internshipTable = document.querySelector('.internshipTable');
+        if (internshipTable) {
+            internshipTable.style.display = 'none';
+        }
     }
 
     
