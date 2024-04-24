@@ -61,7 +61,7 @@ Content-Type: application/json
   "email": "test@student.vinci.be",
   "password": "group20",
   "role": "Etudiant",
-  "firstName": "Student",
+  "firstName": "Student-test",
   "lastName": "Vinci",
   "telephoneNumber": "0499999999"
 }
@@ -87,8 +87,8 @@ Content-Type: application/json
   "email": "test2@vinci.be",
   "password": "group20",
   "role": "Administratif",
-  "firstName": "admin2",
-  "lastName": "Vinci2",
+  "firstName": "AdminDeux",
+  "lastName": "VinciDeux",
   "telephoneNumber": "0499999955"
 }
 
@@ -99,8 +99,8 @@ Authorization: {{adminToken}}
 
 {
   "id": 12,
-  "firstName": "test",
-  "lastName": "test",
+  "firstName": "Test",
+  "lastName": "Test",
   "telephoneNumber": "0499999999",
   "role": "Administratif",
   "email": "admin",

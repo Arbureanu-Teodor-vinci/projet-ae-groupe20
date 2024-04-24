@@ -197,5 +197,22 @@ public class UserImpl implements User {
     }
   }
 
+  @Override
+  public void checkPhoneNumberFormat(String phoneNumber) {
+    if (phoneNumber == null) {
+      return;
+    }
+    if (!phoneNumber.matches("^[0-9]{10}$")) {
+      throw new BusinessException("Phone number is not valid.");
+    }
+  }
+
+  @Override
+  public void checkNamesFormat(String name) {
+    if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]+$")) {
+      throw new BusinessException("Name need to start with a capital letter.");
+    }
+  }
+
 
 }

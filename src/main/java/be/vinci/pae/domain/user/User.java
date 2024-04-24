@@ -45,5 +45,17 @@ public interface User extends UserDTO {
    */
   void checkNotNull() throws BusinessException;
 
+  /**
+   * Check if phone number is valid.
+   *
+   * @param phoneNumber -> phone number to check
+   */
+  void checkPhoneNumberFormat(String phoneNumber) throws BusinessException;
 
+  /**
+   * Check if names are valid.
+   *
+   * @param name -> name to check
+   */
+  void checkNamesFormat(String name) throws BusinessException;
 }
