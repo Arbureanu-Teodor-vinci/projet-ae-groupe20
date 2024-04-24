@@ -195,4 +195,23 @@ public class EnterpriseImpl implements Enterprise {
           "You can't update other data than the blacklisted status and the motivation.");
     }
   }
+
+  @Override
+  public void checkEmailFormat(String email) {
+    int firstIndex = email.indexOf("@");
+    int lastIndex = email.lastIndexOf("@");
+    if (firstIndex != lastIndex || firstIndex == -1) {
+      throw new BusinessException("Email is invalid");
+    }
+  }
+
+  @Override
+  public void checkPhoneNumberFormat(String phoneNumber) {
+    if (phoneNumber == null) {
+      return;
+    }
+    if (!phoneNumber.matches("^[0-9]{10}$")) {
+      throw new BusinessException("Phone number is invalid");
+    }
+  }
 }

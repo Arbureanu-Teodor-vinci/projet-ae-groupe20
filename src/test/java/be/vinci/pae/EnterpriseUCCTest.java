@@ -1,7 +1,9 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
 import be.vinci.pae.domain.factory.DomainFactory;
@@ -87,5 +89,105 @@ class EnterpriseUCCTest {
     List<EnterpriseDTO> actualEnterprises = enterpriseUCC.getAllEnterprises();
 
     assertEquals(expectedEnterprises, actualEnterprises);
+  }
+
+  @Test
+  @DisplayName("Add enterprise with valid credentials")
+  void addEnterprise() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setTradeName("Trade Name");
+    enterpriseDTO.setDesignation("Designation");
+    enterpriseDTO.setAddress("Address");
+    enterpriseDTO.setPhoneNumber("0123456789");
+    enterpriseDTO.setEmail("Test@test.com");
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(new ArrayList<>());
+    Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    assertEquals(enterpriseDTO, enterpriseUCC.addEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Add enterprise with invalid email")
+  void addEnterprise2() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setTradeName("Trade Name");
+    enterpriseDTO.setDesignation("Designation");
+    enterpriseDTO.setAddress("Address");
+    enterpriseDTO.setPhoneNumber("0123456789");
+    enterpriseDTO.setEmail("Testtest.com");
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(new ArrayList<>());
+    Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.addEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Add enterprise that already exist in the db with the same trade name and designation")
+  void addEnterprise3() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setTradeName("Trade Name");
+    enterpriseDTO.setDesignation("Designation");
+    enterpriseDTO.setAddress("Address");
+    enterpriseDTO.setPhoneNumber("0123456789");
+    enterpriseDTO.setEmail("test@test.com");
+
+    EnterpriseDTO enterpriseDTO2 = domainFactory.getEnterpriseDTO();
+    enterpriseDTO2.setTradeName("Trade Name");
+    enterpriseDTO2.setDesignation("Designation");
+    enterpriseDTO2.setAddress("Address");
+    enterpriseDTO2.setPhoneNumber("0123456789");
+    enterpriseDTO2.setEmail("test2@gmail.com");
+
+    List<EnterpriseDTO> enterprises = new ArrayList<>();
+    enterprises.add(enterpriseDTO2);
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(enterprises);
+    Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.addEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Add enterprise with invalid phone number")
+  void addTest4() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setTradeName("Trade Name");
+    enterpriseDTO.setDesignation("Designation");
+    enterpriseDTO.setAddress("Address");
+    enterpriseDTO.setPhoneNumber("0123456789");
+    enterpriseDTO.setEmail("test@test.com");
+
+    EnterpriseDTO enterpriseDTO2 = domainFactory.getEnterpriseDTO();
+    enterpriseDTO2.setTradeName("Trade Name");
+    enterpriseDTO2.setDesignation("Designation 2");
+    enterpriseDTO2.setAddress("Address");
+    enterpriseDTO2.setPhoneNumber("0123456789");
+    enterpriseDTO2.setEmail("test2@gmail.com");
+
+    List<EnterpriseDTO> enterprises = new ArrayList<>();
+    enterprises.add(enterpriseDTO2);
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(enterprises);
+    Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    assertEquals(enterpriseDTO, enterpriseUCC.addEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Add enterprise with invalid phone number")
+  void addEterprise5() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setTradeName("Trade Name");
+    enterpriseDTO.setDesignation("Designation");
+    enterpriseDTO.setAddress("Address");
+    enterpriseDTO.setPhoneNumber("a123456789");
+    enterpriseDTO.setEmail("Test@test.com");
+
+    Mockito.when(enterpriseDAO.getAllEnterprises()).thenReturn(new ArrayList<>());
+    Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.addEnterprise(enterpriseDTO));
   }
 }

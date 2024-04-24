@@ -42,4 +42,18 @@ public interface Enterprise extends EnterpriseDTO {
    *                           motivation.
    */
   void checkUpdateBlacklist(EnterpriseDTO enterprise) throws BusinessException;
+
+  /**
+   * Check if the email format is correct.
+   *
+   * @param email String
+   */
+  void checkEmailFormat(String email) throws BusinessException;
+
+  /**
+   * Check if the phone number format is correct.
+   *
+   * @param phoneNumber String
+   */
+  void checkPhoneNumberFormat(String phoneNumber);
 }
