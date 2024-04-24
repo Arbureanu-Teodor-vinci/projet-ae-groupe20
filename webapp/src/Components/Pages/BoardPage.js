@@ -171,17 +171,6 @@ async function renderBoardPage() {
 
     // Function to create a row for an enterprise
     async function createRow(enterprise) {
-        const options2 = {
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                "Authorization": `${getAuthenticatedUser().token}`,
-            },
-        };
-        // Fetch the number of internships for this enterprise
-        const response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
-        const internshipCount = await response2.json();
-
         // Create a new row
         const row = document.createElement('tr');
 
@@ -192,7 +181,7 @@ async function renderBoardPage() {
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.address}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.phoneNumber}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.city}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${internshipCount}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.internshipCount}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.email}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListMotivation == null ? '-' : enterprise.blackListMotivation}</td>
             <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListed ? 'X' : 'V'}</td>
@@ -221,11 +210,25 @@ async function renderBoardPage() {
 
         return row;
     }
-    
+
     // Sort the enterprises by trade name
     enterprises.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
 
     const enterprisesTable = document.querySelector('.table tbody');
+
+    // Fetch the internshipCount for all enterprises
+    const enterprisesWithInternshipCount = await Promise.all(enterprises.map(async (enterprise) => {
+        const options2 = {
+            method: 'GET',
+            headers : {
+                'Content-Type': 'application/json',
+                "Authorization": `${getAuthenticatedUser().token}`,
+            },
+        };
+        const response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
+        const internshipCount = await response2.json();
+        return { ...enterprise, internshipCount };
+    }));
 
     // Create an array to store the rows
     const rows = [];
@@ -284,7 +287,7 @@ async function renderBoardPage() {
             const newSortOrder = sortOrder[header.dataset.column] === 'asc' ? 'desc' : 'asc';
 
             // Sort the enterprises
-            enterprises.sort((a, b) => {
+            enterprisesWithInternshipCount.sort((a, b) => {
                 const sortValue = sortFunction(a, b);
                 // Reverse the sort order if necessary
                 return sortOrder[header.dataset.column] === 'asc' ? sortValue : -sortValue;
@@ -297,7 +300,7 @@ async function renderBoardPage() {
             }
 
             // Rebuild the table
-            Promise.all(enterprises.map(async (enterprise, index) => {
+            Promise.all(enterprisesWithInternshipCount.map(async (enterprise, index) => {
                 // Create the row
                 const row = await createRow(enterprise);
 
