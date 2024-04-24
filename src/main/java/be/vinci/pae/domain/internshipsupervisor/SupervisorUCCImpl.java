@@ -43,6 +43,10 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   public SupervisorDTO addSupervisor(SupervisorDTO newSsupervisor) {
     Supervisor supervisor = (Supervisor) newSsupervisor;
     try {
+      supervisor.checkPhoneNumberFormat(newSsupervisor.getPhoneNumber());
+      supervisor.checkNamesFormat(newSsupervisor.getFirstName());
+      supervisor.checkNamesFormat(newSsupervisor.getLastName());
+      supervisor.checkEmailFormat(newSsupervisor.getEmail());
       dalServices.startTransaction(); // START TRANSACTION
       // check if email exists already
       SupervisorDTO supervisorDTO = supervisorDS.getOneSupervisorByEmail(

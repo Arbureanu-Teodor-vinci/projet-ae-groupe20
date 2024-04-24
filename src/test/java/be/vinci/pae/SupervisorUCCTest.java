@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 /**
  * SupervisorTest.
  */
-public class SupervisorTest {
+public class SupervisorUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
   private SupervisorUCC supervisorUCC = locator.getService(SupervisorUCC.class);
@@ -72,12 +72,12 @@ public class SupervisorTest {
   public void testAddSupervisor() {
     SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
     supervisorToAdd.setEmail("test@test.gmail");
-    supervisorToAdd.setFirstName("test");
-    supervisorToAdd.setLastName("test");
-    supervisorToAdd.setPhoneNumber("123456789");
-    supervisorToAdd.setEnterpriseId(1);
+    supervisorToAdd.setFirstName("Test");
+    supervisorToAdd.setLastName("Test");
+    supervisorToAdd.setPhoneNumber("0123456789");
 
     Mockito.when(supervisorDAO.addSupervisor(supervisorToAdd)).thenReturn(supervisorToAdd);
+    Mockito.when(supervisorDAO.getOneSupervisorByEmail("test@test.gmail")).thenReturn(null);
 
     SupervisorDTO actualSupervisor = supervisorUCC.addSupervisor(supervisorToAdd);
     assertEquals(supervisorToAdd, actualSupervisor);
@@ -86,8 +86,10 @@ public class SupervisorTest {
 
   @Test
   @DisplayName("Add a supervisor with email that already exists")
-  public void testAddSupervisorWithExistingEmail() {
+  public void testAddSupervisor2() {
     SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
+    supervisorToAdd.setLastName("Test");
+    supervisorToAdd.setFirstName("Test");
     supervisorToAdd.setEmail("test@test.gmail");
 
     Mockito.when(supervisorDAO.getOneSupervisorByEmail("test@test.gmail"))
@@ -95,5 +97,54 @@ public class SupervisorTest {
 
     assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
   }
+
+  @Test
+  @DisplayName("Add a supervisor with a phone number that is not valid")
+  public void testAddSupervisor3() {
+    SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
+    supervisorToAdd.setEmail("test@test.gmail");
+    supervisorToAdd.setFirstName("Test");
+    supervisorToAdd.setLastName("Test");
+    supervisorToAdd.setPhoneNumber("aaaaaaaaa");
+
+    assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
+  }
+
+  @Test
+  @DisplayName("Add a supervisor with a first name that is not valid")
+  public void testAddSupervisor4() {
+    SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
+    supervisorToAdd.setEmail("test@test.gmail");
+    supervisorToAdd.setFirstName("test");
+    supervisorToAdd.setLastName("Test");
+    supervisorToAdd.setPhoneNumber("0123456789");
+
+    assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
+  }
+
+  @Test
+  @DisplayName("Add a supervisor with a last name that is not valid")
+  public void testAddSupervisor5() {
+    SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
+    supervisorToAdd.setEmail("test@test.gmail");
+    supervisorToAdd.setFirstName("Test");
+    supervisorToAdd.setLastName("test");
+    supervisorToAdd.setPhoneNumber("0123456789");
+
+    assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
+  }
+
+  @Test
+  @DisplayName("Add a supervisor with a email not valid")
+  public void testAddSupervisor6() {
+    SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
+    supervisorToAdd.setEmail("test");
+    supervisorToAdd.setFirstName("Test");
+    supervisorToAdd.setLastName("Test");
+    supervisorToAdd.setPhoneNumber("0123456789");
+
+    assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
+  }
+
 
 }

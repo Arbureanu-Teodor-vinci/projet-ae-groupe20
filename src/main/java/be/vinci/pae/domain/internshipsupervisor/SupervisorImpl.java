@@ -112,4 +112,30 @@ public class SupervisorImpl implements Supervisor {
     }
   }
 
+  @Override
+  public void checkPhoneNumberFormat(String phoneNumber) {
+    if (phoneNumber == null) {
+      return;
+    }
+    if (!phoneNumber.matches("^[0-9]{10}$")) {
+      throw new BusinessException("Phone number is invalid");
+    }
+  }
+
+  @Override
+  public void checkNamesFormat(String name) {
+    if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]{1,50}$")) {
+      throw new BusinessException("Name is invalid");
+    }
+  }
+
+  @Override
+  public void checkEmailFormat(String email) {
+    int firstIndex = email.indexOf("@");
+    int lastIndex = email.lastIndexOf("@");
+    if (firstIndex != lastIndex || firstIndex == -1) {
+      throw new BusinessException("Email is invalid");
+    }
+  }
+
 }
