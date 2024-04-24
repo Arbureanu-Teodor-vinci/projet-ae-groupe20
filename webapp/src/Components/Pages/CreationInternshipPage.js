@@ -59,7 +59,7 @@ async function renderCreationStagePage() {
                                     ${supervisors.map((supervisor) => `<option value="${supervisor.id}">${supervisor.firstName} ${supervisor.lastName}</option>`).join('')}
                                 </select>
                                 <div class="d-flex justify-content-center">
-                                    <a id="add-supervisor" href="#" class="text-primary">Responsable de stage non présent? Ajouter le</a>
+                                    <a id="${enterprise.id}" href="#" class="text-primary add-supervisor">Responsable de stage non présent? Ajouter le</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -78,9 +78,10 @@ async function renderCreationStagePage() {
             </div>
         </section>`;
 
-    const addSupervisor = document.getElementById('add-supervisor');
-    addSupervisor.addEventListener('click', () => {
-        Navigate('/creationSupervisor');
+    const addSupervisor = document.querySelector('.add-supervisor');
+    addSupervisor.addEventListener('click', (e) => {
+        e.preventDefault();
+        Navigate(`/creationSupervisor?enterpriseId=${e.target.id}`);
     });
 
     const form = document.querySelector('form');

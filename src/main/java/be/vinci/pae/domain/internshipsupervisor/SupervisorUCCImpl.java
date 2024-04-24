@@ -40,21 +40,21 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   }
 
   @Override
-  public SupervisorDTO addSupervisor(SupervisorDTO newSsupervisor) {
-    Supervisor supervisor = (Supervisor) newSsupervisor;
+  public SupervisorDTO addSupervisor(SupervisorDTO newSupervisor) {
+    Supervisor supervisor = (Supervisor) newSupervisor;
     try {
       dalServices.startTransaction(); // START TRANSACTION
       // check if email exists already
       SupervisorDTO supervisorDTO = supervisorDS.getOneSupervisorByEmail(
-          newSsupervisor.getEmail());
+          newSupervisor.getEmail());
       supervisor.checkUniqueEmail(supervisorDTO);
-      newSsupervisor = supervisorDS.addSupervisor(newSsupervisor);
+      newSupervisor = supervisorDS.addSupervisor(newSupervisor);
     } catch (Throwable e) {
       dalServices.rollbackTransaction(); // ROLLBACK TRANSACTION
       throw e;
     }
     dalServices.commitTransaction(); // COMMIT TRANSACTION
-    return newSsupervisor;
+    return newSupervisor;
   }
 
 }

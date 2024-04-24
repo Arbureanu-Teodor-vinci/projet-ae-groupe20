@@ -254,6 +254,7 @@ async function renderProfilPage() {
                 internshipSubject.textContent = document.getElementById('subjectInput').value;
                 internship = await responseUpdateInternship.json();
             }else{
+              // eslint-disable-next-line no-alert
               alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
               Navigate('/profil');
             }
