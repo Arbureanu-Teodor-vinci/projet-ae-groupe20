@@ -233,7 +233,7 @@ async function renderBoardPage() {
     // Create an array to store the rows
     const rows = [];
 
-    await Promise.all(enterprises.map( async (enterprise, index) => {
+    await Promise.all(enterprisesWithInternshipCount.map( async (enterprise, index) => {
         // Create the row
         const row = await createRow(enterprise);
 
