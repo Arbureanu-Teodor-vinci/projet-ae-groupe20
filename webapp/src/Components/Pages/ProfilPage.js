@@ -254,6 +254,7 @@ async function renderProfilPage() {
                 internshipSubject.textContent = document.getElementById('subjectInput').value;
                 internship = await responseUpdateInternship.json();
             }else{
+              // eslint-disable-next-line no-alert
               alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
               Navigate('/profil');
             }
@@ -264,7 +265,10 @@ async function renderProfilPage() {
 
          
     }else{
-        document.querySelector('.internshipTable').style.display = 'none';
+        const internshipTable = document.querySelector('.internshipTable');
+        if (internshipTable) {
+            internshipTable.style.display = 'none';
+        }
     }
 
     

@@ -35,7 +35,7 @@ async function renderHomePage(){
     console.log(contacts);
     main.innerHTML = `
       <section class="d-flex justify-content-center align-items-center" style="height: 50vh;">
-        <div class="d-grid gap-2 col-6 mx-auto">
+        <div style="margin-top: 100px" class="d-grid gap-2 col-6 mx-auto">
           <button id="profil" class="btn btn-primary mb-3" type="button">Voir mon profil</button>
           <button id="modifDataPerso" class="btn btn-primary mb-3" type="button">Modifier mes données personnelles</button>
           ${isContactAccepted ? '' : '<button id="addContact" class="btn btn-primary mb-3" type="button">Ajouter un nouveau contact</button>'}
