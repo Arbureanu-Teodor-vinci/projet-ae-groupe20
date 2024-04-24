@@ -56,4 +56,11 @@ public interface Enterprise extends EnterpriseDTO {
    * @param phoneNumber String
    */
   void checkPhoneNumberFormat(String phoneNumber);
+
+  /**
+   * Check if the object is null.
+   *
+   * @throws BusinessException if the object is null.
+   */
+  void checkIsNull() throws BusinessException;
 }

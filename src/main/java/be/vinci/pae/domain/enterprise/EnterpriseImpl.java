@@ -214,4 +214,19 @@ public class EnterpriseImpl implements Enterprise {
       throw new BusinessException("Phone number is invalid");
     }
   }
+
+  @Override
+  public void checkIsNull() {
+    if (this.getId() == 0
+        || this.getTradeName() == null
+        || this.getDesignation() == null
+        || this.getAddress() == null
+        || this.getPhoneNumber() == null
+        || this.getCity() == null
+        || this.getEmail() == null
+        || this.getBlackListMotivation() == null
+        || this.getVersion() == 0) {
+      throw new BusinessException("This enterprise is null.");
+    }
+  }
 }

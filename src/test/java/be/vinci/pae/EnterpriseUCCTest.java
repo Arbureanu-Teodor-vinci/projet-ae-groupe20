@@ -190,4 +190,55 @@ class EnterpriseUCCTest {
 
     assertThrows(BusinessException.class, () -> enterpriseUCC.addEnterprise(enterpriseDTO));
   }
+
+  @Test
+  @DisplayName("Blacklist a valid enterprise")
+  void blacklistEnterprise1() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+    Mockito.when(enterpriseDAO.updateEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+
+    EnterpriseDTO actualEnterprise = enterpriseUCC.blacklistEnterprise(enterpriseDTO);
+
+    assertEquals(enterpriseDTO, actualEnterprise);
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise that is already blacklisted")
+  void blacklistEnterprise2() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(true);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise with no blacklist motivation")
+  void blacklistEnterprise3() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(true);
+    enterpriseDTO.setBlackListMotivation(null);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise that does not exist")
+  void blacklistEnterprise4() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(999);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(999)).thenReturn(null);
+
+    assertThrows(NullPointerException.class,
+        () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
+  }
 }

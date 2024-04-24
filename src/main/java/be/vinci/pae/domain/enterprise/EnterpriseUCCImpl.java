@@ -67,6 +67,7 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
       dalServices.startTransaction();
       Enterprise enterpriseFound = (Enterprise) enterpriseDS.getOneEnterpriseByid(
           enterprise.getId());
+      enterpriseFound.checkIsNull();
       enterpriseFound.checkIsBlackListed();
       enterpriseUpdated.checkBlackListMotivation();
       enterprise = enterpriseDS.updateEnterprise(enterprise);
