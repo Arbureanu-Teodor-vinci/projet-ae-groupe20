@@ -259,7 +259,7 @@ public class ContactResource {
       // Create a JSON object with the contact information
       ObjectNode contactNode = jsonMapper.createObjectNode()
           .put("id", contact.getId())
-          .put("interViewMethod", contact.getInterviewMethod())
+          .put("interviewMethod", contact.getInterviewMethod())
           .put("tool", contact.getTool())
           .put("refusalReason", contact.getRefusalReason())
           .put("stateContact", contact.getStateContact())

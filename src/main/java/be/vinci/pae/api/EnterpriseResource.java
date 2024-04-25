@@ -138,8 +138,7 @@ public class EnterpriseResource {
     if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
         || enterpriseDTO.getAddress().trim().isEmpty()
         || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
-        .isEmpty()
-        || enterpriseDTO.getEmail().trim().isEmpty()) {
+        .isEmpty()) {
       Logger.logEntry("Enterprise is missing.");
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
