@@ -1,7 +1,9 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
@@ -196,13 +198,18 @@ class EnterpriseUCCTest {
   void blacklistEnterprise1() {
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
     enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(false);
+    EnterpriseDTO updatedEnterpriseDTO = domainFactory.getEnterpriseDTO();
+    updatedEnterpriseDTO.setId(1);
+    updatedEnterpriseDTO.setBlackListed(true);
+    updatedEnterpriseDTO.setBlackListMotivation("Motivation");
 
     Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
-    Mockito.when(enterpriseDAO.updateEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
+    Mockito.when(enterpriseDAO.updateEnterprise(updatedEnterpriseDTO))
+        .thenReturn(updatedEnterpriseDTO);
 
-    EnterpriseDTO actualEnterprise = enterpriseUCC.blacklistEnterprise(enterpriseDTO);
-
-    assertEquals(enterpriseDTO, actualEnterprise);
+    assertNotEquals(enterpriseUCC.blacklistEnterprise(updatedEnterpriseDTO), enterpriseDTO);
+    assertTrue(enterpriseUCC.blacklistEnterprise(updatedEnterpriseDTO).isBlackListed());
   }
 
   @Test
