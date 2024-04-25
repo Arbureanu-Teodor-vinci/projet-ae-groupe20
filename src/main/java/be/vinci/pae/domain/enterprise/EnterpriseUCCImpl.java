@@ -35,6 +35,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Override
   public int getNbInternships(int id) {
+    if (id < 0) {
+      return -1;
+    }
     return enterpriseDS.getNbInternships(id);
   }
 

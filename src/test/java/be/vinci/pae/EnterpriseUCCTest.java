@@ -94,6 +94,29 @@ class EnterpriseUCCTest {
   }
 
   @Test
+  @DisplayName("Get number of internships for valid enterprise id")
+  void getNbInternshipsValidId() {
+    int id = 1;
+    int expectedNbInternships = 5;
+
+    Mockito.when(enterpriseDAO.getNbInternships(id)).thenReturn(expectedNbInternships);
+
+    int actualNbInternships = enterpriseUCC.getNbInternships(id);
+
+    assertEquals(expectedNbInternships, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for invalid enterprise id")
+  void getNbInternshipsInvalidId() {
+    int id = -1;
+
+    int actualNbInternships = enterpriseUCC.getNbInternships(id);
+
+    assertEquals(-1, actualNbInternships);
+  }
+
+  @Test
   @DisplayName("Add enterprise with valid credentials")
   void addEnterprise() {
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
