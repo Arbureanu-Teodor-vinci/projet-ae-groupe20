@@ -35,31 +35,31 @@ async function renderCreationCompanyPage(){
                     <form>
                         <div class="form-group">
                             <label for="companyName">Nom commercial</label>
-                            <input type="text" class="form-control" id="companyName" required>
+                            <input type="text" class="form-control" id="companyName">
                             <small id="appelationIndicator" class="form-text text-danger" style="display: none;">Indiquez une appellation</small>
                         </div>
                         <div class="form-group">
                             <label for="companyAppellation">Appellation *</label>
-                            <input type="text" class="form-control" id="companyAppellation" required>
+                            <input type="text" class="form-control" id="companyAppellation">
                             <small id="appelationObligatoire" class="form-text text-danger" style="display: none;">Appellation est obligatoire</small>
                             <small id="appelationOptionnal" class="form-text text-muted">L'appellation n'est obligatoire que si le nom de l'entreprise est déjà connu dans le système.</small>
                             <small id="appelationPresent" class="form-text text-danger" style="display: none;">L'appellation est déjà utilisée.</small>
                         </div>
                         <div class="form-group">
                             <labem for="comapanyCity">Ville</label>
-                            <input type="text" class="form-control" id="companyCity" required>
+                            <input type="text" class="form-control" id="companyCity">
                         </div>
                         <div class="form-group">
                             <label for="companyAddress">Adresse</label>
-                            <input type="text" class="form-control" id="companyAdress" required>
+                            <input type="text" class="form-control" id="companyAdress">
                         </div>
                         <div class="form-group">
                             <label for="companyEmail">Email</label>
-                            <input type="email" class="form-control" id="companyEmail" required>
+                            <input type="email" class="form-control" id="companyEmail">
                         </div>
                         <div class="form-group">
                             <label for="companyTel">Tel</label>
-                            <input type="tel" class="form-control" id="companyTel" required>
+                            <input type="tel" class="form-control" id="companyTel">
                         </div>
                         <button type="submit" class="btn btn-success float-right mt-3" id="create">Ajouter</button>
                         <p class = "errorMessage"><p>
@@ -144,7 +144,7 @@ async function renderCreationCompanyPage(){
             body: JSON.stringify({
                 tradeName: companyParam,
                 designation : designationParam,
-                adresse : adresseParam,
+                address : adresseParam,
                 phoneNumber : phoneNumberParam,
                 city : cityParam,
                 email : emailParam
@@ -158,8 +158,8 @@ async function renderCreationCompanyPage(){
             Navigate('/creationContact');
         }
         else{
-            const erreur = document.querySelector('.errorMessage');
-            erreur.innerText = "Un des champs est manquant ou incorrect";
+            // eslint-disable-next-line no-alert
+            alert(`${responseCreateCompany.status} : ${responseCreateCompany.statusText}`);
         }
     });
 

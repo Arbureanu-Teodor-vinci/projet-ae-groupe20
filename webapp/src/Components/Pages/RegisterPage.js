@@ -32,7 +32,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Prenom*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="text" class="form-control form-control-lg" id="firstNameInput" required >
+                                        <input type="text" class="form-control form-control-lg" id="firstNameInput">
                                     </div>
                                 </div>
 
@@ -43,7 +43,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Nom*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="text" class="form-control form-control-lg" id="lastNameInput" required >
+                                        <input type="text" class="form-control form-control-lg" id="lastNameInput">
                                     </div>
                                 </div>
 
@@ -54,7 +54,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Adresse e-mail*</h6>
                                     </div>
                                     <div class="col-md-6 pe-5">
-                                        <input type="text" class="form-control form-control-lg" id="emailInput" required >
+                                        <input type="text" class="form-control form-control-lg" id="emailInput">
                                     </div>
                                     <div class="col-md-3 pe-5">
                                         <select id="emailDomainSelect" class="form-select">
@@ -71,7 +71,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Mot de passe*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="password" class="form-control form-control-lg" id="passwordInput" required >
+                                        <input type="password" class="form-control form-control-lg" id="passwordInput">
                                     </div>
                                 </div>
 
@@ -82,7 +82,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Numéro de téléphone*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="password" class="form-control form-control-lg" id="phoneNumberInput" required >
+                                        <input type="password" class="form-control form-control-lg" id="phoneNumberInput">
                                     </div>
                                 </div>
 

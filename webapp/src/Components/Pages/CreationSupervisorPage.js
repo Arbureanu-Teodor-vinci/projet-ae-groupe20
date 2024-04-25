@@ -44,19 +44,19 @@ async function renderCreationSupervisorPage() {
                             </div>
                             <div class="form-group">
                               <label for="lastName">Nom de famille</label>
-                                <input type="text" class="form-control" id="lastName" required>
+                                <input type="text" class="form-control" id="lastName">
                             </div>
                             <div class="form-group">
                                 <label for="firstName">Prénom</label>
-                                <input type="text" class="form-control" id="firstName" required>
+                                <input type="text" class="form-control" id="firstName">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" required>
+                                <input type="email" class="form-control" id="email">
                             </div>
                             <div class="form-group">
                                 <label for="phone">Téléphone</label>
-                                <input type="tel" class="form-control" id="phone" required>
+                                <input type="tel" class="form-control" id="phone">
                             </div>
                             <button type="submit" class="btn btn-primary mt-3" id="create">Créer</button>
                             <p class = "errorMessage"><p>

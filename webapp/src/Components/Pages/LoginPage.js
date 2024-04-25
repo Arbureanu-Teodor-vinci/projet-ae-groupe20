@@ -34,7 +34,7 @@ async function renderLoginPage() {
     
                                 </div>
                                 <div class="col-md-9 pe-5">
-                                <input type="text" class="form-control form-control-lg" id="emailInput" required>
+                                <input type="text" class="form-control form-control-lg" id="emailInput">
                                 </div>
                             </div>
     
@@ -48,7 +48,7 @@ async function renderLoginPage() {
                                 </div>
                                 <div class="col-md-9 pe-5">
     
-                                    <input type="password" id="pwd" class="form-control form-control-lg" required>
+                                    <input type="password" id="pwd" class="form-control form-control-lg">
     
                                 </div>
                             </div>
