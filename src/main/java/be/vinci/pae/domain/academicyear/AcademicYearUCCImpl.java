@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.academicyear;
 
+import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import jakarta.inject.Inject;
@@ -24,29 +25,37 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
 
   @Override
   public AcademicYearDTO getOrAddActualAcademicYear() {
-
-    //Get the last added academic year in DB
-    AcademicYearDTO academicYearDTO = academicYearDAO.getActualAcademicYear();
-
-    AcademicYear academicYear = (AcademicYear) academicYearDTO;
-    //If the academic year is null or not actual
-    if (academicYear == null || !academicYear.isActual()) {
+    AcademicYearDTO academicYearDTO = null;
+    try {
       dalServices.startTransaction();
+      //Get the last added academic year in DB
+      academicYearDTO = academicYearDAO.getActualAcademicYear();
 
-      academicYear = (AcademicYear) academicYearDAO.getAcademicYearByAcademicYear(
-          getNewAcademicYear());
-      academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
-      academicYear.checkUniqueAcademicYear(academicYearDTO.getYear());
+      AcademicYear academicYear = (AcademicYear) academicYearDTO;
+      //If the academic year is null or not actual
+      if (academicYear == null || !academicYear.isActual()) {
 
-      dalServices.commitTransaction();
+        academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
+
+
+      }
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
     }
-
+    dalServices.commitTransaction();
     return academicYearDTO;
 
   }
 
   @Override
   public AcademicYearDTO getAcademicYearByYear(String year) {
+    if (year == null || year.isEmpty()) {
+      throw new BusinessException("Invalid year.");
+    }
+    if (!year.matches("\\d{4}-\\d{4}")) {
+      throw new BusinessException("Invalid year format.");
+    }
     return academicYearDAO.getAcademicYearByAcademicYear(year);
   }
 

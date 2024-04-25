@@ -1,7 +1,9 @@
 package be.vinci.pae;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
@@ -89,6 +91,29 @@ class EnterpriseUCCTest {
     List<EnterpriseDTO> actualEnterprises = enterpriseUCC.getAllEnterprises();
 
     assertEquals(expectedEnterprises, actualEnterprises);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for valid enterprise id")
+  void getNbInternshipsValidId() {
+    int id = 1;
+    int expectedNbInternships = 5;
+
+    Mockito.when(enterpriseDAO.getNbInternships(id)).thenReturn(expectedNbInternships);
+
+    int actualNbInternships = enterpriseUCC.getNbInternships(id);
+
+    assertEquals(expectedNbInternships, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for invalid enterprise id")
+  void getNbInternshipsInvalidId() {
+    int id = -1;
+
+    int actualNbInternships = enterpriseUCC.getNbInternships(id);
+
+    assertEquals(-1, actualNbInternships);
   }
 
   @Test
@@ -189,5 +214,61 @@ class EnterpriseUCCTest {
     Mockito.when(enterpriseDAO.addEnterprise(enterpriseDTO)).thenReturn(enterpriseDTO);
 
     assertThrows(BusinessException.class, () -> enterpriseUCC.addEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Blacklist a valid enterprise")
+  void blacklistEnterprise1() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(false);
+    EnterpriseDTO updatedEnterpriseDTO = domainFactory.getEnterpriseDTO();
+    updatedEnterpriseDTO.setId(1);
+    updatedEnterpriseDTO.setBlackListed(true);
+    updatedEnterpriseDTO.setBlackListMotivation("Motivation");
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+    Mockito.when(enterpriseDAO.updateEnterprise(updatedEnterpriseDTO))
+        .thenReturn(updatedEnterpriseDTO);
+
+    assertNotEquals(enterpriseUCC.blacklistEnterprise(updatedEnterpriseDTO), enterpriseDTO);
+    assertTrue(enterpriseUCC.blacklistEnterprise(updatedEnterpriseDTO).isBlackListed());
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise that is already blacklisted")
+  void blacklistEnterprise2() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(true);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise with no blacklist motivation")
+  void blacklistEnterprise3() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(1);
+    enterpriseDTO.setBlackListed(true);
+    enterpriseDTO.setBlackListMotivation(null);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(1)).thenReturn(enterpriseDTO);
+
+    assertThrows(BusinessException.class, () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
+  }
+
+  @Test
+  @DisplayName("Blacklist an enterprise that does not exist")
+  void blacklistEnterprise4() {
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
+    enterpriseDTO.setId(999);
+
+    Mockito.when(enterpriseDAO.getOneEnterpriseByid(999)).thenReturn(null);
+
+    assertThrows(NullPointerException.class,
+        () -> enterpriseUCC.blacklistEnterprise(enterpriseDTO));
   }
 }
