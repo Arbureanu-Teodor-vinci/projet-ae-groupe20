@@ -192,4 +192,37 @@ public class SupervisorUCCTest {
 
     assertEquals(expectedSupervisors, actualSupervisors);
   }
+
+  @Test
+  @DisplayName("Get supervisors by enterprise returns list of supervisors")
+  public void getSupervisorsByEnterpriseReturnsListOfSupervisors() {
+    List<SupervisorDTO> expectedSupervisors = Arrays.asList(supervisorDTO);
+    Mockito.when(supervisorDAO.getSupervisorsByEnterprise(1)).thenReturn(expectedSupervisors);
+
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getSupervisorsByEnterprise(1);
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
+
+  @Test
+  @DisplayName("Get supervisors by enterprise returns empty list when no supervisors")
+  public void getSupervisorsByEnterpriseReturnsEmptyListWhenNoSupervisors() {
+    List<SupervisorDTO> expectedSupervisors = new ArrayList<>();
+    Mockito.when(supervisorDAO.getSupervisorsByEnterprise(1)).thenReturn(expectedSupervisors);
+
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getSupervisorsByEnterprise(1);
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
+
+  @Test
+  @DisplayName("Get supervisors by enterprise throws exception for invalid enterprise id")
+  public void getSupervisorsByEnterpriseThrowsExceptionForInvalidEnterpriseId() {
+    assertAll(
+        () -> assertThrows(BusinessException.class,
+            () -> supervisorUCC.getSupervisorsByEnterprise(-1)),
+        () -> assertThrows(BusinessException.class,
+            () -> supervisorUCC.getSupervisorsByEnterprise(0))
+    );
+  }
 }
