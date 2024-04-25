@@ -35,6 +35,9 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Override
   public int getNbInternships(int id) {
+    if (id < 0) {
+      return -1;
+    }
     return enterpriseDS.getNbInternships(id);
   }
 
@@ -67,6 +70,7 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
       dalServices.startTransaction();
       Enterprise enterpriseFound = (Enterprise) enterpriseDS.getOneEnterpriseByid(
           enterprise.getId());
+      enterpriseFound.checkIsNull();
       enterpriseFound.checkIsBlackListed();
       enterpriseUpdated.checkBlackListMotivation();
       enterprise = enterpriseDS.updateEnterprise(enterprise);
