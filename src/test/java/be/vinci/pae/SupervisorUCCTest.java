@@ -10,6 +10,9 @@ import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -146,5 +149,47 @@ public class SupervisorUCCTest {
     assertThrows(BusinessException.class, () -> supervisorUCC.addSupervisor(supervisorToAdd));
   }
 
+  @Test
+  @DisplayName("Get all internship supervisors returns list of supervisors")
+  public void getAllInternshipSupervisors1() {
+    List<SupervisorDTO> expectedSupervisors = Arrays.asList(supervisorDTO);
+    Mockito.when(supervisorDAO.getAllSupervisors()).thenReturn(expectedSupervisors);
 
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getAllInternshipSupervisors();
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
+
+  @Test
+  @DisplayName("Get all internship supervisors returns empty list when no supervisors")
+  public void getAllInternshipSupervisors2() {
+    List<SupervisorDTO> expectedSupervisors = new ArrayList<>();
+    Mockito.when(supervisorDAO.getAllSupervisors()).thenReturn(expectedSupervisors);
+
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getAllInternshipSupervisors();
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
+
+  @Test
+  @DisplayName("Get all internship supervisors returns list of supervisors")
+  public void getAllInternshipSupervisors3() {
+    List<SupervisorDTO> expectedSupervisors = Arrays.asList(supervisorDTO);
+    Mockito.when(supervisorDAO.getAllSupervisors()).thenReturn(expectedSupervisors);
+
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getAllInternshipSupervisors();
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
+
+  @Test
+  @DisplayName("Get all internship supervisors returns empty list when no supervisors")
+  public void getAllInternshipSupervisors4() {
+    List<SupervisorDTO> expectedSupervisors = new ArrayList<>();
+    Mockito.when(supervisorDAO.getAllSupervisors()).thenReturn(expectedSupervisors);
+
+    List<SupervisorDTO> actualSupervisors = supervisorUCC.getAllInternshipSupervisors();
+
+    assertEquals(expectedSupervisors, actualSupervisors);
+  }
 }
