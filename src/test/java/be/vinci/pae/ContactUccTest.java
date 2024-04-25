@@ -13,6 +13,7 @@ import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
@@ -530,5 +531,26 @@ public class ContactUccTest {
     );
   }
 
+  @Test
+  @DisplayName("Get contacts by enterprise returns list of contacts")
+  public void getContactsByEnterprise1() {
+    List<ContactDTO> expectedContacts = Arrays.asList(contactDTO, contactDTO2);
+    Mockito.when(contactDAO.getContactsByEnterprise(1)).thenReturn(expectedContacts);
 
+    List<ContactDTO> actualContacts = contactUCC.getContactsByEnterprise(1);
+
+    assertEquals(expectedContacts, actualContacts);
+  }
+
+  @Test
+  @DisplayName("Get contacts by enterprise returns empty list when no contacts")
+  public void getContactsByEnterprise2() {
+    List<ContactDTO> expectedContacts = new ArrayList<>();
+    Mockito.when(contactDAO.getContactsByEnterprise(1)).thenReturn(expectedContacts);
+
+    List<ContactDTO> actualContacts = contactUCC.getContactsByEnterprise(1);
+
+    assertEquals(expectedContacts, actualContacts);
+  }
+  
 }
