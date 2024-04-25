@@ -167,7 +167,8 @@ public class EnterpriseImpl implements Enterprise {
             "The designation can't be empty because this trade name already exists.");
       }
       if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim())
-          && enterprise.getDesignation().trim().equalsIgnoreCase(designation.trim())) {
+          && enterprise.getDesignation() != null && enterprise.getDesignation().trim()
+          .equalsIgnoreCase(designation.trim())) {
         throw new BusinessException("This designation already exists for this trade name.");
       }
     }
@@ -215,7 +216,7 @@ public class EnterpriseImpl implements Enterprise {
     if (phoneNumber == null) {
       return;
     }
-    if (!phoneNumber.matches("^[0-9]{10}$")) {
+    if (!phoneNumber.matches("^[0-9]{4,}$")) {
       throw new BusinessException("Phone number is invalid");
     }
   }

@@ -24,9 +24,9 @@ Authorization: {{adminToken}}
 {
     "tradeName": "Belfius",
     "designation": "Belfius designation",
-    "adresse": "Belfius adresse",
-    "email": "Belfius email",
-    "phoneNumber": "Belfius phoneNumber",
+    "address": "Belfius adresse",
+    "email": "Belfius@email.com",
+    "phoneNumber": "0123456789",
     "city": "Belfius city"
 
 }

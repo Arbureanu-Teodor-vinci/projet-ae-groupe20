@@ -54,7 +54,7 @@ async function renderCreationStagePage() {
                             </div>
                             <div class="form-group">
                                 <label for="supervisor">Responsable de stage</label>
-                                <select id="supervisor" class="form-control" required>
+                                <select id="supervisor" class="form-control">
                                     <option>Choisissez un responsable de stage</option>
                                     ${supervisors.map((supervisor) => `<option value="${supervisor.id}">${supervisor.firstName} ${supervisor.lastName}</option>`).join('')}
                                 </select>
@@ -68,7 +68,7 @@ async function renderCreationStagePage() {
                             </div>
                             <div class="form-group">
                                 <label for="signatureDate">Date de signature</label>
-                                <input type="date" class="form-control" id="signatureDate" required>
+                                <input type="date" class="form-control" id="signatureDate">
                             </div>
                             <button type="submit" class="btn btn-primary mt-3" id="create">Créer</button>
                             <p class = "errorMessage"><p>
