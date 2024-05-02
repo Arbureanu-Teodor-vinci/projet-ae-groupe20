@@ -4,7 +4,9 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
+import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -36,10 +38,16 @@ public class SupervisorResource {
   @Inject
   private DomainFactory domainFactory;
 
+  @Inject
+  private UserUCC userController;
+
+  @Inject
+  private StudentUCC studentUCC;
+
   /**
    * Add a supervisor.
    *
-   * @param supervisor The supervisor to add.
+   * @param newSupervisor The supervisor to add.
    * @return JSON object containing the new supervisor.
    * @throws WebApplicationException If the supervisor is missing.
    */
@@ -48,30 +56,26 @@ public class SupervisorResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
-  public ObjectNode addSupervisor(SupervisorDTO supervisor) {
-    Logger.logEntry("POST /supervisors/add" + supervisor.getEmail());
+  public ObjectNode addSupervisor(SupervisorDTO newSupervisor, @Context ContainerRequest request) {
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    int enterpriseId = newSupervisor.getEnterpriseId();
+    Logger.logEntry("POST /supervisors/add" + newSupervisor.getEmail());
 
-    if (supervisor == null || supervisor.getEmail() == null || supervisor.getFirstName() == null
-        || supervisor.getLastName() == null || supervisor.getPhoneNumber() == null) {
+    // if the supervisor is null, throw an exception
+    if (newSupervisor.getEmail() == null || newSupervisor.getFirstName() == null
+        || newSupervisor.getLastName() == null || newSupervisor.getPhoneNumber() == null) {
       Logger.logEntry("Supervisor is missing.");
       throw new WebApplicationException("You must enter a supervisor.", Status.BAD_REQUEST);
     }
 
-    SupervisorDTO encodedSupervisor = domainFactory.getSupervisorDTO();
-    encodedSupervisor.setEmail(supervisor.getEmail());
-    encodedSupervisor.setFirstName(supervisor.getFirstName());
-    encodedSupervisor.setLastName(supervisor.getLastName());
-    encodedSupervisor.setPhoneNumber(supervisor.getPhoneNumber());
-    encodedSupervisor.setEnterpriseId(supervisor.getEnterpriseId());
-
-    SupervisorDTO newSupervisor = supervisorUCC.addSupervisor(encodedSupervisor);
-    if (newSupervisor == null) {
-      Logger.logEntry("Error in SupervisorResource addSupervisor");
-      throw new WebApplicationException("Error in SupervisorResource addSupervisor",
-          Status.BAD_REQUEST);
+    SupervisorDTO supervisorDTO = supervisorUCC.addSupervisor(newSupervisor, authentifiedUser,
+        enterpriseId);
+    if (supervisorDTO == null) {
+      Logger.logEntry("Cannot add supervisor");
+      throw new WebApplicationException("Cannot add supervisor", Status.BAD_REQUEST);
     }
 
-    return toJson(newSupervisor);
+    return toJson(supervisorDTO);
   }
 
   /**
