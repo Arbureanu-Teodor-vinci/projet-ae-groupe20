@@ -128,8 +128,7 @@ public class ContactDAOImpl implements ContactDAO {
     ContactDTO contact = domainFactory.getContactDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO "
-              + "InternshipManagement.contacts "
+          "INSERT INTO InternshipManagement.contacts"
               + "(state_contact, student, academic_year, enterprise, version)"
               + " VALUES ('initié', ?, ?, ?, 1)"
               + " RETURNING *"
