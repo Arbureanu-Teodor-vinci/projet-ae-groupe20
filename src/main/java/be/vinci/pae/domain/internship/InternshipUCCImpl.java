@@ -9,6 +9,9 @@ import be.vinci.pae.services.internshipservices.InternshipDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import jakarta.inject.Inject;
 
+/**
+ * Implementation of InternshipUCC.
+ */
 public class InternshipUCCImpl implements InternshipUCC {
 
 

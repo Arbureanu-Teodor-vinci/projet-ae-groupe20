@@ -82,7 +82,6 @@ public class AcademicYearImpl implements AcademicYear {
     return "[id=" + id + ", year=" + year + "]";
   }
 
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {

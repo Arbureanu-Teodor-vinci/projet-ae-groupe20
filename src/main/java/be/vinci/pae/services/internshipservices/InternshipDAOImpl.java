@@ -123,7 +123,8 @@ public class InternshipDAOImpl implements InternshipDAO {
 
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.internship (subject, signature_date, internship_supervisor, contact, academic_year, version) "
+          "INSERT INTO InternshipManagement.internship "
+              + "(subject, signature_date, internship_supervisor, contact, academic_year, version) "
               + "VALUES (?, ?, ?, ?, ?, 1) RETURNING *"
       );
       ps.setString(1, internshipDTO.getSubject());

@@ -129,7 +129,8 @@ public class ContactDAOImpl implements ContactDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO "
-              + "InternshipManagement.contacts (state_contact, student, academic_year, enterprise, version)"
+              + "InternshipManagement.contacts "
+              + "(state_contact, student, academic_year, enterprise, version)"
               + " VALUES ('initié', ?, ?, ?, 1)"
               + " RETURNING *"
       );
