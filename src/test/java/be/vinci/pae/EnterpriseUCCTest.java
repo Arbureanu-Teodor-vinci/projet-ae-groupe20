@@ -149,7 +149,7 @@ class EnterpriseUCCTest {
   }
 
   @Test
-  @DisplayName("Add enterprise that already exist in the db with the same trade name and designation")
+  @DisplayName("Add enterprise that already exists in the db with the same name and designation")
   void addEnterprise3() {
     EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
     enterpriseDTO.setTradeName("Trade Name");
