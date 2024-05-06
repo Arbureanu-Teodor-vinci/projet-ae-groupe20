@@ -92,9 +92,8 @@ async function renderCreationSupervisorPage() {
         
         if(responseCreateSupervisor.ok){
             e.preventDefault();
-            // eslint-disable-next-line no-restricted-globals
-            //plutot stocker la page dans le local storage
-            Navigate(`${history.back()}`);
+            const previousPage = localStorage.getItem('previousPage');
+            Navigate(previousPage);
         }
         else{
             const errorMessage = document.querySelector('.errorMessage');
