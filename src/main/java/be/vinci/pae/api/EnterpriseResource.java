@@ -154,6 +154,12 @@ public class EnterpriseResource {
     return enterpriseNodeMaker(enterprise);
   }
 
+  /**
+   * blacklist an enterprise.
+   *
+   * @param enterpriseDTO The enterprise to blacklist.
+   * @return JSON object containing the enterprise infos.
+   */
   @POST
   @Path("blacklist")
   @Consumes(MediaType.APPLICATION_JSON)

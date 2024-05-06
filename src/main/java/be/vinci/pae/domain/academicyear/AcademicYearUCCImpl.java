@@ -36,8 +36,6 @@ public class AcademicYearUCCImpl implements AcademicYearUCC {
       if (academicYear == null || !academicYear.isActual()) {
 
         academicYearDTO = academicYearDAO.addAcademicYear(getNewAcademicYear());
-
-
       }
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
