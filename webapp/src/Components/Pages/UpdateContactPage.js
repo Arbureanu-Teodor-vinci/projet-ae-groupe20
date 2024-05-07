@@ -38,10 +38,9 @@ async function renderUpdateContactPage() {
     }else{
 
     const contact = await response.json();
-    const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
-    const enterprise = await responseEnterprise.json();
-    // eslint-disable-next-line no-console
-    console.log(enterprise.tradeName);
+    // const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
+    // const enterprise = await responseEnterprise.json();
+
 
     let stateOptions = '';
     if (['initié', 'pris'].includes(contact.stateContact)) {
@@ -78,7 +77,7 @@ async function renderUpdateContactPage() {
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="enterpriseId"><B>Entreprise</B></label>
-                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}" ${nonUpdatable}>
+                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${contact.enterprise.tradeName}" ${nonUpdatable}>
                         </div>
                         <div class="form-group interviewMethodDiv">
                             <label for="interViewMethod"><B>Moyen de contact</B></label>
@@ -167,14 +166,14 @@ if(nonUpdatable === ''){
         const refusalReason = (refusalReasonInput.value === '' || refusalReasonInput.value === "null") ? null : refusalReasonInput.value;
 
         const body = {
-            id: contactId,
+            id: contact.id,
             interviewMethod,
             tool,
             stateContact,
             refusalReason,
             academicYear: contact.academicYear,
-            enterpriseId: contact.enterpriseId,
-            studentId: contact.studentId,
+            enterprise: contact.enterprise,
+            student: contact.student,
             version: contact.version,
         };
 

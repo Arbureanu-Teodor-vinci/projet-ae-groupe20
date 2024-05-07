@@ -1,6 +1,8 @@
 package be.vinci.pae.domain.contact;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.user.Student;
 import be.vinci.pae.domain.user.StudentDTO;
@@ -15,33 +17,39 @@ import java.util.List;
 public class ContactUCCImpl implements ContactUCC {
 
   @Inject
-  private ContactDAO contactDS;
+  private ContactDAO contactDAO;
 
   @Inject
   private DALTransactionServices dalServices;
 
+  @Inject
+  private AcademicYearUCC academicYearUCC;
+
   @Override
   public ContactDTO getOneContact(int id) {
-    if (id < 0) {
+    if (id <= 0) {
       throw new BusinessException("id must be positive");
     }
 
-    return contactDS.getOneContactByid(id);
+    return contactDAO.getOneContactByid(id);
   }
 
   @Override
   public List<ContactDTO> getAllContacts() {
-    return contactDS.getAllContacts();
+    return contactDAO.getAllContacts();
   }
 
   @Override
   public List<ContactDTO> getContactsByEnterprise(int id) {
-    return contactDS.getContactsByEnterprise(id);
+    if (id <= 0) {
+      throw new BusinessException("id must be positive");
+    }
+    return contactDAO.getContactsByEnterprise(id);
   }
 
   @Override
   public List<ContactDTO> getContactsByUser(int id) {
-    return contactDS.getContactsByUser(id);
+    return contactDAO.getContactsByUser(id);
   }
 
   @Override
@@ -49,12 +57,14 @@ public class ContactUCCImpl implements ContactUCC {
     ContactDTO contact = null;
     try {
       dalServices.startTransaction();
-      List<ContactDTO> contactsExisting = contactDS.getContactsByUser(studentDTO.getId());
+      List<ContactDTO> contactsExisting = contactDAO.getContactsByUser(studentDTO.getId());
       Student student = (Student) studentDTO;
       student.checkContactExists(enterpriseDTO, contactsExisting);
       student.checkContactAccepted(contactsExisting);
-      contact = contactDS.addContact(studentDTO.getId(), enterpriseDTO.getId(),
-          studentDTO.getStudentAcademicYear().getId());
+      //CHECK IF STUDENT ALREADY HAS A CONTACT WITH THIS ENTERPRISE AND ACADEMIC YEAR
+      AcademicYearDTO academicYear = academicYearUCC.getOrAddActualAcademicYear();
+      contact = contactDAO.addContact(studentDTO.getId(), enterpriseDTO.getId(),
+          academicYear.getId());
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -68,22 +78,17 @@ public class ContactUCCImpl implements ContactUCC {
     try {
       dalServices.startTransaction();
       Contact contact = (Contact) contactDTO;
-      ContactDTO contactBeforeUpdate = contactDS.getOneContactByid(contact.getId());
-      /*   if (contactBeforeUpdate.getVersion() != contact.getVersion()) {
-       *  dalServices.rollbackTransaction();
-       *  throw new BiznessException(
-       *  "This contact was updated in the meantime, refresh and try again.");}
-       */
+      ContactDTO contactBeforeUpdate = contactDAO.getOneContactByid(contact.getId());
       contact.checkContactState();
       contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact());
       contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod());
       contact.checkContactRefusalReasonUpdate();
       contact.checkContactToolUpdate();
-      contactDTO = contactDS.updateContact(contact);
+      contactDTO = contactDAO.updateContact(contact);
 
       //if contact id updated to accepted, all other contacts of the student are suspended
       if (contactDTO.getStateContact().equals("accepté")) {
-        contactDS.updateAllContactsOfStudentToSuspended(contactDTO.getStudentId());
+        contactDAO.updateAllContactsOfStudentToSuspended(contactDTO.getStudent().getId());
       }
     } catch (Throwable e) {
       dalServices.rollbackTransaction();

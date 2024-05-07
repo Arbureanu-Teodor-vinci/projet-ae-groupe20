@@ -5,13 +5,9 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
-import be.vinci.pae.domain.enterprise.EnterpriseUCC;
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
-import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.utils.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -41,15 +37,6 @@ public class ContactResource {
 
   @Inject
   private ContactUCC contactUCC;
-
-  @Inject
-  private EnterpriseUCC enterpriseUCC;
-
-  @Inject
-  private StudentUCC studentUCC;
-
-  @Inject
-  private DomainFactory domainFactory;
 
   /**
    * Get 1 contact.
@@ -83,7 +70,7 @@ public class ContactResource {
     // Try to get the contact
     ContactDTO contact = contactUCC.getOneContact(id);
     // if the contact is null, throw an exception
-    if (contact == null || contact.getStudentId() != authentifiedUser.getId()
+    if (contact == null || contact.getStudent().getId() != authentifiedUser.getId()
         && authentifiedUser.getRole().equals("Etudiant")) {
       Logger.logEntry("Contact not found.");
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
@@ -188,7 +175,7 @@ public class ContactResource {
   /**
    * Add a contact.
    *
-   * @param jsonIDs The JSON object containing the studentID, enterpriseID and academicYearID.
+   * @param contact The contact DTO containing the student and enterprise infos.
    * @param request The request.
    * @return JSON object containing the contact infos.
    */
@@ -197,25 +184,25 @@ public class ContactResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Etudiant"})
-  public ObjectNode addContact(JsonNode jsonIDs, @Context ContainerRequest request) {
+  public ObjectNode addContact(ContactDTO contact,
+      @Context ContainerRequest request) {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
-    int studentID = authentifiedUser.getId();
-
     Logger.logEntry("POST /contacts/add");
     // Verify the token
 
-    if (!jsonIDs.hasNonNull("enterpriseID")) {
-      throw new WebApplicationException(
-          "You must enter a enterpriseID.",
-          Status.BAD_REQUEST);
+    EnterpriseDTO enterprise = contact.getEnterprise();
+    StudentDTO student = contact.getStudent();
+
+    if (enterprise == null) {
+      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
-    int enterpriseID = jsonIDs.get("enterpriseID").asInt();
 
-    StudentDTO studentDTO = studentUCC.getStudentById(studentID);
-    EnterpriseDTO enterpriseDTO = enterpriseUCC.getOneEnterprise(enterpriseID);
-
+    if (student.getId() != (authentifiedUser.getId())) {
+      throw new WebApplicationException("You can only add a contact for yourself.",
+          Status.FORBIDDEN);
+    }
     // Try to add the contact
-    ContactDTO addedContact = contactUCC.addContact(studentDTO, enterpriseDTO);
+    ContactDTO addedContact = contactUCC.addContact(student, enterprise);
     // if the contact is null, throw an exception
     if (addedContact == null) {
       throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
@@ -257,16 +244,49 @@ public class ContactResource {
   private ObjectNode contactNodeMaker(ContactDTO contact) {
     try {
       // Create a JSON object with the contact information
+      ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
+          .put("id", contact.getStudent().getStudentAcademicYear().getId())
+          .put("year", contact.getStudent().getStudentAcademicYear().getYear());
+
+      ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
+          .put("id", contact.getAcademicYear().getId())
+          .put("year", contact.getAcademicYear().getYear());
+
+      ObjectNode studentNode = jsonMapper.createObjectNode()
+          .put("id", contact.getStudent().getId())
+          .put("firstName", contact.getStudent().getFirstName())
+          .put("lastName", contact.getStudent().getLastName())
+          .put("email", contact.getStudent().getEmail())
+          .put("telephoneNumber", contact.getStudent().getTelephoneNumber())
+          .put("registrationDate", contact.getStudent().getRegistrationDate().toString())
+          .put("role", contact.getStudent().getRole())
+          .put("version", contact.getStudent().getVersion());
+      studentNode.set("academicYear", studentAcademicYearNode);
+
+      ObjectNode enterpriseNode = jsonMapper.createObjectNode()
+          .put("id", contact.getEnterprise().getId())
+          .put("tradeName", contact.getEnterprise().getTradeName())
+          .put("designation", contact.getEnterprise().getDesignation())
+          .put("address", contact.getEnterprise().getAddress())
+          .put("phoneNumber", contact.getEnterprise().getPhoneNumber())
+          .put("city", contact.getEnterprise().getCity())
+          .put("email", contact.getEnterprise().getEmail())
+          .put("blackListed", contact.getEnterprise().isBlackListed())
+          .put("blackListMotivation", contact.getEnterprise().getBlackListMotivation())
+          .put("version", contact.getEnterprise().getVersion());
+
       ObjectNode contactNode = jsonMapper.createObjectNode()
           .put("id", contact.getId())
           .put("interviewMethod", contact.getInterviewMethod())
           .put("tool", contact.getTool())
           .put("refusalReason", contact.getRefusalReason())
           .put("stateContact", contact.getStateContact())
-          .put("studentId", contact.getStudentId())
-          .put("enterpriseId", contact.getEnterpriseId())
-          .put("academicYear", contact.getAcademicYear())
           .put("version", contact.getVersion());
+
+      contactNode.set("student", studentNode);
+      contactNode.set("enterprise", enterpriseNode);
+      contactNode.set("academicYear", contactAcademicYearNode);
+
       return contactNode;
     } catch (Exception e) {
       System.out.println("Can't create contact");

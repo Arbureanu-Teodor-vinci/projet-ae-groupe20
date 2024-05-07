@@ -82,7 +82,7 @@ public class InternshipUCCTest {
     internship.setAcademicYear(2021);
     internship.setVersion(1);
 
-    validContact.setEnterpriseId(8);
+    validContact.setEnterprise(8);
 
     Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
     Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
@@ -100,7 +100,7 @@ public class InternshipUCCTest {
     ContactDTO contactDTO = domainFactory.getContactDTO();
     contactDTO.setStateContact("suspendu");
     contactDTO.setId(2);
-    contactDTO.setEnterpriseId(8);
+    contactDTO.setEnterprise(8);
 
     InternshipDTO internship = domainFactory.getInternshipDTO();
     internship.setContactId(2);
@@ -121,7 +121,7 @@ public class InternshipUCCTest {
 
     InternshipDTO internshipExisting = domainFactory.getInternshipDTO();
 
-    validContact.setStudentId(6);
+    validContact.setStudent(6);
 
     Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
     Mockito.when(internshipDS.getOneInternshipByStudentId(6)).thenReturn(internshipExisting);
@@ -138,8 +138,8 @@ public class InternshipUCCTest {
     InternshipDTO internship = domainFactory.getInternshipDTO();
     internship.setContactId(1);
 
-    validContact.setStudentId(6);
-    validContact.setEnterpriseId(8);
+    validContact.setStudent(6);
+    validContact.setEnterprise(8);
     supervisor.setEnterpriseId(9);
 
     Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);

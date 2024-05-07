@@ -46,11 +46,11 @@ public class InternshipUCCImpl implements InternshipUCC {
 
       Supervisor supervisor = (Supervisor) supervisorDS.getOneSupervisorById(
           internshipDTO.getSupervisorId());
-      if (supervisor.getEnterpriseId() != contact.getEnterpriseId()) {
+      if (supervisor.getEnterpriseId() != contact.getEnterprise().getId()) {
         throw new BusinessException("Supervisor is not from the enterprise");
       }
 
-      if (internshipDS.getOneInternshipByStudentId(contact.getStudentId()) != null) {
+      if (internshipDS.getOneInternshipByStudentId(contact.getStudent().getId()) != null) {
         throw new BusinessException("student already has an internship");
       }
       internship = internshipDS.addInternship(internshipToAdd);

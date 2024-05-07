@@ -55,9 +55,9 @@ public class ContactUccTest {
     studentDTO.setId(1);
     studentDTO.setAcademicYear(academicYearDTO);
 
-    contactDTO.setStudentId(1);
-    contactDTO2.setStudentId(2);
-    contactAccepted.setStudentId(2);
+    contactDTO.setStudent(1);
+    contactDTO2.setStudent(2);
+    contactAccepted.setStudent(2);
 
     enterpriseDTO.setId(1);
 
@@ -552,5 +552,5 @@ public class ContactUccTest {
 
     assertEquals(expectedContacts, actualContacts);
   }
-  
+
 }

@@ -46,7 +46,7 @@ public class InternshipResources {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Etudiant"})
-  public ObjectNode getOneInternshipByStudentId(@PathParam("id") Integer id) {
+  public ObjectNode getOneInternshipByStudentId(@PathParam("id") int id) {
     Logger.logEntry("GET /internships/getOneInternshipByStudentId" + id);
     if (id <= 0) {
       Logger.logEntry("Id must be positive.");

@@ -1,6 +1,9 @@
 package be.vinci.pae.domain.contact;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.user.StudentDTO;
 import java.util.Objects;
 
 /**
@@ -15,9 +18,9 @@ public class ContactImpl implements Contact {
   private String tool;
   private String refusalReason;
   private String stateContact;
-  private int studentId;
-  private int enterpriseId;
-  private int academicYear;
+  private StudentDTO student;
+  private EnterpriseDTO enterprise;
+  private AcademicYearDTO academicYear;
   private int version; // version for optimistic lock
 
   @Override
@@ -71,32 +74,32 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public int getStudentId() {
-    return studentId;
+  public StudentDTO getStudent() {
+    return student;
   }
 
   @Override
-  public void setStudentId(int studentId) {
-    this.studentId = studentId;
+  public void setStudent(StudentDTO student) {
+    this.student = student;
   }
 
   @Override
-  public int getEnterpriseId() {
-    return enterpriseId;
+  public EnterpriseDTO getEnterprise() {
+    return enterprise;
   }
 
   @Override
-  public void setEnterpriseId(int enterpriseId) {
-    this.enterpriseId = enterpriseId;
+  public void setEnterprise(EnterpriseDTO enterprise) {
+    this.enterprise = enterprise;
   }
 
   @Override
-  public int getAcademicYear() {
+  public AcademicYearDTO getAcademicYear() {
     return academicYear;
   }
 
   @Override
-  public void setAcademicYear(int academicYear) {
+  public void setAcademicYear(AcademicYearDTO academicYear) {
     this.academicYear = academicYear;
   }
 
@@ -113,18 +116,6 @@ public class ContactImpl implements Contact {
   @Override
   public void setVersion(int version) {
     this.version = version;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ContactImpl contact = (ContactImpl) o;
-    return id == contact.id;
   }
 
   @Override
@@ -239,17 +230,42 @@ public class ContactImpl implements Contact {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ContactImpl contact = (ContactImpl) o;
+    return id == contact.id && version == contact.version && Objects.equals(interviewMethod,
+        contact.interviewMethod) && Objects.equals(tool, contact.tool)
+        && Objects.equals(refusalReason, contact.refusalReason) && Objects.equals(
+        stateContact, contact.stateContact) && Objects.equals(student, contact.student)
+        && Objects.equals(enterprise, contact.enterprise) && Objects.equals(
+        academicYear, contact.academicYear);
+  }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(id, interviewMethod, tool, refusalReason, stateContact, student, enterprise,
+        academicYear, version);
   }
 
   @Override
   public String toString() {
-    return "ContactImpl{" + "id=" + id + ", interviewMethod='" + interviewMethod + '\'' + ", tool='"
-        + tool + '\'' + ", refusalReason='" + refusalReason + '\'' + ", stateContact='"
-        + stateContact + '\'' + ", studentId=" + studentId + ", enterpriseId=" + enterpriseId
-        + ", academicYear=" + academicYear + '}';
+    return "ContactImpl{"
+        + "id=" + id
+        + ", interviewMethod='" + interviewMethod + '\''
+        + ", tool='" + tool + '\''
+        + ", refusalReason='" + refusalReason + '\''
+        + ", stateContact='" + stateContact + '\''
+        + ", student=" + student.toString()
+        + ", enterprise=" + enterprise.toString()
+        + ", academicYear=" + academicYear.toString()
+        + ", version=" + version
+        + '}';
   }
+
 }

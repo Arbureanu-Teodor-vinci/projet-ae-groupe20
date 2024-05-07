@@ -15,6 +15,12 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
 
   private static final BasicDataSource dataSourcePool = new BasicDataSource();
   private static final ThreadLocal<Connection> threadConnection = new ThreadLocal<Connection>();
+  private static final ThreadLocal<Integer> transactionCount = new ThreadLocal<Integer>() {
+    @Override
+    protected Integer initialValue() {
+      return 0;
+    }
+  };
 
   static {
     dataSourcePool.setDriverClassName("org.postgresql.Driver");
@@ -79,29 +85,36 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
 
   @Override
   public void startTransaction() {
-    Connection connection = getConnection();
-    try {
-      connection.setAutoCommit(false);
-    } catch (SQLException e) {
-      throw new FatalException(e);
+    if (transactionCount.get() == 0) {
+      Connection connection = getConnection();
+      try {
+        connection.setAutoCommit(false);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      }
     }
+    transactionCount.set(transactionCount.get() + 1);
   }
 
   @Override
   public void commitTransaction() {
-    Connection connection = threadConnection.get();
-    try {
-      connection.commit();
-      connection.setAutoCommit(true);
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    } finally {
-      closeConnection();
+    transactionCount.set(transactionCount.get() - 1);
+    if (transactionCount.get() == 0) {
+      Connection connection = threadConnection.get();
+      try {
+        connection.commit();
+        connection.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new FatalException(e);
+      } finally {
+        closeConnection();
+      }
     }
   }
 
   @Override
   public void rollbackTransaction() {
+    transactionCount.set(0);
     Connection connection = threadConnection.get();
     if (connection != null) {
       try {

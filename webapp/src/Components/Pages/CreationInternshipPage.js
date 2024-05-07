@@ -32,10 +32,7 @@ async function renderCreationStagePage() {
     const response = await fetch(`/api/contacts/getOne:${contactIdParam}`, options);
     const contact = await response.json();
     
-    const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
-    const enterprise = await responseEnterprise.json();
-    
-    const responseSupervisor = await fetch(`/api/supervisors/getByEnterprise:${contact.enterpriseId}`, options);
+    const responseSupervisor = await fetch(`/api/supervisors/getByEnterprise:${contact.enterprise.id}`, options);
     const supervisors = await responseSupervisor.json();
 
     // eslint-disable-next-line no-console
@@ -50,7 +47,7 @@ async function renderCreationStagePage() {
                         <form>
                             <div class="form-group">
                                 <label for="companyName">Nom commercial</label>
-                                <p id="companyName">${enterprise.tradeName}</p>
+                                <p id="companyName">${contact.enterprise.tradeName}</p>
                             </div>
                             <div class="form-group">
                                 <label for="supervisor">Responsable de stage</label>
@@ -59,7 +56,7 @@ async function renderCreationStagePage() {
                                     ${supervisors.map((supervisor) => `<option value="${supervisor.id}">${supervisor.firstName} ${supervisor.lastName}</option>`).join('')}
                                 </select>
                                 <div class="d-flex justify-content-center">
-                                    <a id="${enterprise.id}" href="#" class="text-primary add-supervisor">Responsable de stage non présent? Ajouter le</a>
+                                    <a id="${contact.enterprise.id}" href="#" class="text-primary add-supervisor">Responsable de stage non présent? Ajouter le</a>
                                 </div>
                             </div>
                             <div class="form-group">

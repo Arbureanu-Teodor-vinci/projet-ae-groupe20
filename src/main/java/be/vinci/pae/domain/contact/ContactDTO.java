@@ -1,5 +1,8 @@
 package be.vinci.pae.domain.contact;
 
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import be.vinci.pae.domain.user.StudentDTO;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -79,46 +82,46 @@ public interface ContactDTO {
   void setStateContact(String stateContact);
 
   /**
-   * Get studentId.
+   * Get studentDTO
    *
-   * @return studentId integer
+   * @return studentDTO StudentDTO
    */
-  int getStudentId();
+  StudentDTO getStudent();
 
   /**
-   * Set studentId.
+   * Set studentDTO.
    *
-   * @param studentId integer
+   * @param student StudentDTO
    */
-  void setStudentId(int studentId);
+  void setStudent(StudentDTO student);
 
   /**
-   * Get enterpriseId.
+   * Get enterpriseDTO.
    *
-   * @return enterpriseId integer
+   * @return enterpriseDTO EnterpriseDTO
    */
-  int getEnterpriseId();
+  EnterpriseDTO getEnterprise();
 
   /**
-   * Set enterpriseId.
+   * Set enterpriseDTO.
    *
-   * @param enterpriseId integer
+   * @param enterprise EnterpriseDTO
    */
-  void setEnterpriseId(int enterpriseId);
+  void setEnterprise(EnterpriseDTO enterprise);
 
   /**
    * Get academicYear.
    *
-   * @return academicYear integer
+   * @return academicYear AcademicYearDTO
    */
-  int getAcademicYear();
+  AcademicYearDTO getAcademicYear();
 
   /**
    * Set academicYear.
    *
-   * @param academicYear integer
+   * @param academicYear AcademicYearDTO
    */
-  void setAcademicYear(int academicYear);
+  void setAcademicYear(AcademicYearDTO academicYear);
 
   /**
    * Get version of the contact update.
@@ -140,13 +143,4 @@ public interface ContactDTO {
    * @return all possible states of a contact
    */
   String[] getAllPossibleStates();
-
-  @Override
-  boolean equals(Object o);
-
-  @Override
-  int hashCode();
-
-  @Override
-  String toString();
 }

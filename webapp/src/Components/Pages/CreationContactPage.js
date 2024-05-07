@@ -36,8 +36,8 @@ async function renderCreationContactPage() {
                         <div class="form-group row mb-3">
                             <label for="company" class="col-sm-2 col-form-label">Entreprise</label>
                             <div class="col-sm-10">
-                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise" required>
-                                <select id="company" name="company" class="form-control" required></select>
+                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise">
+                                <select id="company" name="company" class="form-control"></select>
                                 <div class="d-flex justify-content-center">
                                     <a id="add-company" href="#" class="text-primary">Entreprise non présente? Ajouter la</a>
                                 </div>
@@ -72,24 +72,26 @@ async function renderCreationContactPage() {
 
     const createButton = document.querySelector('#create');
     createButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const { token, ...student } = getAuthenticatedUser();
+
         const optionsCreateContact = {
             method: 'POST',
             body: JSON.stringify({
-              studentID: getAuthenticatedUser().id,
-              enterpriseID : companySelect.options[companySelect.selectedIndex].getAttribute('data-idEnterprise'),
+                student,
+                enterprise: JSON.parse(companySelect.options[companySelect.selectedIndex].getAttribute('data-company')),
             }),
-            headers : {
-              'Content-Type': 'application/json',
-              "Authorization": `${getAuthenticatedUser().token}`,
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `${token}`,
             },
-          };
+        };
           
           const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
           if (!responseCreateContact.ok && responseCreateContact.status === 412) {
             const erreur = document.querySelector('.contactExist');
             erreur.innerText = "Vous avez déjà contacté cette entreprise au cours de cette année académique";
           }else{
-            event.preventDefault();
             Navigate('/profil');
           }
        
@@ -107,7 +109,7 @@ async function renderCreationContactPage() {
             if(company.blackListed === false){
             const option = document.createElement('option');
             option.text = company.tradeName;
-            option.setAttribute('data-idEnterprise', company.id);
+            option.setAttribute('data-company', JSON.stringify(company));
             companySelect.appendChild(option);
             }
         });

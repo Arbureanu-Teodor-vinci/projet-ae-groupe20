@@ -214,5 +214,10 @@ public class UserImpl implements User {
     }
   }
 
+  @Override
+  public boolean checkIsStudent() {
+    return this.role.equals(POSSIBLE_ROLES[0]);
+  }
+
 
 }

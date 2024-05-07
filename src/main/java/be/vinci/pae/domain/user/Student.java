@@ -3,11 +3,13 @@ package be.vinci.pae.domain.user;
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.List;
 
 /**
  * Interface of student.
  */
+@JsonDeserialize(as = StudentImpl.class)
 public interface Student extends StudentDTO, User {
 
   /**

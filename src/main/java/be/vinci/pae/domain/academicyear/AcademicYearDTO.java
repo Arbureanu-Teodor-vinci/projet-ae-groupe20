@@ -1,8 +1,11 @@
 package be.vinci.pae.domain.academicyear;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Interface of academic year with getters and setters.
  */
+@JsonDeserialize(as = AcademicYearImpl.class)
 public interface AcademicYearDTO {
 
   /**

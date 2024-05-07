@@ -3,7 +3,6 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.api.filters.FatalException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
-import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.StudentUCC;
@@ -52,9 +51,6 @@ public class UserResource {
   private StudentUCC studentController;
 
   @Inject
-  private AcademicYearUCC academicYearController;
-
-  @Inject
   private DomainFactory domainFactory;
 
 
@@ -92,9 +88,7 @@ public class UserResource {
           .withExpiresAt(expirationToken)
           .sign(this.jwtAlgorithm);
 
-      //publicUser = toJson(user, null).put("token", token);
       if (user.getEmail().endsWith("@student.vinci.be")) {
-        //If the user is a student, get his academic year
         StudentDTO student = studentController.getStudentById(user.getId());
         publicUser = toJson(user, student.getStudentAcademicYear()).put("token", token);
       } else {
@@ -137,12 +131,6 @@ public class UserResource {
       throw new WebApplicationException("You must enter a vinci email address.",
           Status.BAD_REQUEST);
     }
-    // check if last and firstname start with a capital letter
-    checkNameFormat(user.getFirstName());
-    checkNameFormat(user.getLastName());
-
-    // check if phone number is valid
-    checkPhoneNumberFormat(user.getTelephoneNumber());
 
     StudentDTO studentDTO = domainFactory.getStudentDTO();
     // Try to register
@@ -150,7 +138,6 @@ public class UserResource {
     //If the user is a student, register him as a student
     if (newUser.getEmail().endsWith("@student.vinci.be")) {
       studentDTO.setId(newUser.getId());
-      studentDTO.setAcademicYear(academicYearController.getOrAddActualAcademicYear());
       studentDTO = studentController.registerStudent(studentDTO);
     }
 
@@ -235,9 +222,6 @@ public class UserResource {
       throw new WebApplicationException("You can't update another user's profile.",
           Status.UNAUTHORIZED);
     }
-    checkNameFormat(user.getFirstName());
-    checkNameFormat(user.getLastName());
-    checkPhoneNumberFormat(user.getTelephoneNumber());
 
     if (user.getFirstName() == null || user.getFirstName().isBlank() || user.getFirstName()
         .isEmpty()) {
@@ -325,7 +309,7 @@ public class UserResource {
 
   private ObjectNode toJson(UserDTO user, AcademicYearDTO academicYear) {
     // StudentDTO student = (StudentDTO) user;
-    ObjectNode json = jsonMapper.createObjectNode()
+    ObjectNode userJson = jsonMapper.createObjectNode()
         .put("id", user.getId())
         .put("role", user.getRole())
         .put("email", user.getEmail())
@@ -334,36 +318,17 @@ public class UserResource {
         .put("telephoneNumber", user.getTelephoneNumber())
         .put("registrationDate", user.getRegistrationDate().toString())
         .put("version", user.getVersion());
+
     if (academicYear != null) {
-      json.put("academicYear", academicYear.toString());
+      ObjectNode academicYearJson = jsonMapper.createObjectNode()
+          .put("id", academicYear.getId())
+          .put("year", academicYear.getYear());
+      userJson.set("academicYear", academicYearJson);
     } else {
-      json.put("academicYear", "null");
+      userJson.putNull("academicYear");
     }
 
-    return json;
-  }
-
-  /**
-   * Check if names are valid, they need to start with a capital letter.
-   *
-   * @param name -> name to check
-   */
-  private void checkNameFormat(String name) {
-    if (!Character.isUpperCase(name.charAt(0))) {
-      throw new WebApplicationException("First and last name need to start with a capital letter.",
-          Status.BAD_REQUEST);
-    }
-  }
-
-  /**
-   * Check if phone number is valid.
-   *
-   * @param phoneNumber -> phone number to check
-   */
-  private void checkPhoneNumberFormat(String phoneNumber) {
-    if (!phoneNumber.matches("^[0-9]{10}$")) {
-      throw new WebApplicationException("Phone number is not valid.", Status.BAD_REQUEST);
-    }
+    return userJson;
   }
 
 }
