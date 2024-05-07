@@ -32,6 +32,15 @@ public interface EnterpriseDAO {
   int getNbInternships(int id);
 
   /**
+   * Get the number of interships in an enterprise for a specific academic year.
+   *
+   * @param id           integer
+   * @param academicYear String
+   * @return integer
+   */
+  int getNbInternshipsPerAcademicYear(int id, String academicYear);
+
+  /**
    * Add an enterprise to the DB.
    *
    * @param enterprise EnterpriseDTO

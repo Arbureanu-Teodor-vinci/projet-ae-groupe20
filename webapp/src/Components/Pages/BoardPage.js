@@ -43,7 +43,10 @@ async function renderBoardPage() {
                 <div class="col-12 text-center">
                     <h1>Tableau de bord</h1>
                 </div>
-                
+                <select id="academicYear">
+                    <option value="All Years">Tous les années</option>
+                    ${academicYears.reverse().map(year => `<option value="${year}">${year}</option>`).join('')}
+                </select>
             </div>
 
             <style>
@@ -58,10 +61,7 @@ async function renderBoardPage() {
                         <canvas id="myChart" width="400" height="400"></canvas> <!-- Canvas element for the chart -->
                     </div>
                     <div class="col-md-6">
-                        <select id="academicYear">
-                            <option value="All Years">Tous les années</option>
-                            ${academicYears.reverse().map(year => `<option value="${year}">${year}</option>`).join('')}
-                        </select>
+                        
                         <table class="tableOfInternships">
                             <tbody>
                                 <tr>
@@ -216,33 +216,55 @@ async function renderBoardPage() {
 
     const enterprisesTable = document.querySelector('.table tbody');
 
-    // Fetch the internshipCount for all enterprises
-    const enterprisesWithInternshipCount = await Promise.all(enterprises.map(async (enterprise) => {
-        const options2 = {
-            method: 'GET',
-            headers : {
-                'Content-Type': 'application/json',
-                "Authorization": `${getAuthenticatedUser().token}`,
-            },
-        };
-        const response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
-        const internshipCount = await response2.json();
-        return { ...enterprise, internshipCount };
-    }));
+    let enterprisesWithInternshipCount = []; // Define it in the outer scope
+    let rows = []; // Define it in the outer scope
 
-    // Create an array to store the rows
-    const rows = [];
+    async function updateTable() {
+        // Fetch the internshipCount for all enterprises
+        enterprisesWithInternshipCount = await Promise.all(enterprises.map(async (enterprise) => {
+            const options2 = {
+                method: 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                    "Authorization": `${getAuthenticatedUser().token}`,
+                },
+            };
+            const selectedYear = academicYearSelect.value; // Get the selected year
+            let response2;
+            if (selectedYear === "All Years") {
+                // Fetch total internships for all years
+                response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
+            } else {
+                // Fetch internships for the selected year
+                response2 = await fetch(`/api/enterprises/getNbInternshipsPerAcademicYear:${enterprise.id}:${selectedYear}`, options2);
+            }
+            const internshipCount = await response2.json();
+            return { ...enterprise, internshipCount };
+        }));
 
-    await Promise.all(enterprisesWithInternshipCount.map( async (enterprise, index) => {
-        // Create the row
-        const row = await createRow(enterprise);
+        // Clear the table
+        enterprisesTable.innerHTML = '';
 
-        // Store the row in the array
-        rows[index] = row;
-    }));
+        // Create an array to store the rows
+        rows = [];
 
-    // Append the rows to the table in the correct order
-    rows.forEach(row => enterprisesTable.appendChild(row));
+        await Promise.all(enterprisesWithInternshipCount.map( async (enterprise, index) => {
+            // Create the row
+            const row = await createRow(enterprise);
+
+            // Store the row in the array
+            rows[index] = row;
+        }));
+
+        // Append the rows to the table in the correct order
+        rows.forEach(row => enterprisesTable.appendChild(row));
+    }
+
+    // Call the function to initially populate the table
+    updateTable();
+
+    // Add an event listener to the academic year select element
+    academicYearSelect.addEventListener('change', updateTable);
 
     // Get the table headers
     const headers = document.querySelectorAll('.table thead th');

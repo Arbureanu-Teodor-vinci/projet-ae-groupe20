@@ -31,6 +31,15 @@ public interface EnterpriseUCC {
   int getNbInternships(int id);
 
   /**
+   * Get the number of interships in an enterprise for a specific academic year.
+   *
+   * @param id           int
+   * @param academicYear String
+   * @return int
+   */
+  int getNbInternshipsPerAcademicYear(int id, String academicYear);
+
+  /**
    * Add an enterprise.
    *
    * @param enterprise EnterpriseDTO

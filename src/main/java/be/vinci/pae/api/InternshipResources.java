@@ -109,7 +109,7 @@ public class InternshipResources {
     InternshipDTO internship = internshipUCC.addInternship(internshipDTO);
     return toJsonObject(internship);
   }
-
+  
   /**
    * Convert an InternshipDTO to a JSON object.
    *

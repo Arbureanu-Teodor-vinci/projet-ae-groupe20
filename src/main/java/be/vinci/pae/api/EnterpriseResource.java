@@ -95,6 +95,7 @@ public class EnterpriseResource {
   /**
    * Get the number of internships in an enterprise.
    *
+   * @param id The id of the enterprise.
    * @return the number of interships in an enterprise
    * @throws WebApplicationException If the token is invalid.
    */
@@ -117,6 +118,35 @@ public class EnterpriseResource {
 
     return nbInternships;
 
+  }
+
+  /**
+   * Get the number of internships in an enterprise for a specific academic year.
+   *
+   * @param id The id of the enterprise.
+   * @return the number of interships in an enterprise
+   * @throws WebApplicationException If the token is invalid.
+   */
+  @GET
+  @Path("getNbInternshipsPerAcademicYear:{id}:{academicYear}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public int getNbInternshipsPerAcademicYear(@PathParam("id") Integer id,
+      @PathParam("academicYear") String academicYear) {
+    Logger.logEntry("GET /enterprises/getNbInternshipsPerAcademicYear:" + id + ":" + academicYear);
+
+    // if the id or academicYear is null, throw an exception
+    if (id == null || academicYear == null) {
+      Logger.logEntry("id or academicYear is missing.");
+      throw new WebApplicationException("You must enter an id and an academic year.",
+          Status.BAD_REQUEST);
+    }
+
+    // Try to get the number of internships
+    int nbInternships = enterpriseUCC.getNbInternshipsPerAcademicYear(id, academicYear);
+
+    return nbInternships;
   }
 
 
