@@ -93,34 +93,6 @@ public class EnterpriseResource {
   }
 
   /**
-   * Get the number of internships in an enterprise.
-   *
-   * @return the number of interships in an enterprise
-   * @throws WebApplicationException If the token is invalid.
-   */
-  @GET
-  @Path("getNbInternships:{id}")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
-  public int getNbInternships(@PathParam("id") Integer id) {
-    Logger.logEntry("GET /enterprises/getNbInternships:" + id);
-
-    // if the id is null, throw an exception
-    if (id == null) {
-      Logger.logEntry("id is missing.");
-      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
-    }
-
-    // Try to get the enterprise
-    int nbInternships = enterpriseUCC.getNbInternships(id);
-
-    return nbInternships;
-
-  }
-
-
-  /**
    * Add an enterprise.
    *
    * @param enterpriseDTO The enterprise to add.

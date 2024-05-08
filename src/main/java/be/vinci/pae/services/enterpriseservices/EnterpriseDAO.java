@@ -23,13 +23,6 @@ public interface EnterpriseDAO {
    */
   List<EnterpriseDTO> getAllEnterprises();
 
-  /**
-   * Get the number of interships in an enterprise.
-   *
-   * @param id integer
-   * @return integer
-   */
-  int getNbInternships(int id);
 
   /**
    * Add an enterprise to the DB.

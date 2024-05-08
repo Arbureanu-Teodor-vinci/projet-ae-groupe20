@@ -38,4 +38,21 @@ public interface InternshipDAO {
    * @return the added internship.
    */
   InternshipDTO addInternship(InternshipDTO internshipDTO);
+
+  /**
+   * Get the number of interships in an enterprise.
+   *
+   * @param id int
+   * @return int
+   */
+  int getNbInternships(int id);
+
+  /**
+   * Get the number of interships in an enterprise for a specific academic year.
+   *
+   * @param id           integer
+   * @param academicYear String
+   * @return integer
+   */
+  int getNbInternshipsPerAcademicYear(int id, String academicYear);
 }

@@ -75,33 +75,6 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   }
 
   @Override
-  public int getNbInternships(int id) {
-    Logger.logEntry("Enterprise DAO - getNbInternships");
-    int nbInternships = 0;
-    try {
-      PreparedStatement ps = dalConn.getPS(
-          "SELECT COUNT(*) FROM InternshipManagement.internship i "
-              + " JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
-              + " WHERE c.enterprise = ?"
-      );
-      ps.setInt(1, id);
-
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) {
-          nbInternships = rs.getInt(1);
-        }
-      }
-      ps.close();
-
-    } catch (SQLException e) {
-      throw new FatalException(e);
-    } finally {
-      dalConn.closeConnection();
-    }
-    return nbInternships;
-  }
-
-  @Override
   public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
     Logger.logEntry("Enterprise DAO - addEnterprise");
     EnterpriseDTO nEnterprise = domainFactory.getEnterpriseDTO();
