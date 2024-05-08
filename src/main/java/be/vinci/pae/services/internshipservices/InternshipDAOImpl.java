@@ -148,6 +148,64 @@ public class InternshipDAOImpl implements InternshipDAO {
     return internship;
   }
 
+  @Override
+  public int getNbInternships(int id) {
+    Logger.logEntry("Internship DAO - getNbInternships");
+    int nbInternships = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(*) FROM InternshipManagement.internship i "
+              + " JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + " WHERE c.enterprise = ?"
+      );
+      ps.setInt(1, id);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbInternships = rs.getInt(1);
+        }
+      }
+      ps.close();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbInternships;
+  }
+
+  @Override
+  public int getNbInternshipsPerAcademicYear(int id, String academicYear) {
+    Logger.logEntry("Internship DAO - getNbInternshipsPerAcademicYear");
+    int nbInternships = 0;
+    try {
+      PreparedStatement ps = dalConn.getPS(
+          "SELECT COUNT(*) AS number_of_internships "
+              + "FROM InternshipManagement.internship i "
+              + "JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise "
+              + "JOIN InternshipManagement.academic_year a ON i.academic_year = a.id_academic_year "
+              + "WHERE e.id_enterprise = ? AND a.academic_year = ?;"
+      );
+      ps.setInt(1, id);
+      ps.setString(2, academicYear);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          nbInternships = rs.getInt(1);
+        }
+      }
+      ps.close();
+
+    } catch (SQLException e) {
+      throw new FatalException(e);
+    } finally {
+      dalConn.closeConnection();
+    }
+    return nbInternships;
+  }
+
   private InternshipDTO getResultSet(ResultSet resultSet) throws SQLException {
     InternshipDTO internship = domainFactory.getInternshipDTO();
     internship.setId(resultSet.getInt(1));

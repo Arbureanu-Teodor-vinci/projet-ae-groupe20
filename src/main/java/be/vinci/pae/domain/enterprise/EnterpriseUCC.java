@@ -23,23 +23,6 @@ public interface EnterpriseUCC {
   List<EnterpriseDTO> getAllEnterprises();
 
   /**
-   * Get the number of interships in an enterprise.
-   *
-   * @param id int
-   * @return int
-   */
-  int getNbInternships(int id);
-
-  /**
-   * Get the number of interships in an enterprise for a specific academic year.
-   *
-   * @param id           int
-   * @param academicYear String
-   * @return int
-   */
-  int getNbInternshipsPerAcademicYear(int id, String academicYear);
-
-  /**
    * Add an enterprise.
    *
    * @param enterprise EnterpriseDTO

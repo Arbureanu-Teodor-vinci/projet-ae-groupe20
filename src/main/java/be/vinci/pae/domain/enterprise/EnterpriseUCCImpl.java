@@ -34,22 +34,6 @@ public class EnterpriseUCCImpl implements EnterpriseUCC {
   }
 
   @Override
-  public int getNbInternships(int id) {
-    if (id < 0) {
-      return -1;
-    }
-    return enterpriseDS.getNbInternships(id);
-  }
-
-  @Override
-  public int getNbInternshipsPerAcademicYear(int id, String academicYear) {
-    if (id < 0) {
-      return -1;
-    }
-    return enterpriseDS.getNbInternshipsPerAcademicYear(id, academicYear);
-  }
-
-  @Override
   public EnterpriseDTO addEnterprise(EnterpriseDTO enterpriseDTO) {
     EnterpriseDTO enterprise;
     try {

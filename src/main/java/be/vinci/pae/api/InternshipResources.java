@@ -109,7 +109,65 @@ public class InternshipResources {
     InternshipDTO internship = internshipUCC.addInternship(internshipDTO);
     return toJsonObject(internship);
   }
-  
+
+
+  /**
+   * Get the number of internships in an enterprise.
+   *
+   * @param id The id of the enterprise.
+   * @return the number of interships in an enterprise
+   * @throws WebApplicationException If the token is invalid.
+   */
+  @GET
+  @Path("getNbInternships:{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public int getNbInternships(@PathParam("id") Integer id) {
+    Logger.logEntry("GET /enterprises/getNbInternships:" + id);
+
+    // if the id is null, throw an exception
+    if (id == null) {
+      Logger.logEntry("id is missing.");
+      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
+    }
+
+    // Try to get the number of internships in the enterprise
+    int nbInternships = internshipUCC.getNbInternships(id);
+
+    return nbInternships;
+
+  }
+
+  /**
+   * Get the number of internships in an enterprise for a specific academic year.
+   *
+   * @param id The id of the enterprise.
+   * @return the number of interships in an enterprise
+   * @throws WebApplicationException If the token is invalid.
+   */
+  @GET
+  @Path("getNbInternshipsPerAcademicYear:{id}:{academicYear}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public int getNbInternshipsPerAcademicYear(@PathParam("id") Integer id,
+      @PathParam("academicYear") String academicYear) {
+    Logger.logEntry("GET /enterprises/getNbInternshipsPerAcademicYear:" + id + ":" + academicYear);
+
+    // if the id or academicYear is null, throw an exception
+    if (id == null || academicYear == null) {
+      Logger.logEntry("id or academicYear is missing.");
+      throw new WebApplicationException("You must enter an id and an academic year.",
+          Status.BAD_REQUEST);
+    }
+
+    // Try to get the number of internships
+    int nbInternships = internshipUCC.getNbInternshipsPerAcademicYear(id, academicYear);
+
+    return nbInternships;
+  }
+
   /**
    * Convert an InternshipDTO to a JSON object.
    *

@@ -233,10 +233,10 @@ async function renderBoardPage() {
             let response2;
             if (selectedYear === "All Years") {
                 // Fetch total internships for all years
-                response2 = await fetch(`/api/enterprises/getNbInternships:${enterprise.id}`, options2);
+                response2 = await fetch(`/api/internships/getNbInternships:${enterprise.id}`, options2);
             } else {
                 // Fetch internships for the selected year
-                response2 = await fetch(`/api/enterprises/getNbInternshipsPerAcademicYear:${enterprise.id}:${selectedYear}`, options2);
+                response2 = await fetch(`/api/internships/getNbInternshipsPerAcademicYear:${enterprise.id}:${selectedYear}`, options2);
             }
             const internshipCount = await response2.json();
             return { ...enterprise, internshipCount };

@@ -11,16 +11,6 @@ GET {{baseUrl}}/enterprises/getAll
 Content-Type: application/json
 Authorization: {{adminToken}}
 
-### Get number of interships for an enterprise
-GET {{baseUrl}}/enterprises/getNbInternships:2
-Content-Type: application/json
-Authorization: {{adminToken}}
-
-### Get number of interships for an enterprise for a specific year
-GET {{baseUrl}}/enterprises/getNbInternshipsPerAcademicYear:2:2022-2023
-Content-Type: application/json
-Authorization: {{adminToken}}
-
 ### Add a new enterprise
 POST {{baseUrl}}/enterprises/add
 Content-Type: application/json
