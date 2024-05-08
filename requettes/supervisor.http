@@ -7,11 +7,22 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "lastName": "Supervisor 1",
-    "firstName": "Supervisor 1",
-    "email": "super@sup@gmail.com",
-    "enterpriseId": 1,
-    "phoneNumber": "1234567890"
+  "lastName": "Supervisor",
+  "firstName": "Supervisor",
+  "email": "super@gmail.com",
+  "enterprise": {
+    "id": 3,
+    "tradeName": "Infrabel",
+    "designation": null,
+    "address": "Rue Bara, 135",
+    "phoneNumber": "02 525 22 11",
+    "city": "1070 Bruxelles",
+    "email": null,
+    "blackListed": false,
+    "blackListMotivation": null,
+    "version": 1
+  },
+  "phoneNumber": "1234567890"
 }
 
 ### CREATE A NEW SUPERVISOR WITH INVALID EMAIL THAT ALREADY EXISTS

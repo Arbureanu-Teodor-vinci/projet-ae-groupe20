@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internship.InternshipUCC;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
+import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.internshipservices.InternshipDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
@@ -26,22 +29,38 @@ public class InternshipUCCTest {
 
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
   private InternshipDTO internshipDTO = domainFactory.getInternshipDTO();
+  private AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
+  private EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
   private ContactDTO validContact = domainFactory.getContactDTO();
   private SupervisorDTO supervisor = domainFactory.getSupervisorDTO();
-  private InternshipDAO internshipDS = locator.getService(InternshipDAO.class);
-  private ContactDAO contactDS = locator.getService(ContactDAO.class);
-  private SupervisorDAO supervisorDS = locator.getService(SupervisorDAO.class);
+  private StudentDTO student = domainFactory.getStudentDTO();
+
+  private InternshipDAO internshipDAO = locator.getService(InternshipDAO.class);
+  private ContactDAO contactDAO = locator.getService(ContactDAO.class);
+  private SupervisorDAO supervisorDAO = locator.getService(SupervisorDAO.class);
 
   @BeforeEach
   void setUp() {
+    student.setId(6);
+    enterpriseDTO.setId(8);
+
     validContact.setId(1);
     validContact.setStateContact("accepté");
+    validContact.setStudent(student);
+    validContact.setEnterprise(enterpriseDTO);
 
-    internshipDTO.setContactId(1);
+    internshipDTO.setId(1);
+    internshipDTO.setContact(validContact);
     internshipDTO.setVersion(1);
-    supervisor.setEnterpriseId(8);
+    internshipDTO.setSubject("subject");
 
-    Mockito.when(internshipDS.getOneInternshipByStudentId(3)).thenReturn(internshipDTO);
+    supervisor.setId(1);
+    supervisor.setEnterprise(enterpriseDTO);
+
+    academicYearDTO.setId(1);
+    academicYearDTO.setYear("2021-2022");
+
+    Mockito.when(internshipDAO.getOneInternshipByStudentId(3)).thenReturn(internshipDTO);
   }
 
   @Test
@@ -62,10 +81,13 @@ public class InternshipUCCTest {
   @Test
   @DisplayName("Update subject of an internship")
   void updateSubject() {
-    InternshipDTO internshipUpdate = internshipDTO;
+    InternshipDTO internshipUpdate = domainFactory.getInternshipDTO();
+    internshipUpdate.setId(internshipDTO.getId());
     internshipUpdate.setSubject("new subject");
 
-    Mockito.when(internshipDS.updateSubject(internshipUpdate)).thenReturn(internshipUpdate);
+    Mockito.when(internshipDAO.getOneInternshipById(internshipUpdate.getId()))
+        .thenReturn(internshipDTO);
+    Mockito.when(internshipDAO.updateSubject(internshipUpdate)).thenReturn(internshipUpdate);
 
     assertEquals(internshipUCC.updateSubject(internshipUpdate),
         internshipUpdate);
@@ -75,19 +97,19 @@ public class InternshipUCCTest {
   @DisplayName("Add an internship")
   void addInternship() {
     InternshipDTO internship = domainFactory.getInternshipDTO();
-    internship.setContactId(1);
+    internship.setContact(validContact);
     internship.setSubject("subject");
     internship.setSignatureDate("2021-01-01");
-    internship.setSupervisorId(1);
-    internship.setAcademicYear(2021);
+    internship.setSupervisor(supervisor);
+    internship.setAcademicYear(academicYearDTO);
     internship.setVersion(1);
 
-    validContact.setEnterprise(8);
+    validContact.setEnterprise(enterpriseDTO);
 
-    Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
-    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+    Mockito.when(contactDAO.getOneContactByid(1)).thenReturn(validContact);
+    Mockito.when(supervisorDAO.getOneSupervisorById(internship.getSupervisor().getId()))
         .thenReturn(supervisor);
-    Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
+    Mockito.when(internshipDAO.addInternship(internship)).thenReturn(internship);
 
     InternshipDTO actualInternship = internshipUCC.addInternship(internship);
 
@@ -100,34 +122,36 @@ public class InternshipUCCTest {
     ContactDTO contactDTO = domainFactory.getContactDTO();
     contactDTO.setStateContact("suspendu");
     contactDTO.setId(2);
-    contactDTO.setEnterprise(8);
+    contactDTO.setEnterprise(enterpriseDTO);
 
     InternshipDTO internship = domainFactory.getInternshipDTO();
-    internship.setContactId(2);
+    internship.setContact(contactDTO);
+    internship.setSupervisor(supervisor);
 
-    Mockito.when(contactDS.getOneContactByid(2)).thenReturn(contactDTO);
-    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+    Mockito.when(contactDAO.getOneContactByid(2)).thenReturn(contactDTO);
+    Mockito.when(supervisorDAO.getOneSupervisorById(internship.getSupervisor().getId()))
         .thenReturn(supervisor);
-    Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
+    Mockito.when(internshipDAO.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
   }
 
   @Test
-  @DisplayName("Trying to add a an internship while the stuendent already has one")
+  @DisplayName("Trying to add a an internship while the student already has one")
   void addInternship3() {
     InternshipDTO internship = domainFactory.getInternshipDTO();
-    internship.setContactId(1);
+    internship.setContact(validContact);
+    internship.setSupervisor(supervisor);
 
     InternshipDTO internshipExisting = domainFactory.getInternshipDTO();
 
-    validContact.setStudent(6);
+    validContact.setStudent(student);
 
-    Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
-    Mockito.when(internshipDS.getOneInternshipByStudentId(6)).thenReturn(internshipExisting);
-    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+    Mockito.when(contactDAO.getOneContactByid(1)).thenReturn(validContact);
+    Mockito.when(internshipDAO.getOneInternshipByStudentId(6)).thenReturn(internshipExisting);
+    Mockito.when(supervisorDAO.getOneSupervisorById(internship.getSupervisor().getId()))
         .thenReturn(supervisor);
-    Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
+    Mockito.when(internshipDAO.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
   }
@@ -136,16 +160,19 @@ public class InternshipUCCTest {
   @DisplayName("Trying to add a an internship while the supervisor is not from the enterprise")
   void addInternship4() {
     InternshipDTO internship = domainFactory.getInternshipDTO();
-    internship.setContactId(1);
+    internship.setContact(validContact);
+    EnterpriseDTO supervisorEnterprise = domainFactory.getEnterpriseDTO();
+    supervisorEnterprise.setId(9);
 
-    validContact.setStudent(6);
-    validContact.setEnterprise(8);
-    supervisor.setEnterpriseId(9);
+    validContact.setStudent(student);
+    validContact.setEnterprise(enterpriseDTO);
+    supervisor.setEnterprise(supervisorEnterprise);
+    internship.setSupervisor(supervisor);
 
-    Mockito.when(contactDS.getOneContactByid(1)).thenReturn(validContact);
-    Mockito.when(supervisorDS.getOneSupervisorById(internship.getSupervisorId()))
+    Mockito.when(contactDAO.getOneContactByid(1)).thenReturn(validContact);
+    Mockito.when(supervisorDAO.getOneSupervisorById(internship.getSupervisor().getId()))
         .thenReturn(supervisor);
-    Mockito.when(internshipDS.addInternship(internship)).thenReturn(internship);
+    Mockito.when(internshipDAO.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
   }

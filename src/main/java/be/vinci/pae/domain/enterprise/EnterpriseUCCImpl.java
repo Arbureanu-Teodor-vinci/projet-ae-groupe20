@@ -12,7 +12,7 @@ import java.util.List;
 public class EnterpriseUCCImpl implements EnterpriseUCC {
 
   @Inject
-  EnterpriseDAO enterpriseDS;
+  private EnterpriseDAO enterpriseDS;
 
   @Inject
   private DALTransactionServices dalServices;

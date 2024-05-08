@@ -13,25 +13,36 @@ public class InternshipUCCImpl implements InternshipUCC {
 
 
   @Inject
-  ContactDAO contactDS;
+  private ContactDAO contactDAO;
   @Inject
-  private InternshipDAO internshipDS;
+  private InternshipDAO internshipDAO;
   @Inject
   private DALTransactionServices dalServices;
   @Inject
-  private SupervisorDAO supervisorDS;
+  private SupervisorDAO supervisorDAO;
 
   @Override
   public InternshipDTO getOneInternshipByStudentId(int id) {
     if (id <= 0) {
       throw new BusinessException("Id must be positive");
     }
-    return internshipDS.getOneInternshipByStudentId(id);
+    return internshipDAO.getOneInternshipByStudentId(id);
   }
 
   @Override
   public InternshipDTO updateSubject(InternshipDTO internshipUpdated) {
-    internshipUpdated = internshipDS.updateSubject(internshipUpdated);
+    try {
+      dalServices.startTransaction();
+      InternshipDTO internshipBeforeUpdate = internshipDAO.getOneInternshipById(
+          internshipUpdated.getId());
+      Internship internship = (Internship) internshipUpdated;
+      internship.checkOnlySubjectUpdated(internshipBeforeUpdate);
+      internshipUpdated = internshipDAO.updateSubject(internshipUpdated);
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
     return internshipUpdated;
   }
 
@@ -41,19 +52,20 @@ public class InternshipUCCImpl implements InternshipUCC {
     try {
       dalServices.startTransaction();
       Internship internshipToAdd = (Internship) internshipDTO;
-      Contact contact = (Contact) contactDS.getOneContactByid(internshipToAdd.getContactId());
+      Contact contact = (Contact) contactDAO.getOneContactByid(
+          internshipToAdd.getContact().getId());
       contact.checkIfContactIsAccepted();
 
-      Supervisor supervisor = (Supervisor) supervisorDS.getOneSupervisorById(
-          internshipDTO.getSupervisorId());
-      if (supervisor.getEnterpriseId() != contact.getEnterprise().getId()) {
-        throw new BusinessException("Supervisor is not from the enterprise");
+      Supervisor supervisor = (Supervisor) supervisorDAO.getOneSupervisorById(
+          internshipDTO.getSupervisor().getId());
+      if (supervisor.getEnterprise().getId() != contact.getEnterprise().getId()) {
+        throw new BusinessException("Supervisor is not from the same enterprise");
       }
 
-      if (internshipDS.getOneInternshipByStudentId(contact.getStudent().getId()) != null) {
+      if (internshipDAO.getOneInternshipByStudentId(contact.getStudent().getId()) != null) {
         throw new BusinessException("student already has an internship");
       }
-      internship = internshipDS.addInternship(internshipToAdd);
+      internship = internshipDAO.addInternship(internshipToAdd);
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
       throw e;

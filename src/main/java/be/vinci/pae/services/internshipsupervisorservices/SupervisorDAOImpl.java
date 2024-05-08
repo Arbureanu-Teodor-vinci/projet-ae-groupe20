@@ -1,6 +1,7 @@
 package be.vinci.pae.services.internshipsupervisorservices;
 
 import be.vinci.pae.api.filters.FatalException;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.services.dal.DALServices;
@@ -28,7 +29,13 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     List<SupervisorDTO> internshipSupervisors = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.internship_supervisor"
+          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor,\n"
+              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
+              + "        e.id_enterprise, e.trade_name, e.designation, e.address,\n"
+              + "        e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,\n"
+              + "        e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
+              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
+              + "WHERE e.id_enterprise = isup.enterprise"
       );
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
@@ -50,8 +57,13 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     SupervisorDTO internshipSupervisor = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.internship_supervisor "
-              + "WHERE id_internship_supervisor = ?"
+          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
+              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
+              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
+              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
+              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
+              + "WHERE e.id_enterprise = isup.enterprise\n"
+              + "AND isup.id_internship_supervisor = ?"
       );
       ps.setInt(1, id);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -74,8 +86,13 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     List<SupervisorDTO> internshipSupervisors = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.internship_supervisor "
-              + "WHERE enterprise = ?"
+          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
+              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
+              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
+              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
+              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
+              + "WHERE e.id_enterprise = isup.enterprise\n"
+              + "AND isup.enterprise = ?"
       );
       ps.setInt(1, idEnterprise);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -98,7 +115,13 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     SupervisorDTO internshipSupervisor = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.internship_supervisor WHERE email = ?"
+          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
+              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
+              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
+              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
+              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
+              + "WHERE e.id_enterprise = isup.enterprise\n"
+              + "AND isup.email = ?"
       );
       ps.setString(1, email);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -128,10 +151,10 @@ public class SupervisorDAOImpl implements SupervisorDAO {
       ps.setString(2, supervisor.getLastName());
       ps.setString(3, supervisor.getEmail());
       ps.setString(4, supervisor.getPhoneNumber());
-      ps.setInt(5, supervisor.getEnterpriseId());
+      ps.setInt(5, supervisor.getEnterprise().getId());
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
-          supervisor = getResultSet(resultSet);
+          supervisor = getOneSupervisorById(resultSet.getInt("id_internship_supervisor"));
         }
       }
       ps.close();
@@ -151,13 +174,25 @@ public class SupervisorDAOImpl implements SupervisorDAO {
    * @throws SQLException the SQL exception
    */
   private SupervisorDTO getResultSet(ResultSet resultSet) throws SQLException {
+    EnterpriseDTO enterprise = domainFactory.getEnterpriseDTO();
+    enterprise.setId(resultSet.getInt("id_enterprise"));
+    enterprise.setTradeName(resultSet.getString("trade_name"));
+    enterprise.setDesignation(resultSet.getString("designation"));
+    enterprise.setAddress(resultSet.getString("address"));
+    enterprise.setPhoneNumber(resultSet.getString("phone_number_enterprise"));
+    enterprise.setCity(resultSet.getString("city"));
+    enterprise.setEmail(resultSet.getString("email_enterprise"));
+    enterprise.setBlackListed(resultSet.getBoolean("black_listed"));
+    enterprise.setBlackListMotivation(resultSet.getString("black_listed_motivation"));
+    enterprise.setVersion(resultSet.getInt("version_enterprise"));
+
     SupervisorDTO internshipSupervisor = domainFactory.getSupervisorDTO();
-    internshipSupervisor.setId(resultSet.getInt(1));
-    internshipSupervisor.setFirstName(resultSet.getString(2));
-    internshipSupervisor.setLastName(resultSet.getString(3));
-    internshipSupervisor.setEmail(resultSet.getString(4));
-    internshipSupervisor.setPhoneNumber(resultSet.getString(5));
-    internshipSupervisor.setEnterpriseId(resultSet.getInt(6));
+    internshipSupervisor.setId(resultSet.getInt("id_internship_supervisor"));
+    internshipSupervisor.setFirstName(resultSet.getString("last_name_supervisor"));
+    internshipSupervisor.setLastName(resultSet.getString("first_name_supervisor"));
+    internshipSupervisor.setEmail(resultSet.getString("email_supervisor"));
+    internshipSupervisor.setPhoneNumber(resultSet.getString("phone_number_supervisor"));
+    internshipSupervisor.setEnterprise(enterprise);
     return internshipSupervisor;
   }
 }

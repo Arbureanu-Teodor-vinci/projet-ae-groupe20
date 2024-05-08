@@ -53,24 +53,14 @@ public class SupervisorResource {
 
     if (supervisor == null || supervisor.getEmail() == null || supervisor.getFirstName() == null
         || supervisor.getLastName() == null || supervisor.getPhoneNumber() == null) {
-      Logger.logEntry("Supervisor is missing.");
       throw new WebApplicationException("You must enter a supervisor.", Status.BAD_REQUEST);
     }
 
-    SupervisorDTO encodedSupervisor = domainFactory.getSupervisorDTO();
-    encodedSupervisor.setEmail(supervisor.getEmail());
-    encodedSupervisor.setFirstName(supervisor.getFirstName());
-    encodedSupervisor.setLastName(supervisor.getLastName());
-    encodedSupervisor.setPhoneNumber(supervisor.getPhoneNumber());
-    encodedSupervisor.setEnterpriseId(supervisor.getEnterpriseId());
-
-    SupervisorDTO newSupervisor = supervisorUCC.addSupervisor(encodedSupervisor);
+    SupervisorDTO newSupervisor = supervisorUCC.addSupervisor(supervisor);
     if (newSupervisor == null) {
-      Logger.logEntry("Error in SupervisorResource addSupervisor");
       throw new WebApplicationException("Error in SupervisorResource addSupervisor",
           Status.BAD_REQUEST);
     }
-
     return toJson(newSupervisor);
   }
 
@@ -158,13 +148,25 @@ public class SupervisorResource {
 
 
   private ObjectNode toJson(SupervisorDTO supervisor) {
+    ObjectNode enterpriseNode = jsonMapper.createObjectNode();
+    enterpriseNode.put("id", supervisor.getEnterprise().getId());
+    enterpriseNode.put("tradeName", supervisor.getEnterprise().getTradeName());
+    enterpriseNode.put("designation", supervisor.getEnterprise().getDesignation());
+    enterpriseNode.put("address", supervisor.getEnterprise().getAddress());
+    enterpriseNode.put("phoneNumber", supervisor.getEnterprise().getPhoneNumber());
+    enterpriseNode.put("city", supervisor.getEnterprise().getCity());
+    enterpriseNode.put("email", supervisor.getEnterprise().getEmail());
+    enterpriseNode.put("blackListed", supervisor.getEnterprise().isBlackListed());
+    enterpriseNode.put("blackListMotivation", supervisor.getEnterprise().getBlackListMotivation());
+    enterpriseNode.put("version", supervisor.getEnterprise().getVersion());
+
     ObjectNode node = jsonMapper.createObjectNode();
     node.put("id", supervisor.getId());
     node.put("email", supervisor.getEmail());
     node.put("firstName", supervisor.getFirstName());
     node.put("lastName", supervisor.getLastName());
     node.put("phoneNumber", supervisor.getPhoneNumber());
-    node.put("enterpriseId", supervisor.getEnterpriseId());
+    node.set("enterprise", enterpriseNode);
     return node;
   }
 

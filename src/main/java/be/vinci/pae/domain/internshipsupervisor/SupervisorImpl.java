@@ -2,6 +2,7 @@ package be.vinci.pae.domain.internshipsupervisor;
 
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ public class SupervisorImpl implements Supervisor {
   private String lastName;
   private String email;
   private String phoneNumber;
-  private int enterpriseId;
+  private EnterpriseDTO enterprise;
 
   @Override
   public int getId() {
@@ -68,13 +69,13 @@ public class SupervisorImpl implements Supervisor {
   }
 
   @Override
-  public int getEnterpriseId() {
-    return enterpriseId;
+  public EnterpriseDTO getEnterprise() {
+    return enterprise;
   }
 
   @Override
-  public void setEnterpriseId(int enterpriseId) {
-    this.enterpriseId = enterpriseId;
+  public void setEnterprise(EnterpriseDTO enterprise) {
+    this.enterprise = enterprise;
   }
 
   @Override
@@ -86,23 +87,27 @@ public class SupervisorImpl implements Supervisor {
       return false;
     }
     SupervisorImpl that = (SupervisorImpl) o;
-    return id == that.id;
+    return id == that.id && Objects.equals(firstName, that.firstName)
+        && Objects.equals(lastName, that.lastName) && Objects.equals(email,
+        that.email) && Objects.equals(phoneNumber, that.phoneNumber)
+        && Objects.equals(enterprise, that.enterprise);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(id, firstName, lastName, email, phoneNumber, enterprise);
   }
 
   @Override
   public String toString() {
-    return "InternshipSupervisor{"
-        + "id=" + id
-        + ", firstName='" + firstName + '\''
-        + ", lastName='" + lastName + '\''
-        + ", email='" + email + '\''
-        + ", phoneNumber='" + phoneNumber + '\''
-        + ", enterpriseId=" + enterpriseId + '}';
+    return "SupervisorImpl{" +
+        "id=" + id +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", email='" + email + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", enterprise=" + enterprise +
+        '}';
   }
 
   @Override

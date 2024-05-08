@@ -261,9 +261,9 @@ public class ContactImpl implements Contact {
         + ", tool='" + tool + '\''
         + ", refusalReason='" + refusalReason + '\''
         + ", stateContact='" + stateContact + '\''
-        + ", student=" + student.toString()
-        + ", enterprise=" + enterprise.toString()
-        + ", academicYear=" + academicYear.toString()
+        + ", student=" + student
+        + ", enterprise=" + enterprise
+        + ", academicYear=" + academicYear
         + ", version=" + version
         + '}';
   }

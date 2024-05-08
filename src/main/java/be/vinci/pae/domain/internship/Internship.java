@@ -8,4 +8,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(as = InternshipImpl.class)
 public interface Internship extends InternshipDTO {
 
+  /**
+   * Check if only the subject of the internship has been updated.
+   *
+   * @param previousInternship the previous internship to compare with.
+   */
+  void checkOnlySubjectUpdated(InternshipDTO previousInternship);
+
 }

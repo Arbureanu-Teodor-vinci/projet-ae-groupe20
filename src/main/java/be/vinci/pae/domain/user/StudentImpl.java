@@ -37,7 +37,7 @@ public class StudentImpl extends UserImpl implements Student {
 
   @Override
   public void checkUniqueStudent(StudentDTO studentDTO) {
-    if (studentDTO == null) {
+    if (studentDTO != null) {
       throw new BusinessException("Student already exists");
     }
   }
