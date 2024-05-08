@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { clearPage } from "../../utils/render";
 // eslint-disable-next-line no-unused-vars
 import Navigate from '../Router/Navigate';
@@ -44,23 +45,22 @@ async function renderUpdateContactPage() {
     console.log(enterprise.tradeName);
 
     let stateOptions = '';
-    if (['initié', 'pris'].includes(contact.stateContact)) {
-        stateOptions = `
-            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivis">Non suivis</option>
-            
-        `;
     if (contact.stateContact === 'initié') {
-            stateOptions += `<option value="pris">Pris</option>`;
+            stateOptions += `
+            <option value="pris">Pris</option>
+            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
+            `;
+            
         }
     if (contact.stateContact === 'pris') {
         stateOptions += `
             <option value="accepté">Accepté</option>
             <option value="refusé">Refusé</option>
-        `;
-    }
-
-    } else if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
+            <option value="non suivis">Non suivis</option>
+            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
+            `;
+    } 
+    if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
     }
 
@@ -77,8 +77,8 @@ async function renderUpdateContactPage() {
                     <h1>Modifier un contact</h1>
                     <form id="contactForm">
                         <div class="form-group">
-                            <label for="enterpriseId"><B>Entreprise</B></label>
-                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${enterprise.tradeName}" ${nonUpdatable}>
+                            <label for="companyName"><B>Nom commercial</B></label>
+                            <p id="companyName">${enterprise.tradeName}</p>
                         </div>
                         <div class="form-group interviewMethodDiv">
                             <label for="interViewMethod"><B>Moyen de contact</B></label>
@@ -109,57 +109,57 @@ async function renderUpdateContactPage() {
         </div>
     </section>`;
 
-const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
-const interViewMethodSelect = document.querySelector('#interViewMethod');
-const stateContactSelect = document.querySelector('#stateContact');
-const toolDiv = document.querySelector('.tool');
-const toolInput = document.querySelector('#toolInput');
-const refusalReasonDiv = document.querySelector('.refusalReason');
-const refusalReasonInput = document.querySelector('#refusalReasonInput');
+    const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
+    const interViewMethodSelect = document.querySelector('#interViewMethod');
+    const stateContactSelect = document.querySelector('#stateContact');
+    const toolDiv = document.querySelector('.tool');
+    const toolInput = document.querySelector('#toolInput');
+    const refusalReasonDiv = document.querySelector('.refusalReason');
+    const refusalReasonInput = document.querySelector('#refusalReasonInput');
 
-if (contact.interViewMethod === null) {
-    document.querySelector('#interViewMethod').value = '';
-}
-
-
-// Hide the tool input if the interview method is not "A distance"
-toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
-
-interViewMethodSelect.addEventListener('change', (event) => {
-    // If the interview method is "A distance", display the tool input, otherwise hide it
-    if (event.target.value === 'A distance') {
-        toolDiv.style.display = 'block';
-    } else {
-        toolDiv.style.display = 'none';
-        toolInput.value = null; 
+    if (contact.interViewMethod === null) {
+        document.querySelector('#interViewMethod').value = '';
     }
-});
 
-// Hide the refusal reason input if the state is not "refusé"
-refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
 
-interViewMethodSelectDiv.style.display = (stateContactSelect.value === 'initié' || stateContactSelect.value === 'non suivis') ? 'none' : 'block';
+    // Hide the tool input if the interview method is not "A distance"
+    toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
 
-stateContactSelect.addEventListener('change', (event) => {
-    // If the state is "refusé", display the refusal reason input, otherwise hide it
-    if (event.target.value === 'refusé') {
-        refusalReasonDiv.style.display = 'block';
-    } else {
-        refusalReasonDiv.style.display = 'none';
-        refusalReasonInput.value = null;
-    }
+    interViewMethodSelect.addEventListener('change', (event) => {
+        // If the interview method is "A distance", display the tool input, otherwise hide it
+        if (event.target.value === 'A distance') {
+            toolDiv.style.display = 'block';
+        } else {
+            toolDiv.style.display = 'none';
+            toolInput.value = null; 
+        }
+    });
+
+    // Hide the refusal reason input if the state is not "refusé"
+    refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
+
+    interViewMethodSelectDiv.style.display = (stateContactSelect.value === 'initié' || stateContactSelect.value === 'non suivis') ? 'none' : 'block';
+
+    stateContactSelect.addEventListener('change', (event) => {
+        // If the state is "refusé", display the refusal reason input, otherwise hide it
+        if (event.target.value === 'refusé') {
+            refusalReasonDiv.style.display = 'block';
+        } else {
+            refusalReasonDiv.style.display = 'none';
+            refusalReasonInput.value = null;
+        }
     
-    interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
-    toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
+        interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
+        toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
     
-});
+    });
 
     document.getElementById('contactForm').addEventListener('submit', (event) => {
         event.preventDefault();
         Navigate('/profil');
     });
-if(nonUpdatable === ''){
-    document.getElementById("updateContactButton").addEventListener('click', async (event) => {
+    if(nonUpdatable === ''){
+        document.getElementById("updateContactButton").addEventListener('click', async (event) => {
         event.preventDefault();
         const interviewMethod = (interViewMethodSelect.value === '' || interViewMethodSelect === "null") ? null  : interViewMethodSelect.value;
         const tool = (toolInput.value === '' || toolInput.value === "null") ? null : toolInput.value;

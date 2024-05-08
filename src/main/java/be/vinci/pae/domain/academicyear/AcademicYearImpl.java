@@ -64,6 +64,13 @@ public class AcademicYearImpl implements AcademicYear {
   }
 
   @Override
+  public void checkAcademicYear(String academicYear, List<String> academicYears) {
+    if (!academicYears.contains(academicYear)) {
+      throw new BusinessException("Academic year is not valid.");
+    }
+  }
+
+  @Override
   public void checkUniqueAcademicYear(String academicYear) {
     //Check if the academic year is unique
     if (academicYear.equals(this.year)) {
@@ -82,7 +89,6 @@ public class AcademicYearImpl implements AcademicYear {
     return "[id=" + id + ", year=" + year + "]";
   }
 
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -98,12 +104,5 @@ public class AcademicYearImpl implements AcademicYear {
   @Override
   public int hashCode() {
     return Objects.hash(id, year);
-  }
-
-  @Override
-  public void checkAcademicYear(String academicYear, List<String> academicYears) {
-    if (!academicYears.contains(academicYear)) {
-      throw new BusinessException("Academic year is not valid.");
-    }
   }
 }

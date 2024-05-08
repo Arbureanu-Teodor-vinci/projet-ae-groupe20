@@ -82,7 +82,7 @@ async function renderRegisterPage() {
                                         <h6 class="mb-0">Numéro de téléphone*</h6>
                                     </div>
                                     <div class="col-md-9 pe-5">
-                                        <input type="password" class="form-control form-control-lg" id="phoneNumberInput">
+                                        <input type="text" class="form-control form-control-lg" id="phoneNumberInput">
                                     </div>
                                 </div>
 

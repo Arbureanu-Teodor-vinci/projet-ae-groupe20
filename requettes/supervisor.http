@@ -7,11 +7,12 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "lastName": "Supervisor 1",
-    "firstName": "Supervisor 1",
-    "email": "super@sup@gmail.com",
-    "enterpriseId": 1,
-    "phoneNumber": "1234567890"
+    "lastName": "Supervisor",
+    "firstName": "Supervisor",
+    "email": "supersp@mail.com",
+    "enterpriseId": 8,
+    "phoneNumber": "1234567890",
+    "idEnterprise": 1
 }
 
 ### CREATE A NEW SUPERVISOR WITH INVALID EMAIL THAT ALREADY EXISTS
@@ -54,3 +55,16 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/supervisors/getByEnterprise:1
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### CREATE A NEW SUPERVISOR
+POST {{baseUrl}}/supervisors/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "firstName": "Cristiano",
+  "lastName": "Ronaldo",
+  "email": "cristiano.ronald@hotmail.com",
+  "phoneNumber": "1234567890",
+  "enterpriseId": 8
+}

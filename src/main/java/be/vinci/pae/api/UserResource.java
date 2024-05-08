@@ -220,6 +220,13 @@ public class UserResource {
     return usersJsonList;
   }
 
+  /**
+   * Update the user profile.
+   *
+   * @param user    The user to update.
+   * @param request The request.
+   * @return JSON object containing user infos.
+   */
   @PUT
   @Path("updateProfile")
   @Consumes(MediaType.APPLICATION_JSON)
