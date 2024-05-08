@@ -44,19 +44,19 @@ async function renderCreationSupervisorPage() {
                             </div>
                             <div class="form-group">
                               <label for="lastName">Nom de famille</label>
-                                <input type="text" class="form-control" id="lastName">
+                                <input type="text" class="form-control" id="lastName" required>
                             </div>
                             <div class="form-group">
                                 <label for="firstName">Prénom</label>
-                                <input type="text" class="form-control" id="firstName">
+                                <input type="text" class="form-control" id="firstName" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email">
+                                <input type="email" class="form-control" id="email" required>
                             </div>
                             <div class="form-group">
                                 <label for="phone">Téléphone</label>
-                                <input type="tel" class="form-control" id="phone">
+                                <input type="tel" class="form-control" id="phone" required>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3" id="create">Créer</button>
                             <p class = "errorMessage"><p>
@@ -89,13 +89,15 @@ async function renderCreationSupervisorPage() {
 };
 
         const responseCreateSupervisor = await fetch('/api/supervisors/add', optionsCreateSupervisor);
+        
         if(responseCreateSupervisor.ok){
             e.preventDefault();
-            Navigate('/profil');
+            const previousPage = localStorage.getItem('previousPage');
+            Navigate(previousPage);
         }
         else{
             const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = "Erreur lors de la création du responsable de stage";
+            errorMessage.innerHTML = await responseCreateSupervisor.text();
         }
     });
 }

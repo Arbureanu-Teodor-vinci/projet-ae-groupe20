@@ -111,8 +111,8 @@ async function renderEnterprisePage(enterpriseId) {
                 <td>${student.lastName} ${student.firstName}</td>
                 <td>${contact.stateContact}</td>
                 <td>${contact.interviewMethod}</td>
-                <td>${contact.tool}</td>
-                <td>${contact.refusalReason}</td>
+                <td>${contact.tool ? contact.tool : ' - '}</td>
+                <td>${contact.refusalReason ? contact.refusalReason : ' - '}</td>
             </tr>
         `;
   });

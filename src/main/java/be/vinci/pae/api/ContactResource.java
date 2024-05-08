@@ -66,6 +66,7 @@ public class ContactResource {
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getOneContact(@PathParam("id") Integer id, @Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getOne:" + id);
+    
     // Verify the token
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {

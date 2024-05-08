@@ -87,16 +87,16 @@ async function renderBoardPage() {
             <table class="table">
                 <thead>
                     <tr>
-                        <th data-column="tradeName" data-sort-order="asc">Entreprise</th>
-                        <th data-column="designation" data-sort-order="asc">Appelation</th>
-                        <th data-column="address" data-sort-order="asc">Adresse</th>
-                        <th data-column="phoneNumber" data-sort-order="asc">Numéro de téléphone</th>
-                        <th data-column="city" data-sort-order="asc">Ville</th>
-                        <th data-column="internshipCount" data-sort-order="asc">Nombre d'étudiants en stage</th>
-                        <th data-column="email" data-sort-order="asc">Email</th>
-                        <th data-column="blackListReason" data-sort-order="asc">Raison de blacklist</th>
-                        <th data-column="blackList" data-sort-order="asc">Black-listée</th>
-                        <th data-column="profile" data-sort-order="asc">Profil</th>
+                        <th class="text-center" data-column="tradeName" data-sort-order="asc">Entreprise</th>
+                        <th class="text-center" data-column="designation" data-sort-order="asc">Appelation</th>
+                        <th class="text-center" data-column="address" data-sort-order="asc">Adresse</th>
+                        <th class="text-center" data-column="phoneNumber" data-sort-order="asc">Numéro de téléphone</th>
+                        <th class="text-center" data-column="city" data-sort-order="asc">Ville</th>
+                        <th class="text-center" data-column="internshipCount" data-sort-order="asc">Nombre d'étudiants en stage</th>
+                        <th class="text-center" data-column="email" data-sort-order="asc">Email</th>
+                        <th class="text-center" data-column="blackListReason" data-sort-order="asc">Raison de blacklist</th>
+                        <th class="text-center" data-column="blackList" data-sort-order="asc">Black-listée</th>
+                        <th class="text-center" data-column="profile" data-sort-order="asc">Profil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,15 +176,15 @@ async function renderBoardPage() {
 
         // Add the enterprise data to the row
         row.innerHTML = `
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.tradeName}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.designation}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.address}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.phoneNumber}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.city}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.internshipCount}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.email}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListMotivation == null ? '-' : enterprise.blackListMotivation}</td>
-            <td${enterprise.blackListed ? ' style="color: red;"' : ''}>${enterprise.blackListed ? 'X' : 'V'}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.tradeName}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.designation ? enterprise.designation : ' - '}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.address}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.phoneNumber}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.city}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.internshipCount}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.email ? enterprise.email : ' - '}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.blackListMotivation  ? enterprise.blackListMotivation : '-'}</td>
+            <td${enterprise.blackListed ? ' style="color: red;"' : ''} class="text-center">${enterprise.blackListed ? 'Oui' : 'Non'}</td>
         `;
 
         // Create a new button

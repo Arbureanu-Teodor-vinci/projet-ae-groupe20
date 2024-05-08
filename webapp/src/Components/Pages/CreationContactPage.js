@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-console */
 import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
@@ -36,10 +38,10 @@ async function renderCreationContactPage() {
                         <div class="form-group row mb-3">
                             <label for="company" class="col-sm-2 col-form-label">Entreprise</label>
                             <div class="col-sm-10">
-                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise" required>
+                                <input type="text" id="company-filter" class="form-control" placeholder="Rechercher une entreprise">
                                 <select id="company" name="company" class="form-control" required></select>
                                 <div class="d-flex justify-content-center">
-                                    <a id="add-company" href="#" class="text-primary">Entreprise non présente? Ajouter la</a>
+                                    <a id="add-company" href="#" class="text-primary">Entreprise non présente? Ajoutez la</a>
                                 </div>
                             </div>
                         </div>
@@ -63,55 +65,76 @@ async function renderCreationContactPage() {
 
     // Filtrer les options lors de la saisie dans le champ de filtre
     if (companyFilterInput){
-    companyFilterInput.addEventListener('input', (event) => {
+        renderCompaniesOptions(companies);
+        companyFilterInput.addEventListener('input', (event) => {
         const filterValue = event.target.value.toLowerCase();
-        const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().includes(filterValue));
+        const filteredCompanies = companies.filter(company => company.tradeName.toLowerCase().startsWith(filterValue));
         renderCompaniesOptions(filteredCompanies);
-    });
-}
-
-    const createButton = document.querySelector('#create');
-    createButton.addEventListener('click', async (event) => {
-        const optionsCreateContact = {
-            method: 'POST',
-            body: JSON.stringify({
-              studentID: getAuthenticatedUser().id,
-              enterpriseID : companySelect.options[companySelect.selectedIndex].getAttribute('data-idEnterprise'),
-            }),
-            headers : {
-              'Content-Type': 'application/json',
-              "Authorization": `${getAuthenticatedUser().token}`,
-            },
-          };
-          
-          const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
-          if (!responseCreateContact.ok && responseCreateContact.status === 412) {
-            const erreur = document.querySelector('.contactExist');
-            erreur.innerText = "Vous avez déjà contacté cette entreprise au cours de cette année académique";
-          }else{
-            event.preventDefault();
-            Navigate('/profil');
-          }
-       
-    });
-
-    // Initialiser les options avec toutes les entreprises
-    renderCompaniesOptions(companies);
-
+        });
+    }
+    
+    // Fonction qui permet de générer les options du select
     function renderCompaniesOptions(companiesToRender) {
         // Réinitialiser les options du select
         companySelect.innerHTML = '';
 
+        // Trier les entreprises par nom
+        companiesToRender.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
+
+        
+
+        if(companiesToRender.length === 0) {
+            // Si aucune entreprise n'a été trouvée, ajoutez une option avec le message d'erreur
+            const option = document.createElement('option');
+            option.text = "Aucun résultat n'a été trouvé.";
+            option.value = '';
+            companySelect.appendChild(option);
+        } else {
+        
         // Ajouter les options filtrées ou toutes les options
         companiesToRender.forEach(company => {
             if(company.blackListed === false){
             const option = document.createElement('option');
-            option.text = company.tradeName;
-            option.setAttribute('data-idEnterprise', company.id);
+            option.text = company.designation ? `${company.tradeName  } - ${  company.designation}` : company.tradeName;
+            option.value = company.id;
             companySelect.appendChild(option);
             }
-        });
+            });
+        }
     }
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (event) => {
+        const valueCompany = companySelect.value;
+        console.log(valueCompany);
+        if(valueCompany === ''){
+            event.preventDefault();
+            Navigate('/creationCompany');
+        } else {
+        event.preventDefault();
+        const optionsCreateContact = {
+            method: 'POST',
+            headers : {
+                'Content-Type': 'application/json',
+                "Authorization": `${getAuthenticatedUser().token}`,
+              },
+            body: JSON.stringify({
+              studentID: getAuthenticatedUser().id,
+              enterpriseID : valueCompany
+            }),
+          };
+          const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
+          if(responseCreateContact.ok){
+            event.preventDefault();
+            Navigate('/profil');
+          } else {
+            alert(`${responseCreateContact.status} : ${responseCreateContact.statusText}`);
+          }
+        }
+    });
+
+  
+    
 }
 
 export default creationContactPage;
