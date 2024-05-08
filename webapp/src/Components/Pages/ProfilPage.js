@@ -141,8 +141,8 @@ async function renderProfilPage() {
                               contact.entreprise.blackListed ? 'red' : 'black'
                             }; font-weight: ${
                               contact.entreprise.blackListed ? 'bold' : 'normal'
-                            }">${contact.entreprise.tradeName}</td>
-                            <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                            }">${contact.entreprise.tradeName} ${contact.entreprise.designation ? ` - ${contact.entreprise.designation}` : ''}</td>
+                            <td class="text-center">${contact.interviewMethod || ' - '}</td>
                             <td class="text-center">${contact.tool || ' - '}</td>
                             <td class="text-center">${contact.stateContact || ' - '}</td>
                             <td class="text-center">${contact.refusalReason || ' - '}</td>
