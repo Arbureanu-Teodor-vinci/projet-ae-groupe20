@@ -39,7 +39,7 @@ public class SupervisorResource {
   /**
    * Add a supervisor.
    *
-   * @param supervisor The supervisor to add.
+   * @param newSupervisor The supervisor to add.
    * @return JSON object containing the new supervisor.
    * @throws WebApplicationException If the supervisor is missing.
    */
@@ -48,20 +48,27 @@ public class SupervisorResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
-  public ObjectNode addSupervisor(SupervisorDTO supervisor) {
-    Logger.logEntry("POST /supervisors/add" + supervisor.getEmail());
+  public ObjectNode addSupervisor(SupervisorDTO newSupervisor, @Context ContainerRequest request) {
+    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    Logger.logEntry("POST /supervisors/add" + newSupervisor.getEmail());
 
-    if (supervisor == null || supervisor.getEmail() == null || supervisor.getFirstName() == null
-        || supervisor.getLastName() == null || supervisor.getPhoneNumber() == null) {
+    // if the supervisor is null, throw an exception
+    if (newSupervisor.getEmail() == null || newSupervisor.getFirstName() == null
+        || newSupervisor.getLastName() == null || newSupervisor.getPhoneNumber() == null) {
+      Logger.logEntry("Supervisor is missing.");
       throw new WebApplicationException("You must enter a supervisor.", Status.BAD_REQUEST);
     }
-
-    SupervisorDTO newSupervisor = supervisorUCC.addSupervisor(supervisor);
-    if (newSupervisor == null) {
-      throw new WebApplicationException("Error in SupervisorResource addSupervisor",
-          Status.BAD_REQUEST);
+    if (newSupervisor.getEnterprise().getId() == 0) {
+      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
-    return toJson(newSupervisor);
+
+    SupervisorDTO supervisorDTO = supervisorUCC.addSupervisor(newSupervisor, authentifiedUser);
+    if (supervisorDTO == null) {
+      Logger.logEntry("Cannot add supervisor");
+      throw new WebApplicationException("Cannot add supervisor", Status.BAD_REQUEST);
+    }
+
+    return toJson(supervisorDTO);
   }
 
   /**

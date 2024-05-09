@@ -12,9 +12,11 @@ import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internship.InternshipUCC;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.internshipservices.InternshipDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
+import java.util.Arrays;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +24,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+/**
+ * InternshipUCC tests.
+ */
 public class InternshipUCCTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
@@ -34,7 +39,7 @@ public class InternshipUCCTest {
   private ContactDTO validContact = domainFactory.getContactDTO();
   private SupervisorDTO supervisor = domainFactory.getSupervisorDTO();
   private StudentDTO student = domainFactory.getStudentDTO();
-
+  private AcademicYearDAO academicYearDAO = locator.getService(AcademicYearDAO.class);
   private InternshipDAO internshipDAO = locator.getService(InternshipDAO.class);
   private ContactDAO contactDAO = locator.getService(ContactDAO.class);
   private SupervisorDAO supervisorDAO = locator.getService(SupervisorDAO.class);
@@ -175,5 +180,75 @@ public class InternshipUCCTest {
     Mockito.when(internshipDAO.addInternship(internship)).thenReturn(internship);
 
     assertThrows(BusinessException.class, () -> internshipUCC.addInternship(internship));
+  }
+
+  @Test
+  @DisplayName("Get number of internships for valid enterprise id")
+  void getNbInternshipsValidId() {
+    int id = 1;
+    int expectedNbInternships = 5;
+
+    Mockito.when(internshipDAO.getNbInternships(id)).thenReturn(expectedNbInternships);
+
+    int actualNbInternships = internshipUCC.getNbInternships(id);
+
+    assertEquals(expectedNbInternships, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for invalid enterprise id")
+  void getNbInternshipsInvalidId() {
+    int id = -1;
+
+    int actualNbInternships = internshipUCC.getNbInternships(id);
+
+    assertEquals(-1, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for an "
+      + "enterprise per academic year for valid enterprise id and academic year")
+  void getNbInternshipsPerAcademicYearValidId() {
+    int id = 1;
+    String academicYear = "2023-2024";
+    int expectedNbInternships = 5;
+
+    // Mock the behavior of AcademicYearDAO
+    Mockito.when(academicYearDAO.getAllAcademicYears()).thenReturn(
+        Arrays.asList("2021-2022", "2022-2023", "2023-2024"));
+    Mockito.when(internshipDAO.getNbInternshipsPerAcademicYear(id, academicYear))
+        .thenReturn(expectedNbInternships);
+
+    int actualNbInternships = internshipUCC.getNbInternshipsPerAcademicYear(id, academicYear);
+
+    assertEquals(expectedNbInternships, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for an "
+      + "enterprise per academic year for invalid enterprise id")
+  void getNbInternshipsPerAcademicYearInvalidId() {
+    int id = -1;
+    String academicYear = "2023-2024";
+
+    int actualNbInternships = internshipUCC.getNbInternshipsPerAcademicYear(id, academicYear);
+
+    assertEquals(-1, actualNbInternships);
+  }
+
+  @Test
+  @DisplayName("Get number of internships for an "
+      + "enterprise per academic year for invalid academic year")
+  void getNbInternshipsPerAcademicYearInvalidAcademicYear() {
+    int id = 1;
+    String academicYear = "2099-2100";
+
+    // Mock the behavior of AcademicYearDAO
+    Mockito.when(academicYearDAO.getAllAcademicYears()).thenReturn(
+        Arrays.asList("2021-2022", "2022-2023", "2023-2024"));
+    // Call the method under test and expect a BusinessException
+    assertThrows(BusinessException.class, () -> {
+      internshipUCC.getNbInternshipsPerAcademicYear(id, academicYear);
+    });
   }
 }

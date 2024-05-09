@@ -92,3 +92,13 @@ Authorization: {{adminToken}}
     "contactId": 8,
     "academicYear": 1
 }
+
+### Get number of interships for an enterprise
+GET {{baseUrl}}/internships/getNbInternships:2
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+### Get number of interships for an enterprise for a specific year
+GET {{baseUrl}}/internships/getNbInternshipsPerAcademicYear:2:2022-2023
+Content-Type: application/json
+Authorization: {{adminToken}}

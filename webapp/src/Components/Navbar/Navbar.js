@@ -2,7 +2,6 @@ import Navigate from '../Router/Navigate';
 // eslint-disable-next-line import/extensions
 import { clearAuthenticatedUser, getAuthenticatedUser } from '../../utils/auths.js';
 import logoNav from '../../img/logoNav.png';
-import homeLogo from '../../img/homeLogo.png';
 import dashboardLogo from '../../img/dashboardLogo.png';
 import profilLogo from '../../img/profilLogo.png';
 import usersLogo from '../../img/usersLogo.png';
@@ -56,12 +55,7 @@ function renderNavbar() {
             <img src="${logoNav}" width="64" height="64" alt="Bootstrap" data-uri="/" class="logo-img">
           </a>
           <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-            <li>
-              <a href="#" class="nav-link text-white">
-                <img src="${homeLogo}" class="bi d-block mx-auto mb-1" width="24" height="24" data-uri="/">
-                Accueil
-              </a>
-            </li>
+            
             <li>
               <a href="#" class="nav-link text-white">
                 <img src="${dashboardLogo}" class="bi d-block mx-auto mb-1" width="24" height="24" data-uri="/board">

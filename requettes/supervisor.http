@@ -65,3 +65,18 @@ Authorization: {{adminToken}}
 GET {{baseUrl}}/supervisors/getByEnterprise:1
 Content-Type: application/json
 Authorization: {{adminToken}}
+
+### CREATE A NEW SUPERVISOR
+POST {{baseUrl}}/supervisors/add
+Content-Type: application/json
+Authorization: {{adminToken}}
+
+{
+  "firstName": "Cristiano",
+  "lastName": "Ronaldo",
+  "email": "cristiano.ronald@hotmail.com",
+  "phoneNumber": "1234567890",
+  "enterprise": {
+    "id" : 8
+  }
+}

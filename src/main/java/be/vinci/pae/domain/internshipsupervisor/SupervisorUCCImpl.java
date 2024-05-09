@@ -1,6 +1,9 @@
 package be.vinci.pae.domain.internshipsupervisor;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.user.UserDTO;
+import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import jakarta.inject.Inject;
@@ -13,6 +16,9 @@ public class SupervisorUCCImpl implements SupervisorUCC {
 
   @Inject
   SupervisorDAO supervisorDS;
+
+  @Inject
+  ContactDAO contactDS;
 
   @Inject
   DALTransactionServices dalServices;
@@ -40,25 +46,41 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   }
 
   @Override
-  public SupervisorDTO addSupervisor(SupervisorDTO newSupervisor) {
-    Supervisor supervisor = (Supervisor) newSupervisor;
+  public SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO, UserDTO user) {
+    ContactDTO contactDTO = null;
+    if (user.getRole().equals("Etudiant")) {
+      List<ContactDTO> contacts = contactDS.getContactsByUser(user.getId());
+      for (ContactDTO contact : contacts) {
+        if (contact.getEnterprise().getId() == supervisorDTO.getEnterprise().getId()) {
+          contactDTO = contact;
+          break;
+        }
+      }
+      if (contactDTO == null) {
+        throw new BusinessException("You don't have a contact with this enterprise");
+      }
+      if (!contactDTO.getStateContact().equals("accepté")) {
+        throw new BusinessException("The student must be accepted by the enterprise");
+      }
+    }
     try {
-      supervisor.checkPhoneNumberFormat(newSupervisor.getPhoneNumber());
-      supervisor.checkNamesFormat(newSupervisor.getFirstName());
-      supervisor.checkNamesFormat(newSupervisor.getLastName());
-      supervisor.checkEmailFormat(newSupervisor.getEmail());
       dalServices.startTransaction(); // START TRANSACTION
+      Supervisor supervisorCast = (Supervisor) supervisorDTO;
+      supervisorCast.checkPhoneNumberFormat(supervisorDTO.getPhoneNumber());
+      supervisorCast.checkNamesFormat(supervisorDTO.getFirstName());
+      supervisorCast.checkNamesFormat(supervisorDTO.getLastName());
+      supervisorCast.checkEmailFormat(supervisorDTO.getEmail());
       // check if email exists already
-      SupervisorDTO supervisorDTO = supervisorDS.getOneSupervisorByEmail(
-          newSupervisor.getEmail());
-      supervisor.checkUniqueEmail(supervisorDTO);
-      newSupervisor = supervisorDS.addSupervisor(newSupervisor);
+      SupervisorDTO supervisorCheckEmail = supervisorDS.getOneSupervisorByEmail(
+          supervisorDTO.getEmail());
+      supervisorCast.checkUniqueEmail(supervisorCheckEmail);
+      supervisorDTO = supervisorDS.addSupervisor(supervisorDTO);
     } catch (Throwable e) {
       dalServices.rollbackTransaction(); // ROLLBACK TRANSACTION
       throw e;
     }
     dalServices.commitTransaction(); // COMMIT TRANSACTION
-    return newSupervisor;
+    return supervisorDTO;
   }
 
 }

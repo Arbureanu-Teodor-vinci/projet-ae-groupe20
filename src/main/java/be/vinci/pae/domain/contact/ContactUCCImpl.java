@@ -54,7 +54,7 @@ public class ContactUCCImpl implements ContactUCC {
 
   @Override
   public ContactDTO addContact(StudentDTO studentDTO, EnterpriseDTO enterpriseDTO) {
-    ContactDTO contact = null;
+    ContactDTO contact;
     try {
       dalServices.startTransaction();
       List<ContactDTO> contactsExisting = contactDAO.getContactsByUser(studentDTO.getId());

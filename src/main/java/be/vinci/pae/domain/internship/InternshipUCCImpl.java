@@ -1,14 +1,21 @@
 package be.vinci.pae.domain.internship;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYear;
 import be.vinci.pae.domain.contact.Contact;
+import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.Supervisor;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import be.vinci.pae.services.dal.DALTransactionServices;
 import be.vinci.pae.services.internshipservices.InternshipDAO;
 import be.vinci.pae.services.internshipsupervisorservices.SupervisorDAO;
 import jakarta.inject.Inject;
+import java.util.List;
 
+/**
+ * Implementation of InternshipUCC.
+ */
 public class InternshipUCCImpl implements InternshipUCC {
 
 
@@ -16,10 +23,17 @@ public class InternshipUCCImpl implements InternshipUCC {
   private ContactDAO contactDAO;
   @Inject
   private InternshipDAO internshipDAO;
+
+  @Inject
+  private AcademicYearDAO academicYearDAO;
+
   @Inject
   private DALTransactionServices dalServices;
   @Inject
   private SupervisorDAO supervisorDAO;
+
+  @Inject
+  private DomainFactory domainFactory;
 
   @Override
   public InternshipDTO getOneInternshipByStudentId(int id) {
@@ -72,5 +86,27 @@ public class InternshipUCCImpl implements InternshipUCC {
     }
     dalServices.commitTransaction();
     return internship;
+  }
+
+  @Override
+  public int getNbInternships(int id) {
+    if (id < 0) {
+      return -1;
+    }
+    return internshipDAO.getNbInternships(id);
+  }
+
+  @Override
+  public int getNbInternshipsPerAcademicYear(int id, String academicYear) {
+    if (id < 0) {
+      return -1;
+    }
+    int count = 0;
+
+    List<String> academicYears = academicYearDAO.getAllAcademicYears();
+    AcademicYear yearCheck = (AcademicYear) domainFactory.getAcademicYearDTO();
+    yearCheck.checkAcademicYear(academicYear, academicYears);
+    count = internshipDAO.getNbInternshipsPerAcademicYear(id, academicYear);
+    return count;
   }
 }

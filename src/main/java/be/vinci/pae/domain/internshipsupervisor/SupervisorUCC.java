@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.internshipsupervisor;
 
+import be.vinci.pae.domain.user.UserDTO;
 import java.util.List;
 
 /**
@@ -33,10 +34,11 @@ public interface SupervisorUCC {
   /**
    * Add a supervisor.
    *
-   * @param supervisor the supervisor to add
+   * @param newSupervisor the new supervisor
+   * @param user          the user who wants to add the supervisor
    * @return SupervisorDTO
    */
-  SupervisorDTO addSupervisor(SupervisorDTO supervisor);
+  SupervisorDTO addSupervisor(SupervisorDTO newSupervisor, UserDTO user);
 
 
 }

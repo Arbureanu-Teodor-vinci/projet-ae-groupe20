@@ -78,6 +78,7 @@ async function renderCreationStagePage() {
     const addSupervisor = document.querySelector('.add-supervisor');
     addSupervisor.addEventListener('click', (e) => {
         e.preventDefault();
+        localStorage.setItem('previousPage', window.location.href);
         Navigate(`/creationSupervisor?enterpriseId=${e.target.id}`);
     });
 
