@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
 import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
@@ -72,7 +70,7 @@ async function renderCreationContactPage() {
         renderCompaniesOptions(filteredCompanies);
         });
     }
-    
+
     // Fonction qui permet de générer les options du select
     function renderCompaniesOptions(companiesToRender) {
         // Réinitialiser les options du select
@@ -81,8 +79,6 @@ async function renderCreationContactPage() {
         // Trier les entreprises par nom
         companiesToRender.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
 
-        
-
         if(companiesToRender.length === 0) {
             // Si aucune entreprise n'a été trouvée, ajoutez une option avec le message d'erreur
             const option = document.createElement('option');
@@ -90,13 +86,13 @@ async function renderCreationContactPage() {
             option.value = '';
             companySelect.appendChild(option);
         } else {
-        
+
         // Ajouter les options filtrées ou toutes les options
         companiesToRender.forEach(company => {
             if(company.blackListed === false){
             const option = document.createElement('option');
             option.text = company.designation ? `${company.tradeName  } - ${  company.designation}` : company.tradeName;
-            option.value = company.id;
+            option.setAttribute('data-company', JSON.stringify(company));
             companySelect.appendChild(option);
             }
             });
@@ -106,6 +102,7 @@ async function renderCreationContactPage() {
     const form = document.querySelector('form');
     form.addEventListener('submit', async (event) => {
         const valueCompany = companySelect.value;
+        const { token, ...student } = getAuthenticatedUser();
         console.log(valueCompany);
         if(valueCompany === ''){
             event.preventDefault();
@@ -114,15 +111,16 @@ async function renderCreationContactPage() {
         event.preventDefault();
         const optionsCreateContact = {
             method: 'POST',
-            headers : {
-                'Content-Type': 'application/json',
-                "Authorization": `${getAuthenticatedUser().token}`,
-              },
             body: JSON.stringify({
-              studentID: getAuthenticatedUser().id,
-              enterpriseID : valueCompany
+                student,
+                enterprise: JSON.parse(companySelect.options[companySelect.selectedIndex].getAttribute('data-company')),
             }),
-          };
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `${token}`,
+            },
+        };
+          
           const responseCreateContact = await fetch(`/api/contacts/add`, optionsCreateContact);
           if(responseCreateContact.ok){
             event.preventDefault();
@@ -133,8 +131,23 @@ async function renderCreationContactPage() {
         }
     });
 
-  
-    
+    // Initialiser les options avec toutes les entreprises
+    renderCompaniesOptions(companies);
+
+    /* function renderCompaniesOptions(companiesToRender) {
+        // Réinitialiser les options du select
+        companySelect.innerHTML = '';
+
+        // Ajouter les options filtrées ou toutes les options
+        companiesToRender.forEach(company => {
+            if(company.blackListed === false){
+            const option = document.createElement('option');
+            option.text = company.tradeName;
+            option.setAttribute('data-company', JSON.stringify(company));
+            companySelect.appendChild(option);
+            }
+        });
+    } */
 }
 
 export default creationContactPage;

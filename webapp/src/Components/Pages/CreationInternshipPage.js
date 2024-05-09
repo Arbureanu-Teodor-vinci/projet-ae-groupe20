@@ -30,12 +30,9 @@ async function renderCreationStagePage() {
         },
     };
     const response = await fetch(`/api/contacts/getOne:${contactIdParam}`, options);
-    const contact = await response.json();
+    const contactResponse = await response.json();
     
-    const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
-    const enterprise = await responseEnterprise.json();
-    
-    const responseSupervisor = await fetch(`/api/supervisors/getByEnterprise:${contact.enterpriseId}`, options);
+    const responseSupervisor = await fetch(`/api/supervisors/getByEnterprise:${contactResponse.enterprise.id}`, options);
     const supervisors = await responseSupervisor.json();
 
     // eslint-disable-next-line no-console
@@ -50,16 +47,13 @@ async function renderCreationStagePage() {
                         <form>
                             <div class="form-group">
                                 <label for="companyName">Nom commercial</label>
-                                <p id="companyName">${enterprise.tradeName}</p>
+                                <p id="companyName">${contactResponse.enterprise.tradeName}</p>
                             </div>
                             <div class="form-group">
                                 <label for="supervisor">Responsable de stage</label>
-                                <select id="supervisor" class="form-control">
-                                    <option>Choisissez un responsable de stage</option>
-                                    ${supervisors.map((supervisor) => `<option value="${supervisor.id}">${supervisor.firstName} ${supervisor.lastName}</option>`).join('')}
-                                </select>
+                                <select id="supervisor" class="form-control"> </select>
                                 <div class="d-flex justify-content-center">
-                                    <a id="${enterprise.id}" href="#" class="text-primary add-supervisor">Responsable de stage non présent? Ajouter le</a>
+                                    <a id="${contactResponse.enterprise.id}" href="#" class="text-primary add-supervisor">Responsable de stage non présent? Ajouter le</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -79,6 +73,15 @@ async function renderCreationStagePage() {
         </section>`;
 
     const addSupervisor = document.querySelector('.add-supervisor');
+    const supervisorSelect = document.getElementById('supervisor');
+    supervisors.forEach(supervisor => {
+        const option = document.createElement('option');
+        option.value = supervisor.id;
+        option.textContent = `${supervisor.lastName} ${supervisor.firstName}`;
+        option.setAttribute('data-supervisor', JSON.stringify(supervisor));
+        supervisorSelect.appendChild(option);
+    });
+
     addSupervisor.addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.setItem('previousPage', window.location.href);
@@ -87,8 +90,9 @@ async function renderCreationStagePage() {
 
     const form = document.querySelector('form');
     form.addEventListener('submit', async (event) => {
-        const supervisorParam = document.getElementById('supervisor').value;
+        
         const subjectParam = document.getElementById('subject').value;
+        const selectedSupervisor = JSON.parse(supervisorSelect.options[supervisorSelect.selectedIndex].getAttribute('data-supervisor'));
         // eslint-disable-next-line no-console
         console.log(subjectParam);
         const signatureDateParam = document.getElementById('signatureDate').value;
@@ -103,9 +107,8 @@ async function renderCreationStagePage() {
             body: JSON.stringify({
                 subject: subjectParam,
                 signatureDate: signatureDateParam,
-                supervisorId: supervisorParam,
-                contactId: contactIdParam,
-                academicYear: 1
+                supervisor: selectedSupervisor,
+                contact: contactResponse,
             }),
         };
         const responseCreateInternship = await fetch(`/api/internships/add`, optionsCreateInternship);

@@ -26,26 +26,6 @@ async function renderProfilPage() {
     
     if (response.ok) {
         const contacts = await response.json();
-    
-        // Récupérez les détails de l'entreprise pour chaque contact
-        const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
-    
-        // Recupérez les réponses de chaque requête
-        const entrepriseResponses = await Promise.all(entreprisePromises);
-    
-        // Récupérez les détails de l'entreprise pour chaque contact
-        // eslint-disable-next-line no-shadow
-        const contactsWithEnterprise = await Promise.all(entrepriseResponses.map(async (response, i) => {
-            if (response.ok) {
-                const entreprise = await response.json();
-                // Ajoutez les détails de l'entreprise au contact
-                return { ...contacts[i], entreprise };
-            } 
-                // eslint-disable-next-line no-console
-                console.log(`Erreur lors de la récupération de l'entreprise : ${response.statusText}`);
-                return contacts[i];
-            
-        }));
 
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -133,35 +113,35 @@ async function renderProfilPage() {
                             </tr>
                         </thead>
                         <tbody>
-                        ${contactsWithEnterprise
-                          .map(
-                            (contact) => `
+                        ${contacts
+                            .map(
+                                (contact) => `
                         <tr>
-                            <td class="text-center" style="color: ${
-                              contact.entreprise.blackListed ? 'red' : 'black'
-                            }; font-weight: ${
-                              contact.entreprise.blackListed ? 'bold' : 'normal'
-                            }">${contact.entreprise.tradeName} ${contact.entreprise.designation ? ` - ${contact.entreprise.designation}` : ''}</td>
-                            <td class="text-center">${contact.interviewMethod || ' - '}</td>
-                            <td class="text-center">${contact.tool || ' - '}</td>
-                            <td class="text-center">${contact.stateContact || ' - '}</td>
-                            <td class="text-center">${contact.refusalReason || ' - '}</td>
-                            <td class="text-center">
-                                <button id="editButton${
-                                  contact.id
-                                }" class="btn btn-primary">Modifier</button>
-                            </td>
-                            <td class="text-center">
-                                ${
-                                  contact.stateContact === 'accepté'
-                                    ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>`
-                                    : ''
-                                }
-                            </td>
+                                <td class="text-center" style="color: ${
+                                    contact.enterprise.blackListed ? 'red' : 'black'
+                                }; font-weight: ${
+                                    contact.enterprise.blackListed ? 'bold' : 'normal'
+                                }">${contact.enterprise.tradeName} ${contact.enterprise.designation ? ` - ${contact.enterprise.designation}` : ''}</td>
+                                <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                                <td class="text-center">${contact.tool || ' - '}</td>
+                                <td class="text-center">${contact.stateContact || ' - '}</td>
+                                <td class="text-center">${contact.refusalReason || ' - '}</td>
+                                <td class="text-center">
+                                        <button id="editButton${
+                                            contact.id
+                                        }" class="btn btn-primary">Modifier</button>
+                                </td>
+                                <td class="text-center">
+                                        ${
+                                            contact.stateContact === 'accepté'
+                                                ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>`
+                                                : ''
+                                        }
+                                </td>
                         </tr>
                         `,
-                          )
-                          .join('')}
+                            )
+                            .join('')}
                         </tbody>
                     </table>
                 </div>
@@ -204,19 +184,16 @@ async function renderProfilPage() {
         if(responseInternship.ok){
             internship = await responseInternship.json();
             if(internship){
-                const responseInternshipSupervisor = await fetch(`/api/supervisors/getOne:${internship.supervisorId}`, options);
-                const internshiptSupervisor = await responseInternshipSupervisor.json();
                 internshipSubject.textContent = internship.subject;
                 document.getElementById('signatureDate').textContent = internship.signatureDate;
-                const enterprise = contactsWithEnterprise.find(contact => contact.id === internship.contactId).entreprise;
                 const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
-                internshipEnterpriseTableLine.textContent = enterprise.tradeName;
-                if (enterprise.blackListed) {
+                internshipEnterpriseTableLine.textContent = internship.contact.enterprise.tradeName;
+                if (internship.contact.enterprise.blackListed) {
                     internshipEnterpriseTableLine.style.color = 'red';
                     internshipEnterpriseTableLine.style.fontWeight = 'bold';
                     internshipEnterpriseTableLine.textContent += ' (blacklisted)';
                 }
-                document.getElementById('internshipSupervisor').textContent = `${internshiptSupervisor.firstName  } ${  internshiptSupervisor.lastName}`;
+                document.getElementById('internshipSupervisor').textContent = `${internship.supervisor.firstName  } ${  internship.supervisor.lastName}`;
                 const addStageButtons = document.querySelector('.addStage');
                 addStageButtons.disabled = true;
             }
@@ -246,8 +223,8 @@ async function renderProfilPage() {
                   subject: subjectInput.value,
                   academicYear: internship.academicYear,
                   version: internship.version,
-                  contactId: internship.contactId,
-                  supervisorId: internship.supervisorId,
+                  contact: internship.contact,
+                  supervisor: internship.supervisor,
                   signatureDate: internship.signatureDate, }),
             });
             if (responseUpdateInternship.ok) {

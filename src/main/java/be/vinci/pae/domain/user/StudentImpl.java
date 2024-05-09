@@ -37,7 +37,7 @@ public class StudentImpl extends UserImpl implements Student {
 
   @Override
   public void checkUniqueStudent(StudentDTO studentDTO) {
-    if (studentDTO != null) {
+    if (studentDTO.getId() != 0) {
       throw new BusinessException("Student already exists");
     }
   }
@@ -47,9 +47,9 @@ public class StudentImpl extends UserImpl implements Student {
       List<ContactDTO> contactsExisting) {
     boolean contactExists = false;
     for (ContactDTO contact : contactsExisting) {
-      if (contact.getStudentId() == this.getId()
-          && contact.getEnterpriseId() == enterpriseDTO.getId()
-          && contact.getAcademicYear() == this.academicYear.getId()) {
+      if (contact.getStudent() == this
+          && contact.getEnterprise() == enterpriseDTO
+          && contact.getAcademicYear() == this.academicYear) {
         contactExists = true;
       }
     }
@@ -63,9 +63,9 @@ public class StudentImpl extends UserImpl implements Student {
   public void checkContactAccepted(List<ContactDTO> contactsExisting) {
     boolean contactAccepted = false;
     for (ContactDTO contact : contactsExisting) {
-      if (contact.getStudentId() == this.getId()
+      if (contact.getStudent() == this
           && contact.getStateContact().equals("accepté")
-          && contact.getAcademicYear() == this.academicYear.getId()) {
+          && contact.getAcademicYear() == this.academicYear) {
         contactAccepted = true;
       }
     }
@@ -98,7 +98,8 @@ public class StudentImpl extends UserImpl implements Student {
   @Override
   public String toString() {
     return "StudentImpl{"
-        + "academicYear=" + academicYear
+        + "id=" + id
+        + ", academicYear=" + academicYear
         + '}';
   }
 }

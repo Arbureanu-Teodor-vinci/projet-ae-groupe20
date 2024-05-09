@@ -1,10 +1,12 @@
 package be.vinci.pae.domain.user;
 
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Interface of studentDTO.
  */
+@JsonDeserialize(as = StudentImpl.class)
 public interface StudentDTO extends UserDTO {
 
 

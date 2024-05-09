@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import { clearPage } from "../../utils/render";
 // eslint-disable-next-line no-unused-vars
 import Navigate from '../Router/Navigate';
@@ -39,28 +38,25 @@ async function renderUpdateContactPage() {
     }else{
 
     const contact = await response.json();
-    const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
-    const enterprise = await responseEnterprise.json();
-    // eslint-disable-next-line no-console
-    console.log(enterprise.tradeName);
 
     let stateOptions = '';
-    if (contact.stateContact === 'initié') {
-            stateOptions += `
-            <option value="pris">Pris</option>
+    if (['initié', 'pris'].includes(contact.stateContact)) {
+        stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            `;
+            <option value="non suivis">Non suivis</option>
             
+        `;
+    if (contact.stateContact === 'initié') {
+            stateOptions += `<option value="pris">Pris</option>`;
         }
     if (contact.stateContact === 'pris') {
         stateOptions += `
             <option value="accepté">Accepté</option>
             <option value="refusé">Refusé</option>
-            <option value="non suivis">Non suivis</option>
-            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            `;
-    } 
-    if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
+        `;
+    }
+
+    } else if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
     }
 
@@ -77,14 +73,14 @@ async function renderUpdateContactPage() {
                     <h1>Modifier un contact</h1>
                     <form id="contactForm">
                         <div class="form-group">
-                            <label for="companyName"><B>Nom commercial</B></label>
-                            <p id="companyName">${enterprise.tradeName}</p>
+                            <label for="enterpriseId"><B>Entreprise</B></label>
+                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${contact.enterprise.tradeName}" disabled>
                         </div>
                         <div class="form-group interviewMethodDiv">
-                            <label for="interViewMethod"><B>Moyen de contact</B></label>
-                            <select id="interViewMethod" name="interViewMethod" class="form-control text-center" ${nonUpdatable}>
-                                <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
-                                <option value="Dans l entreprise" ${contact.interViewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
+                            <label for="interviewMethod"><B>Moyen de contact</B></label>
+                            <select id="interviewMethod" name="interviewMethod" class="form-control text-center" ${nonUpdatable}>
+                                <option value="A distance" ${contact.interviewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
+                                <option value="Dans l entreprise" ${contact.interviewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
                             </select>
                         </div>
                         <div class="form-group tool">
@@ -109,57 +105,58 @@ async function renderUpdateContactPage() {
         </div>
     </section>`;
 
-    const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
-    const interViewMethodSelect = document.querySelector('#interViewMethod');
-    const stateContactSelect = document.querySelector('#stateContact');
-    const toolDiv = document.querySelector('.tool');
-    const toolInput = document.querySelector('#toolInput');
-    const refusalReasonDiv = document.querySelector('.refusalReason');
-    const refusalReasonInput = document.querySelector('#refusalReasonInput');
+const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
+const interViewMethodSelect = document.querySelector('#interviewMethod');
+const stateContactSelect = document.querySelector('#stateContact');
+const toolDiv = document.querySelector('.tool');
+const toolInput = document.querySelector('#toolInput');
+const refusalReasonDiv = document.querySelector('.refusalReason');
+const refusalReasonInput = document.querySelector('#refusalReasonInput');
 
-    if (contact.interViewMethod === null) {
-        document.querySelector('#interViewMethod').value = '';
+if (contact.interViewMethod === null) {
+    document.querySelector('#interViewMethod').value = '';
+}
+
+
+// Hide the tool input if the interview method is not "A distance"
+toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
+if(stateContactSelect.value === 'initié') toolDiv.style.display = 'none';
+
+interViewMethodSelect.addEventListener('change', (event) => {
+    // If the interview method is "A distance", display the tool input, otherwise hide it
+    if (event.target.value === 'A distance') {
+        toolDiv.style.display = 'block';
+    } else {
+        toolDiv.style.display = 'none';
+        toolInput.value = null; 
     }
+});
 
+// Hide the refusal reason input if the state is not "refusé"
+refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
 
-    // Hide the tool input if the interview method is not "A distance"
-    toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
+interViewMethodSelectDiv.style.display = (stateContactSelect.value === 'initié' || stateContactSelect.value === 'non suivis') ? 'none' : 'block';
 
-    interViewMethodSelect.addEventListener('change', (event) => {
-        // If the interview method is "A distance", display the tool input, otherwise hide it
-        if (event.target.value === 'A distance') {
-            toolDiv.style.display = 'block';
-        } else {
-            toolDiv.style.display = 'none';
-            toolInput.value = null; 
-        }
-    });
-
-    // Hide the refusal reason input if the state is not "refusé"
-    refusalReasonDiv.style.display = stateContactSelect.value === 'refusé' ? 'block' : 'none';
-
-    interViewMethodSelectDiv.style.display = (stateContactSelect.value === 'initié' || stateContactSelect.value === 'non suivis') ? 'none' : 'block';
-
-    stateContactSelect.addEventListener('change', (event) => {
-        // If the state is "refusé", display the refusal reason input, otherwise hide it
-        if (event.target.value === 'refusé') {
-            refusalReasonDiv.style.display = 'block';
-        } else {
-            refusalReasonDiv.style.display = 'none';
-            refusalReasonInput.value = null;
-        }
+stateContactSelect.addEventListener('change', (event) => {
+    // If the state is "refusé", display the refusal reason input, otherwise hide it
+    if (event.target.value === 'refusé') {
+        refusalReasonDiv.style.display = 'block';
+    } else {
+        refusalReasonDiv.style.display = 'none';
+        refusalReasonInput.value = null;
+    }
     
-        interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
-        toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
+    interViewMethodSelectDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis') ? 'none' : 'block';
+    toolDiv.style.display = (event.target.value === 'initié' || event.target.value === 'non suivis' || interViewMethodSelect.value === 'Dans l entreprise') ? 'none' : 'block';
     
-    });
+});
 
     document.getElementById('contactForm').addEventListener('submit', (event) => {
         event.preventDefault();
         Navigate('/profil');
     });
-    if(nonUpdatable === ''){
-        document.getElementById("updateContactButton").addEventListener('click', async (event) => {
+if(nonUpdatable === ''){
+    document.getElementById("updateContactButton").addEventListener('click', async (event) => {
         event.preventDefault();
         const interviewMethod = (interViewMethodSelect.value === '' || interViewMethodSelect === "null") ? null  : interViewMethodSelect.value;
         const tool = (toolInput.value === '' || toolInput.value === "null") ? null : toolInput.value;
@@ -167,14 +164,14 @@ async function renderUpdateContactPage() {
         const refusalReason = (refusalReasonInput.value === '' || refusalReasonInput.value === "null") ? null : refusalReasonInput.value;
 
         const body = {
-            id: contactId,
+            id: contact.id,
             interviewMethod,
             tool,
             stateContact,
             refusalReason,
             academicYear: contact.academicYear,
-            enterpriseId: contact.enterpriseId,
-            studentId: contact.studentId,
+            enterprise: contact.enterprise,
+            student: contact.student,
             version: contact.version,
         };
 

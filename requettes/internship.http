@@ -1,8 +1,8 @@
 @baseUrl = http://localhost:3000
 @authToken = {{adminToken}}
 
-### GET ONE INTERNSHIP BY STUDENT ID = 6
-GET {{baseUrl}}/internships/getOneInternshipByStudentId:6
+### GET ONE INTERNSHIP BY STUDENT ID = 27
+GET {{baseUrl}}/internships/getOneInternshipByStudentId:27
 Authorization: {{adminToken}}
 
 ### GET ONE INTERNSHIP BY STUDENT ID < 0
@@ -19,10 +19,12 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "id": 15,
+    "id": 14,
     "subject": "New Subject",
-    "academicYear": 3,
-    "version": 1
+    "academicYear": {
+        "id": 1
+    },
+    "version": 2
 }
 
 ### UPDATE INTERNSHIP SUBJECT WITH WRONG VERSION
@@ -43,10 +45,17 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
+    "subject": "SubjectTEst",
     "signatureDate": "2024-01-01",
-    "supervisorId": 3,
-    "contactId": 12,
-    "academicYear": 1
+    "supervisor": {
+        "id": 8
+    },
+    "contact": {
+      "id": 39
+    },
+    "academicYear": {
+      "id": 3
+    }
 }
 
 ### ADD INTERNSHIP WITH CONTACT NOT IT ACCEPTED STATE

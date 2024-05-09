@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internship.InternshipUCC;
@@ -45,8 +44,8 @@ public class InternshipResources {
   @Path("/getOneInternshipByStudentId:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Etudiant"})
-  public ObjectNode getOneInternshipByStudentId(@PathParam("id") Integer id) {
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
+  public ObjectNode getOneInternshipByStudentId(@PathParam("id") int id) {
     Logger.logEntry("GET /internships/getOneInternshipByStudentId" + id);
     if (id <= 0) {
       Logger.logEntry("Id must be positive.");
@@ -55,7 +54,7 @@ public class InternshipResources {
     InternshipDTO internship = internshipUCC.getOneInternshipByStudentId(id);
     if (internship == null) {
       Logger.logEntry("Internship not found.");
-      throw new BusinessException("Internship not found.");
+      throw new WebApplicationException("Internship not found.");
     }
     return toJsonObject(internship);
   }
@@ -99,10 +98,9 @@ public class InternshipResources {
   @Authorize(rolesAllowed = {"Etudiant"})
   public ObjectNode addInternship(InternshipDTO internshipDTO) {
     Logger.logEntry("POST /internships/addInternship");
-    if (internshipDTO == null || internshipDTO.getSupervisorId() <= 0
-        || internshipDTO.getContactId() <= 0
-        || internshipDTO.getSignatureDate() == null
-        || internshipDTO.getAcademicYear() <= 0) {
+    if (internshipDTO == null || internshipDTO.getSupervisor().getId() <= 0
+        || internshipDTO.getContact().getId() <= 0
+        || internshipDTO.getSignatureDate() == null) {
       throw new WebApplicationException("parameters missing.",
           Status.BAD_REQUEST);
     }
@@ -175,15 +173,92 @@ public class InternshipResources {
    * @return The JSON object.
    */
   private ObjectNode toJsonObject(InternshipDTO internshipDTO) {
-    ObjectNode node = jsonMapper.createObjectNode();
-    node.put("id", internshipDTO.getId());
-    node.put("subject", internshipDTO.getSubject());
-    node.put("signatureDate", internshipDTO.getSignatureDate());
-    node.put("supervisorId", internshipDTO.getSupervisorId());
-    node.put("contactId", internshipDTO.getContactId());
-    node.put("academicYear", internshipDTO.getAcademicYear());
-    node.put("version", internshipDTO.getVersion());
-    return node;
+
+    ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getStudent().getStudentAcademicYear().getId())
+        .put("year", internshipDTO.getContact().getStudent().getStudentAcademicYear().getYear());
+    
+    ObjectNode contactStudentNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getStudent().getId())
+        .put("firstName", internshipDTO.getContact().getStudent().getFirstName())
+        .put("lastName", internshipDTO.getContact().getStudent().getLastName())
+        .put("email", internshipDTO.getContact().getStudent().getEmail())
+        .put("telephoneNumber", internshipDTO.getContact().getStudent().getTelephoneNumber())
+        .put("registrationDate",
+            internshipDTO.getContact().getStudent().getRegistrationDate().toString())
+        .put("role", internshipDTO.getContact().getStudent().getRole())
+        .put("version", internshipDTO.getContact().getStudent().getVersion());
+    contactStudentNode.set("academicYear", studentAcademicYearNode);
+
+    ObjectNode contactEnterpriseNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getEnterprise().getId())
+        .put("tradeName", internshipDTO.getContact().getEnterprise().getTradeName())
+        .put("designation", internshipDTO.getContact().getEnterprise().getDesignation())
+        .put("address", internshipDTO.getContact().getEnterprise().getAddress())
+        .put("phoneNumber", internshipDTO.getContact().getEnterprise().getPhoneNumber())
+        .put("city", internshipDTO.getContact().getEnterprise().getCity())
+        .put("email", internshipDTO.getContact().getEnterprise().getEmail())
+        .put("blackListed", internshipDTO.getContact().getEnterprise().isBlackListed())
+        .put("blackListMotivation",
+            internshipDTO.getContact().getEnterprise().getBlackListMotivation())
+        .put("version", internshipDTO.getContact().getEnterprise().getVersion());
+
+    ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getAcademicYear().getId())
+        .put("year", internshipDTO.getContact().getAcademicYear().getYear());
+
+    ObjectNode contactNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getId())
+        .put("interviewMethod", internshipDTO.getContact().getInterviewMethod())
+        .put("tool", internshipDTO.getContact().getTool())
+        .put("refusalReason", internshipDTO.getContact().getRefusalReason())
+        .put("stateContact", internshipDTO.getContact().getStateContact())
+        .put("version", internshipDTO.getContact().getVersion());
+
+    contactNode.set("student", contactStudentNode);
+    contactNode.set("enterprise", contactEnterpriseNode);
+    contactNode.set("academicYear", contactAcademicYearNode);
+
+    ObjectNode supervisorEnterpriseNode = jsonMapper.createObjectNode();
+    supervisorEnterpriseNode.put("id", internshipDTO.getSupervisor().getEnterprise().getId());
+    supervisorEnterpriseNode.put("tradeName",
+        internshipDTO.getSupervisor().getEnterprise().getTradeName());
+    supervisorEnterpriseNode.put("designation",
+        internshipDTO.getSupervisor().getEnterprise().getDesignation());
+    supervisorEnterpriseNode.put("address",
+        internshipDTO.getSupervisor().getEnterprise().getAddress());
+    supervisorEnterpriseNode.put("phoneNumber",
+        internshipDTO.getSupervisor().getEnterprise().getPhoneNumber());
+    supervisorEnterpriseNode.put("city", internshipDTO.getSupervisor().getEnterprise().getCity());
+    supervisorEnterpriseNode.put("email", internshipDTO.getSupervisor().getEnterprise().getEmail());
+    supervisorEnterpriseNode.put("blackListed",
+        internshipDTO.getSupervisor().getEnterprise().isBlackListed());
+    supervisorEnterpriseNode.put("blackListMotivation",
+        internshipDTO.getSupervisor().getEnterprise().getBlackListMotivation());
+    supervisorEnterpriseNode.put("version",
+        internshipDTO.getSupervisor().getEnterprise().getVersion());
+
+    ObjectNode supervisorNode = jsonMapper.createObjectNode();
+    supervisorNode.put("id", internshipDTO.getSupervisor().getId());
+    supervisorNode.put("email", internshipDTO.getSupervisor().getEmail());
+    supervisorNode.put("firstName", internshipDTO.getSupervisor().getFirstName());
+    supervisorNode.put("lastName", internshipDTO.getSupervisor().getLastName());
+    supervisorNode.put("phoneNumber", internshipDTO.getSupervisor().getPhoneNumber());
+    supervisorNode.set("enterprise", supervisorEnterpriseNode);
+
+    ObjectNode internshipAcademicYearNode = jsonMapper.createObjectNode();
+    internshipAcademicYearNode.put("id", internshipDTO.getAcademicYear().getId());
+    internshipAcademicYearNode.put("year", internshipDTO.getAcademicYear().getYear());
+
+    ObjectNode internship = jsonMapper.createObjectNode();
+    internship.put("id", internshipDTO.getId());
+    internship.put("subject", internshipDTO.getSubject());
+    internship.put("signatureDate", internshipDTO.getSignatureDate());
+    internship.set("supervisor", supervisorNode);
+    internship.set("contact", contactNode);
+    internship.set("academicYear", internshipAcademicYearNode);
+    internship.put("version", internshipDTO.getVersion());
+    return internship;
   }
 
 }

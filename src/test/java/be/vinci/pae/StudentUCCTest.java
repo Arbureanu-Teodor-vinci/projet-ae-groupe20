@@ -43,7 +43,7 @@ public class StudentUCCTest {
     studentDTO.setRole("Etudiant");
     Student student = (Student) studentDTO;
 
-    Mockito.when(studentDAO.getStudentById(1)).thenReturn(null);
+    Mockito.when(studentDAO.getStudentById(1)).thenReturn(domainFactory.getStudentDTO());
     Mockito.when(studentDAO.addStudent(student)).thenReturn(studentDTO);
 
   }

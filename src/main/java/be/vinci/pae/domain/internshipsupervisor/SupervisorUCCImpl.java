@@ -46,13 +46,12 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   }
 
   @Override
-  public SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO, UserDTO user, int idEnterprise) {
-    SupervisorDTO supervisor;
+  public SupervisorDTO addSupervisor(SupervisorDTO supervisorDTO, UserDTO user) {
     ContactDTO contactDTO = null;
     if (user.getRole().equals("Etudiant")) {
       List<ContactDTO> contacts = contactDS.getContactsByUser(user.getId());
       for (ContactDTO contact : contacts) {
-        if (contact.getEnterpriseId() == idEnterprise) {
+        if (contact.getEnterprise().getId() == supervisorDTO.getEnterprise().getId()) {
           contactDTO = contact;
           break;
         }
@@ -75,13 +74,13 @@ public class SupervisorUCCImpl implements SupervisorUCC {
       SupervisorDTO supervisorCheckEmail = supervisorDS.getOneSupervisorByEmail(
           supervisorDTO.getEmail());
       supervisorCast.checkUniqueEmail(supervisorCheckEmail);
-      supervisor = supervisorDS.addSupervisor(supervisorDTO);
+      supervisorDTO = supervisorDS.addSupervisor(supervisorDTO);
     } catch (Throwable e) {
       dalServices.rollbackTransaction(); // ROLLBACK TRANSACTION
       throw e;
     }
     dalServices.commitTransaction(); // COMMIT TRANSACTION
-    return supervisor;
+    return supervisorDTO;
   }
 
 }

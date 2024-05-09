@@ -4,9 +4,7 @@ import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
-import be.vinci.pae.domain.user.StudentUCC;
 import be.vinci.pae.domain.user.UserDTO;
-import be.vinci.pae.domain.user.UserUCC;
 import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -38,12 +36,6 @@ public class SupervisorResource {
   @Inject
   private DomainFactory domainFactory;
 
-  @Inject
-  private UserUCC userController;
-
-  @Inject
-  private StudentUCC studentUCC;
-
   /**
    * Add a supervisor.
    *
@@ -57,8 +49,7 @@ public class SupervisorResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode addSupervisor(SupervisorDTO newSupervisor, @Context ContainerRequest request) {
-    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
-    int enterpriseId = newSupervisor.getEnterpriseId();
+    final UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     Logger.logEntry("POST /supervisors/add" + newSupervisor.getEmail());
 
     // if the supervisor is null, throw an exception
@@ -67,9 +58,11 @@ public class SupervisorResource {
       Logger.logEntry("Supervisor is missing.");
       throw new WebApplicationException("You must enter a supervisor.", Status.BAD_REQUEST);
     }
+    if (newSupervisor.getEnterprise().getId() == 0) {
+      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+    }
 
-    SupervisorDTO supervisorDTO = supervisorUCC.addSupervisor(newSupervisor, authentifiedUser,
-        enterpriseId);
+    SupervisorDTO supervisorDTO = supervisorUCC.addSupervisor(newSupervisor, authentifiedUser);
     if (supervisorDTO == null) {
       Logger.logEntry("Cannot add supervisor");
       throw new WebApplicationException("Cannot add supervisor", Status.BAD_REQUEST);
@@ -162,13 +155,25 @@ public class SupervisorResource {
 
 
   private ObjectNode toJson(SupervisorDTO supervisor) {
+    ObjectNode enterpriseNode = jsonMapper.createObjectNode();
+    enterpriseNode.put("id", supervisor.getEnterprise().getId());
+    enterpriseNode.put("tradeName", supervisor.getEnterprise().getTradeName());
+    enterpriseNode.put("designation", supervisor.getEnterprise().getDesignation());
+    enterpriseNode.put("address", supervisor.getEnterprise().getAddress());
+    enterpriseNode.put("phoneNumber", supervisor.getEnterprise().getPhoneNumber());
+    enterpriseNode.put("city", supervisor.getEnterprise().getCity());
+    enterpriseNode.put("email", supervisor.getEnterprise().getEmail());
+    enterpriseNode.put("blackListed", supervisor.getEnterprise().isBlackListed());
+    enterpriseNode.put("blackListMotivation", supervisor.getEnterprise().getBlackListMotivation());
+    enterpriseNode.put("version", supervisor.getEnterprise().getVersion());
+
     ObjectNode node = jsonMapper.createObjectNode();
     node.put("id", supervisor.getId());
     node.put("email", supervisor.getEmail());
     node.put("firstName", supervisor.getFirstName());
     node.put("lastName", supervisor.getLastName());
     node.put("phoneNumber", supervisor.getPhoneNumber());
-    node.put("enterpriseId", supervisor.getEnterpriseId());
+    node.set("enterprise", enterpriseNode);
     return node;
   }
 

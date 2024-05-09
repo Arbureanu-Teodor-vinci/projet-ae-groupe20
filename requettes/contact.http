@@ -17,7 +17,7 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 ### Get all contacts by user
-GET {{baseUrl}}/contacts/getByUser:5
+GET {{baseUrl}}/contacts/getByUser:27
 Content-Type: application/json
 Authorization: {{adminToken}}
 
@@ -38,6 +38,21 @@ POST {{baseUrl}}/contacts/add
 Content-Type: application/json
 Authorization: {{adminToken}}
 
-{
-    "enterpriseID": 2
+{   "student" : {
+  "id": 27,
+  "role": "Etudiant",
+  "email": "matteo@student.vinci.be",
+  "firstName": "Matteo",
+  "lastName": "Erismann",
+  "telephoneNumber": "+320470000001",
+  "registrationDate": "2024-05-06",
+  "version": 1,
+  "academicYear": {
+    "id": 3,
+    "year": "2023-2024"
+  }
+},
+    "enterprise": {
+        "id": 3
+    }
 }

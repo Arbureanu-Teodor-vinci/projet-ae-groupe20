@@ -66,7 +66,7 @@ async function renderPage() {
             <td>${user.lastName}</td>
             <td>${user.telephoneNumber}</td>
             <td>${user.registrationDate}</td>
-            <td>${user.academicYear.replace(/.*year=/, '').replace(']', '')}</td>
+            <td>${user.academicYear.year}</td>
             <td><button id="${user.id}" class="btn btn-primary viewInfo">Voir les informations de cet(tte) étudiant(e)</button></td>
         </tr>
         `;

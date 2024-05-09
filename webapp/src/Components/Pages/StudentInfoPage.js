@@ -32,6 +32,7 @@ async function renderStudentInfoPage() {
 
     const response = await fetch(`/api/auths/user:${studentId}`, options);
     const responseContacts = await fetch(`/api/contacts/getByUser:${studentId}`, options);
+    const responseInternship = await fetch(`/api/internships/getOneInternshipByStudentId:${studentId}`, options);
 
 
     if (response.ok) {
@@ -46,14 +47,14 @@ async function renderStudentInfoPage() {
         const contacts = await responseContacts.json();
     
         // Récupérez les détails de l'entreprise pour chaque contact
-        const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
+        // const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
     
         // Recupérez les réponses de chaque requête
-        const entrepriseResponses = await Promise.all(entreprisePromises);
+       // const entrepriseResponses = await Promise.all(entreprisePromises);
     
         // Récupérez les détails de l'entreprise pour chaque contact
         // eslint-disable-next-line no-shadow
-        const contactsWithEnterprise = await Promise.all(entrepriseResponses.map(async (responseContacts, i) => {
+        /* const contactsWithEnterprise = await Promise.all(entrepriseResponses.map(async (responseContacts, i) => {
             if (responseContacts.ok) {
                 const entreprise = await responseContacts.json();
                 // Ajoutez les détails de l'entreprise au contact
@@ -63,7 +64,7 @@ async function renderStudentInfoPage() {
                 console.log(`Erreur lors de la récupération de l'entreprise : ${responseContacts.statusText}`);
                 return contacts[i];
             
-        }));
+        })); */
       
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -105,24 +106,24 @@ async function renderStudentInfoPage() {
             </div>
             <div class="col-12 mt-3">
                 <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <th>Entreprise</th>
-                            <td class="text-center">${user && user.internship && user.internship.company || ' - '}</td>
-                        </tr>
-                        <tr>
-                            <th>Responsable de stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipManager || ' - '}</td>
-                        </tr>
-                        <tr>
-                            <th>Sujet du stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipSubject || ' - '}</td>
-                        </tr>
-                        <tr>
-                            <th>Date de signature du stage</th>
-                            <td class="text-center">${user && user.internship && user.internship.internshipSignatureDate || ' - '}</td>
-                        </tr>
-                    </tbody>
+                <tbody>
+                <tr>
+                    <th>Entreprise</th>
+                    <td class="text-center" id ="internshipEnterprise"> - </td>
+                </tr>
+                <tr>
+                    <th>Responsable de stage</th>
+                    <td class="text-center" id="internshipSupervisor"> - </td>
+                </tr>
+                <tr>
+                    <th>Sujet du stage</th>
+                    <td class="text-center" id="internshipSubject"> - </td>
+                </tr>
+                <tr>
+                    <th>Date de signature du stage</th>
+                    <td class="text-center" id="signatureDate"> - </td>
+                </tr>
+            </tbody>
                 </table>
             </div>
         </div>
@@ -143,10 +144,14 @@ async function renderStudentInfoPage() {
                             </tr>
                         </thead>
                         <tbody>
-                        ${contactsWithEnterprise.map(contact => `
+                        ${contacts.map(contact => `
                         <tr>
-                            <td class="text-center">${contact.entreprise.tradeName}</td>
-                            <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                        <td class="text-center" style="color: ${
+                            contact.enterprise.blackListed ? 'red' : 'black'
+                        }; font-weight: ${
+                            contact.enterprise.blackListed ? 'bold' : 'normal'
+                        }">${contact.enterprise.tradeName} ${contact.enterprise.designation ? ` - ${contact.enterprise.designation}` : ''}</td>
+                            <td class="text-center">${contact.interviewMethod || ' - '}</td>
                             <td class="text-center">${contact.tool || ' - '}</td>
                             <td class="text-center">${contact.stateContact || ' - '}</td>
                             <td class="text-center">${contact.refusalReason || ' - '}</td>
@@ -160,6 +165,22 @@ async function renderStudentInfoPage() {
     </div>
 </section>`
         }
+
+        if(responseInternship.ok){
+            const internship = await responseInternship.json();
+            
+            const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
+                internshipEnterpriseTableLine.textContent = internship.contact.enterprise.tradeName;
+                if (internship.contact.enterprise.blackListed) {
+                    internshipEnterpriseTableLine.style.color = 'red';
+                    internshipEnterpriseTableLine.style.fontWeight = 'bold';
+                    internshipEnterpriseTableLine.textContent += ' (blacklisted)';
+                }
+            document.getElementById('internshipSupervisor').textContent = `${internship.supervisor.firstName  } ${  internship.supervisor.lastName}`;
+            document.getElementById('internshipSubject').innerText = internship.subject;
+            document.getElementById('signatureDate').innerText = internship.signatureDate;
+        }
+
     }
 }
 export default StudentInfoPage;

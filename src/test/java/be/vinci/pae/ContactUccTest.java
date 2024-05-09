@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.user.StudentDTO;
+import be.vinci.pae.services.academicyear.AcademicYearDAO;
 import be.vinci.pae.services.contactservices.ContactDAO;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +31,9 @@ public class ContactUccTest {
 
   ServiceLocator locator = ServiceLocatorUtilities.bind(new TestsApplicationBinder());
   private ContactUCC contactUCC = locator.getService(ContactUCC.class);
+  private AcademicYearUCC academicYearUCC = locator.getService(AcademicYearUCC.class);
   private ContactDAO contactDAO = locator.getService(ContactDAO.class);
+  private AcademicYearDAO academicYearDAO = locator.getService(AcademicYearDAO.class);
   private DomainFactory domainFactory = locator.getService(DomainFactory.class);
 
   private ContactDTO contactDTO = domainFactory.getContactDTO();
@@ -51,13 +55,13 @@ public class ContactUccTest {
     Mockito.when(contactDAO.getOneContactByid(2)).thenReturn(contactDTO2);
 
     academicYearDTO.setId(1);
+    academicYearDTO.setYear("2023-2024");
 
     studentDTO.setId(1);
     studentDTO.setAcademicYear(academicYearDTO);
 
-    contactDTO.setStudentId(1);
-    contactDTO2.setStudentId(2);
-    contactAccepted.setStudentId(2);
+    contactDTO.setStudent(studentDTO);
+    contactDTO2.setStudent(studentDTO);
 
     enterpriseDTO.setId(1);
 
@@ -65,6 +69,10 @@ public class ContactUccTest {
     //when contact is updated return the updated contact
     Mockito.when(contactDAO.updateContact(Mockito.any(ContactDTO.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
+
+    Mockito.when(academicYearDAO.getActualAcademicYear()).thenReturn(academicYearDTO);
+    academicYearUCC = Mockito.mock(AcademicYearUCC.class);
+    Mockito.when(academicYearUCC.getNewAcademicYear()).thenReturn(academicYearDTO.getYear());
 
   }
 
@@ -552,5 +560,5 @@ public class ContactUccTest {
 
     assertEquals(expectedContacts, actualContacts);
   }
-  
+
 }

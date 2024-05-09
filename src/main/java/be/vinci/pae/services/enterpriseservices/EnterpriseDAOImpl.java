@@ -77,7 +77,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
   @Override
   public EnterpriseDTO addEnterprise(EnterpriseDTO enterprise) {
     Logger.logEntry("Enterprise DAO - addEnterprise");
-    EnterpriseDTO nEnterprise = domainFactory.getEnterpriseDTO();
+    EnterpriseDTO enterpriseDTO = domainFactory.getEnterpriseDTO();
 
     try {
       PreparedStatement ps = dalConn.getPS(
@@ -94,7 +94,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          nEnterprise = getResultSet(rs);
+          enterpriseDTO = getResultSet(rs);
         }
       }
       ps.close();
@@ -105,7 +105,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     } finally {
       dalConn.closeConnection();
     }
-    return nEnterprise;
+    return enterpriseDTO;
   }
 
   @Override

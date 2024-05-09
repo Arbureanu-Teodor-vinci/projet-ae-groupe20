@@ -36,10 +36,9 @@ public interface SupervisorUCC {
    *
    * @param newSupervisor the new supervisor
    * @param user          the user who wants to add the supervisor
-   * @param idEnterprise  the id of the enterprise
    * @return SupervisorDTO
    */
-  SupervisorDTO addSupervisor(SupervisorDTO newSupervisor, UserDTO user, int idEnterprise);
+  SupervisorDTO addSupervisor(SupervisorDTO newSupervisor, UserDTO user);
 
 
 }

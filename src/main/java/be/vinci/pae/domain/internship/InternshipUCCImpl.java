@@ -2,6 +2,8 @@ package be.vinci.pae.domain.internship;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYear;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.contact.Contact;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.Supervisor;
@@ -18,11 +20,12 @@ import java.util.List;
  */
 public class InternshipUCCImpl implements InternshipUCC {
 
-
   @Inject
-  ContactDAO contactDS;
+  private AcademicYearUCC academicYearUCC;
   @Inject
-  private InternshipDAO internshipDS;
+  private ContactDAO contactDAO;
+  @Inject
+  private InternshipDAO internshipDAO;
 
   @Inject
   private AcademicYearDAO academicYearDAO;
@@ -30,7 +33,7 @@ public class InternshipUCCImpl implements InternshipUCC {
   @Inject
   private DALTransactionServices dalServices;
   @Inject
-  private SupervisorDAO supervisorDS;
+  private SupervisorDAO supervisorDAO;
 
   @Inject
   private DomainFactory domainFactory;
@@ -40,12 +43,23 @@ public class InternshipUCCImpl implements InternshipUCC {
     if (id <= 0) {
       throw new BusinessException("Id must be positive");
     }
-    return internshipDS.getOneInternshipByStudentId(id);
+    return internshipDAO.getOneInternshipByStudentId(id);
   }
 
   @Override
   public InternshipDTO updateSubject(InternshipDTO internshipUpdated) {
-    internshipUpdated = internshipDS.updateSubject(internshipUpdated);
+    try {
+      dalServices.startTransaction();
+      InternshipDTO internshipBeforeUpdate = internshipDAO.getOneInternshipById(
+          internshipUpdated.getId());
+      Internship internship = (Internship) internshipUpdated;
+      internship.checkOnlySubjectUpdated(internshipBeforeUpdate);
+      internshipUpdated = internshipDAO.updateSubject(internshipUpdated);
+    } catch (Throwable e) {
+      dalServices.rollbackTransaction();
+      throw e;
+    }
+    dalServices.commitTransaction();
     return internshipUpdated;
   }
 
@@ -55,19 +69,22 @@ public class InternshipUCCImpl implements InternshipUCC {
     try {
       dalServices.startTransaction();
       Internship internshipToAdd = (Internship) internshipDTO;
-      Contact contact = (Contact) contactDS.getOneContactByid(internshipToAdd.getContactId());
+      Contact contact = (Contact) contactDAO.getOneContactByid(
+          internshipToAdd.getContact().getId());
       contact.checkIfContactIsAccepted();
 
-      Supervisor supervisor = (Supervisor) supervisorDS.getOneSupervisorById(
-          internshipDTO.getSupervisorId());
-      if (supervisor.getEnterpriseId() != contact.getEnterpriseId()) {
-        throw new BusinessException("Supervisor is not from the enterprise");
+      Supervisor supervisor = (Supervisor) supervisorDAO.getOneSupervisorById(
+          internshipDTO.getSupervisor().getId());
+      if (supervisor.getEnterprise().getId() != contact.getEnterprise().getId()) {
+        throw new BusinessException("Supervisor is not from the same enterprise");
       }
 
-      if (internshipDS.getOneInternshipByStudentId(contact.getStudentId()) != null) {
+      if (internshipDAO.getOneInternshipByStudentId(contact.getStudent().getId()) != null) {
         throw new BusinessException("student already has an internship");
       }
-      internship = internshipDS.addInternship(internshipToAdd);
+      AcademicYearDTO academicYear = academicYearUCC.getOrAddActualAcademicYear();
+      internshipToAdd.setAcademicYear(academicYear);
+      internship = internshipDAO.addInternship(internshipToAdd);
     } catch (Throwable e) {
       dalServices.rollbackTransaction();
       throw e;
@@ -81,7 +98,7 @@ public class InternshipUCCImpl implements InternshipUCC {
     if (id < 0) {
       return -1;
     }
-    return internshipDS.getNbInternships(id);
+    return internshipDAO.getNbInternships(id);
   }
 
   @Override
@@ -90,11 +107,11 @@ public class InternshipUCCImpl implements InternshipUCC {
       return -1;
     }
     int count = 0;
-    
+
     List<String> academicYears = academicYearDAO.getAllAcademicYears();
     AcademicYear yearCheck = (AcademicYear) domainFactory.getAcademicYearDTO();
     yearCheck.checkAcademicYear(academicYear, academicYears);
-    count = internshipDS.getNbInternshipsPerAcademicYear(id, academicYear);
+    count = internshipDAO.getNbInternshipsPerAcademicYear(id, academicYear);
     return count;
   }
 }

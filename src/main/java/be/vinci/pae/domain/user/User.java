@@ -58,4 +58,11 @@ public interface User extends UserDTO {
    * @param name -> name to check
    */
   void checkNamesFormat(String name) throws BusinessException;
+
+  /**
+   * Check if the user is a student.
+   *
+   * @return true if the user is a student
+   */
+  boolean checkIsStudent();
 }

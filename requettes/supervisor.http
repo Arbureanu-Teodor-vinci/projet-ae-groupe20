@@ -7,12 +7,22 @@ Content-Type: application/json
 Authorization: {{adminToken}}
 
 {
-    "lastName": "Supervisor",
-    "firstName": "Supervisor",
-    "email": "supersp@mail.com",
-    "enterpriseId": 8,
-    "phoneNumber": "1234567890",
-    "idEnterprise": 1
+  "lastName": "Supervisor",
+  "firstName": "Supervisor",
+  "email": "super@gmail.com",
+  "enterprise": {
+    "id": 3,
+    "tradeName": "Infrabel",
+    "designation": null,
+    "address": "Rue Bara, 135",
+    "phoneNumber": "02 525 22 11",
+    "city": "1070 Bruxelles",
+    "email": null,
+    "blackListed": false,
+    "blackListMotivation": null,
+    "version": 1
+  },
+  "phoneNumber": "1234567890"
 }
 
 ### CREATE A NEW SUPERVISOR WITH INVALID EMAIL THAT ALREADY EXISTS
@@ -66,5 +76,7 @@ Authorization: {{adminToken}}
   "lastName": "Ronaldo",
   "email": "cristiano.ronald@hotmail.com",
   "phoneNumber": "1234567890",
-  "enterpriseId": 8
+  "enterprise": {
+    "id" : 8
+  }
 }

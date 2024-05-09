@@ -1,5 +1,8 @@
 package be.vinci.pae.domain.internship;
 
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import java.util.Objects;
 
 /**
@@ -11,9 +14,9 @@ public class InternshipImpl implements Internship {
   private int id;
   private String subject;
   private String signatureDate;
-  private int supervisorId;
-  private int contactId;
-  private int academicYear;
+  private SupervisorDTO supervisor;
+  private ContactDTO contact;
+  private AcademicYearDTO academicYear;
   private int version;
 
   @Override
@@ -47,32 +50,32 @@ public class InternshipImpl implements Internship {
   }
 
   @Override
-  public int getSupervisorId() {
-    return supervisorId;
+  public SupervisorDTO getSupervisor() {
+    return supervisor;
   }
 
   @Override
-  public void setSupervisorId(int supervisorId) {
-    this.supervisorId = supervisorId;
+  public void setSupervisor(SupervisorDTO supervisor) {
+    this.supervisor = supervisor;
   }
 
   @Override
-  public int getContactId() {
-    return contactId;
+  public ContactDTO getContact() {
+    return contact;
   }
 
   @Override
-  public void setContactId(int contactId) {
-    this.contactId = contactId;
+  public void setContact(ContactDTO contact) {
+    this.contact = contact;
   }
 
   @Override
-  public int getAcademicYear() {
+  public AcademicYearDTO getAcademicYear() {
     return academicYear;
   }
 
   @Override
-  public void setAcademicYear(int academicYear) {
+  public void setAcademicYear(AcademicYearDTO academicYear) {
     this.academicYear = academicYear;
   }
 
@@ -86,6 +89,7 @@ public class InternshipImpl implements Internship {
     this.version = version;
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,12 +99,15 @@ public class InternshipImpl implements Internship {
       return false;
     }
     InternshipImpl that = (InternshipImpl) o;
-    return id == that.id;
+    return id == that.id && version == that.version && Objects.equals(subject, that.subject)
+        && Objects.equals(signatureDate, that.signatureDate) && Objects.equals(
+        supervisor, that.supervisor) && Objects.equals(contact, that.contact)
+        && Objects.equals(academicYear, that.academicYear);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(id, subject, signatureDate, supervisor, contact, academicYear, version);
   }
 
   @Override
@@ -109,10 +116,23 @@ public class InternshipImpl implements Internship {
         + "id=" + id
         + ", subject='" + subject + '\''
         + ", signatureDate='" + signatureDate + '\''
-        + ", supervisorId=" + supervisorId
-        + ", contractId=" + contactId
+        + ", supervisorId=" + supervisor
+        + ", contractId=" + contact
         + ", academicYear=" + academicYear + '}';
   }
 
+  @Override
+  public void checkOnlySubjectUpdated(InternshipDTO previousInternship) {
+    if (this.equals(previousInternship)) {
+      throw new IllegalArgumentException("The internship has not been updated");
+    }
+    if (this.getSubject().equals(previousInternship.getSubject())) {
+      throw new IllegalArgumentException("Subject has not been updated");
+    }
+    if (this.getSignatureDate() != null && !this.getSignatureDate()
+        .equals(previousInternship.getSignatureDate())) {
+      throw new IllegalArgumentException("Signature date can not be updated");
+    }
+  }
 
 }

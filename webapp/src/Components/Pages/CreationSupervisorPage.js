@@ -29,18 +29,17 @@ async function renderCreationSupervisorPage() {
         },
     };
     const responseEnterprise = await fetch(`/api/enterprises/getOne:${enterpriseIdParam}`, options);
-    const enterprise = await responseEnterprise.json();
-    console.log(enterprise);
+    const enterpriseJson = await responseEnterprise.json();
     main.innerHTML = `
         <section>
             <div style="margin-top: 100px" class="container h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12 text-center">
-                        <h1>Création d'un responsable de stage pour ${enterprise}</h1>
+                        <h1>Création d'un responsable de stage pour ${enterpriseJson.tradeName} ${enterpriseJson.designation != null ? enterpriseJson.designation : ''}</h1>
                         <form>
                             <div class="form-group">
                                 <label for="companyName">Nom commercial</label>
-                                <p id="companyName">${enterprise.tradeName}</p>
+                                <p id="companyName">${enterpriseJson.tradeName}</p>
                             </div>
                             <div class="form-group">
                               <label for="lastName">Nom de famille</label>
@@ -83,7 +82,7 @@ async function renderCreationSupervisorPage() {
                 lastName: lastNameParam,
                 firstName: firstNameParam,  
                 email: emailParam,
-                enterpriseId: enterpriseIdParam,
+                enterprise: enterpriseJson,
                 phoneNumber: phoneParam
             }),                
 };

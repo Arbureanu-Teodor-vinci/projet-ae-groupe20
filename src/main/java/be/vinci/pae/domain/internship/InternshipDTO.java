@@ -1,5 +1,8 @@
 package be.vinci.pae.domain.internship;
 
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.contact.ContactDTO;
+import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -51,46 +54,46 @@ public interface InternshipDTO {
   void setSignatureDate(String signatureDate);
 
   /**
-   * Get supervisorId.
+   * Get supervisorDTO.
    *
-   * @return supervisorId integer
+   * @return supervisor SupervisorDTO
    */
-  int getSupervisorId();
+  SupervisorDTO getSupervisor();
 
   /**
    * Set supervisorId.
    *
-   * @param supervisorId integer
+   * @param supervisor integer
    */
-  void setSupervisorId(int supervisorId);
+  void setSupervisor(SupervisorDTO supervisor);
 
   /**
-   * Get contractId.
+   * Get contactDTO.
    *
-   * @return contractId integer
+   * @return contact ContactDTO
    */
-  int getContactId();
+  ContactDTO getContact();
 
   /**
-   * Set contractId.
+   * Set contactDTO.
    *
-   * @param contactId integer
+   * @param contact contactDTO
    */
-  void setContactId(int contactId);
+  void setContact(ContactDTO contact);
 
   /**
-   * Get academicYear.
+   * Get academicYearDTO.
    *
    * @return academicYear integer
    */
-  int getAcademicYear();
+  AcademicYearDTO getAcademicYear();
 
   /**
-   * Set academicYear.
+   * Set academicYearDTO.
    *
-   * @param academicYear integer
+   * @param academicYear academicYearDTO
    */
-  void setAcademicYear(int academicYear);
+  void setAcademicYear(AcademicYearDTO academicYear);
 
   /**
    * Get version.

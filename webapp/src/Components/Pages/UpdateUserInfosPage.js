@@ -57,42 +57,47 @@ async function renderUpdateUserInfos() {
     </section>`;
 
   const errorMessage = document.getElementById('error-message');
-  // const showUpdatePasswordForm = document.getElementById('showUpdatePasswordForm');
+  const showUpdatePasswordForm = document.getElementById('showUpdatePasswordForm');
   const passwordFormDiv = document.querySelector('.passwordForm');
 
   let changePassword = false;
 
-  document.addEventListener('click', (e) => {
+  showUpdatePasswordForm.addEventListener('click', (e) => {
+    e.preventDefault();
     if (e.target.id === 'showUpdatePasswordForm') {
+      
       passwordFormDiv.innerHTML = `
       <div class="form-group">
-                      <label for="actualPassword">Mot de passe actuel</label>
-                      <div class="input-group">
-                          <input type="password" id="actualPassword" name="password" class="form-control" required>
-                          <button type="button" class="btn btn-secondary">Afficher</button>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="newPassword">Nouveau mot de passe</label>
-                      <div class="input-group">
-                          <input type="password" id="newPassword" name="newPassword" class="form-control" required>
-                          <button type="button" class="btn btn-secondary">Afficher</button>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="newPasswordValidation">Valider nouveau mot de passe</label>
-                      <div class="input-group">
-                          <input type="password" id="newPasswordValidation" name="newPasswordValidation" class="form-control" required>
-                          <button type="button" class="btn btn-secondary">Afficher</button>
-                      </div>
-                  </div>
-                  <a href="#" id="unshowUpdatePasswordForm">Ne pas modifier mon mot de passe</a><p> </p>`;
+              <label for="actualPassword">Mot de passe actuel</label>
+              <div class="input-group">
+                <input type="password" id="actualPassword" name="password" class="form-control" required>
+                <button type="button" class="btn btn-secondary">Afficher</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">Nouveau mot de passe</label>
+              <div class="input-group">
+                <input type="password" id="newPassword" name="newPassword" class="form-control" required>
+                <button type="button" class="btn btn-secondary">Afficher</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newPasswordValidation">Valider nouveau mot de passe</label>
+              <div class="input-group">
+                <input type="password" id="newPasswordValidation" name="newPasswordValidation" class="form-control" required>
+                <button type="button" class="btn btn-secondary">Afficher</button>
+              </div>
+            </div>
+            <a href="#" id="unshowUpdatePasswordForm">Ne pas modifier mon mot de passe</a><p> </p>`;
+      document.querySelectorAll('.btn-secondary').forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          const passwordInput = document.getElementById(event.target.previousElementSibling.id);
+          const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
+        });
+      });
+
       changePassword = true;
-    }
-    if (e.target.classList.contains('btn-secondary')) {
-      const passwordInput = document.getElementById(e.target.previousElementSibling.id);
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
     }
     if(e.target.id === 'unshowUpdatePasswordForm') {
       passwordFormDiv.innerHTML = `

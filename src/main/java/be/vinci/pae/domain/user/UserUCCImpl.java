@@ -34,9 +34,7 @@ public class UserUCCImpl implements UserUCC {
     UserDTO userDTO = userDAO.getOneUserByEmail(email);
 
     User user = (User) userDTO;
-    if (user == null) {
-      throw new NullPointerException("Invalid email");
-    }
+    user.checkNotNull();
     user.checkPassword(password);
 
     return userDTO;

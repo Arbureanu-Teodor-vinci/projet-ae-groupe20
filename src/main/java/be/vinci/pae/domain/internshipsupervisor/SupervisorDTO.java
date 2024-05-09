@@ -1,5 +1,6 @@
 package be.vinci.pae.domain.internshipsupervisor;
 
+import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -79,25 +80,16 @@ public interface SupervisorDTO {
   void setPhoneNumber(String phoneNumber);
 
   /**
-   * Get enterpriseId.
+   * Get enterpriseDTO.
    *
-   * @return enterpriseId integer
+   * @return enterpriseDTO EnterpriseDTO
    */
-  int getEnterpriseId();
+  EnterpriseDTO getEnterprise();
 
   /**
-   * Set enterpriseId.
+   * Set enterprise.
    *
-   * @param enterpriseId integer
+   * @param enterprise EnterpriseDTO
    */
-  void setEnterpriseId(int enterpriseId);
-
-  @Override
-  boolean equals(Object o);
-
-  @Override
-  int hashCode();
-
-  @Override
-  String toString();
+  void setEnterprise(EnterpriseDTO enterprise);
 }
