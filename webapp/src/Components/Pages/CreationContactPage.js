@@ -79,8 +79,6 @@ async function renderCreationContactPage() {
         // Trier les entreprises par nom
         companiesToRender.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
 
-
-
         if(companiesToRender.length === 0) {
             // Si aucune entreprise n'a été trouvée, ajoutez une option avec le message d'erreur
             const option = document.createElement('option');
@@ -94,7 +92,7 @@ async function renderCreationContactPage() {
             if(company.blackListed === false){
             const option = document.createElement('option');
             option.text = company.designation ? `${company.tradeName  } - ${  company.designation}` : company.tradeName;
-            option.value = company.id;
+            option.setAttribute('data-company', JSON.stringify(company));
             companySelect.appendChild(option);
             }
             });
@@ -136,7 +134,7 @@ async function renderCreationContactPage() {
     // Initialiser les options avec toutes les entreprises
     renderCompaniesOptions(companies);
 
-    function renderCompaniesOptions(companiesToRender) {
+    /* function renderCompaniesOptions(companiesToRender) {
         // Réinitialiser les options du select
         companySelect.innerHTML = '';
 
@@ -149,7 +147,7 @@ async function renderCreationContactPage() {
             companySelect.appendChild(option);
             }
         });
-    }
+    } */
 }
 
 export default creationContactPage;

@@ -38,9 +38,6 @@ async function renderUpdateContactPage() {
     }else{
 
     const contact = await response.json();
-    // const responseEnterprise = await fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options);
-    // const enterprise = await responseEnterprise.json();
-
 
     let stateOptions = '';
     if (['initié', 'pris'].includes(contact.stateContact)) {
@@ -77,13 +74,13 @@ async function renderUpdateContactPage() {
                     <form id="contactForm">
                         <div class="form-group">
                             <label for="enterpriseId"><B>Entreprise</B></label>
-                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${contact.enterprise.tradeName}" ${nonUpdatable}>
+                            <input type="text" id="enterpriseId" name="enterpriseId" class="form-control text-center" value="${contact.enterprise.tradeName}" disabled>
                         </div>
                         <div class="form-group interviewMethodDiv">
-                            <label for="interViewMethod"><B>Moyen de contact</B></label>
-                            <select id="interViewMethod" name="interViewMethod" class="form-control text-center" ${nonUpdatable}>
-                                <option value="A distance" ${contact.interViewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
-                                <option value="Dans l entreprise" ${contact.interViewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
+                            <label for="interviewMethod"><B>Moyen de contact</B></label>
+                            <select id="interviewMethod" name="interviewMethod" class="form-control text-center" ${nonUpdatable}>
+                                <option value="A distance" ${contact.interviewMethod === 'A distance' ? 'selected' : ''}>A distance</option>
+                                <option value="Dans l entreprise" ${contact.interviewMethod === 'Dans l entreprise' ? 'selected' : ''}>Dans l'entreprise</option>
                             </select>
                         </div>
                         <div class="form-group tool">
@@ -109,7 +106,7 @@ async function renderUpdateContactPage() {
     </section>`;
 
 const interViewMethodSelectDiv = document.querySelector('.interviewMethodDiv');
-const interViewMethodSelect = document.querySelector('#interViewMethod');
+const interViewMethodSelect = document.querySelector('#interviewMethod');
 const stateContactSelect = document.querySelector('#stateContact');
 const toolDiv = document.querySelector('.tool');
 const toolInput = document.querySelector('#toolInput');
@@ -123,6 +120,7 @@ if (contact.interViewMethod === null) {
 
 // Hide the tool input if the interview method is not "A distance"
 toolDiv.style.display = interViewMethodSelect.value === 'A distance' ? 'block' : 'none';
+if(stateContactSelect.value === 'initié') toolDiv.style.display = 'none';
 
 interViewMethodSelect.addEventListener('change', (event) => {
     // If the interview method is "A distance", display the tool input, otherwise hide it

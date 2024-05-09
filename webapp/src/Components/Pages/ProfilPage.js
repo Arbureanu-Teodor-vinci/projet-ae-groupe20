@@ -121,7 +121,7 @@ async function renderProfilPage() {
                                     contact.enterprise.blackListed ? 'red' : 'black'
                                 }; font-weight: ${
                                     contact.enterprise.blackListed ? 'bold' : 'normal'
-                                }">${contact.enterprise.tradeName} ${contact.entreprise.designation ? ` - ${contact.entreprise.designation}` : ''}</td>
+                                }">${contact.enterprise.tradeName} ${contact.enterprise.designation ? ` - ${contact.enterprise.designation}` : ''}</td>
                                 <td class="text-center">${contact.interViewMethod || ' - '}</td>
                                 <td class="text-center">${contact.tool || ' - '}</td>
                                 <td class="text-center">${contact.stateContact || ' - '}</td>
@@ -184,19 +184,16 @@ async function renderProfilPage() {
         if(responseInternship.ok){
             internship = await responseInternship.json();
             if(internship){
-                const responseInternshipSupervisor = await fetch(`/api/supervisors/getOne:${internship.supervisorId}`, options);
-                const internshiptSupervisor = await responseInternshipSupervisor.json();
                 internshipSubject.textContent = internship.subject;
                 document.getElementById('signatureDate').textContent = internship.signatureDate;
-                const {enterprise} = contacts.find(contact => contact.id === internship.contactId);
                 const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
-                internshipEnterpriseTableLine.textContent = enterprise.tradeName;
-                if (enterprise.blackListed) {
+                internshipEnterpriseTableLine.textContent = internship.contact.enterprise.tradeName;
+                if (internship.contact.enterprise.blackListed) {
                     internshipEnterpriseTableLine.style.color = 'red';
                     internshipEnterpriseTableLine.style.fontWeight = 'bold';
                     internshipEnterpriseTableLine.textContent += ' (blacklisted)';
                 }
-                document.getElementById('internshipSupervisor').textContent = `${internshiptSupervisor.firstName  } ${  internshiptSupervisor.lastName}`;
+                document.getElementById('internshipSupervisor').textContent = `${internship.supervisor.firstName  } ${  internship.supervisor.lastName}`;
                 const addStageButtons = document.querySelector('.addStage');
                 addStageButtons.disabled = true;
             }
@@ -226,8 +223,8 @@ async function renderProfilPage() {
                   subject: subjectInput.value,
                   academicYear: internship.academicYear,
                   version: internship.version,
-                  contactId: internship.contactId,
-                  supervisorId: internship.supervisorId,
+                  contact: internship.contact,
+                  supervisor: internship.supervisor,
                   signatureDate: internship.signatureDate, }),
             });
             if (responseUpdateInternship.ok) {

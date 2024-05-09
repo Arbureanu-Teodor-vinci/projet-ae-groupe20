@@ -53,6 +53,6 @@ public class TestsApplicationBinder extends AbstractBinder {
     bind(Mockito.mock(SupervisorDAO.class)).to(SupervisorDAO.class);
     bind(InternshipUCCImpl.class).to(InternshipUCC.class).in(Singleton.class);
     bind(Mockito.mock(InternshipDAO.class)).to(InternshipDAO.class);
-    // bind(ContactImpl.class).to(ContactDTO.class).in(Singleton.class);
+    //bind(ContactImpl.class).to(ContactDTO.class).in(Singleton.class);
   }
 }

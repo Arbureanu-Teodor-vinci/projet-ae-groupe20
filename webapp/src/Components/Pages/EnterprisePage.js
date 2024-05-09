@@ -103,12 +103,10 @@ async function renderEnterprisePage(enterpriseId) {
 
   const contactsTable = document.querySelector('.table tbody');
   contacts.forEach(async (contact) => {
-    const response3 = await fetch(`/api/auths/user:${contact.studentId}`, options);
-    const student = await response3.json();
-
+  
     contactsTable.innerHTML += `
             <tr>
-                <td>${student.lastName} ${student.firstName}</td>
+                <td>${contact.student.lastName} ${contact.student.firstName}</td>
                 <td>${contact.stateContact}</td>
                 <td>${contact.interviewMethod}</td>
                 <td>${contact.tool ? contact.tool : ' - '}</td>

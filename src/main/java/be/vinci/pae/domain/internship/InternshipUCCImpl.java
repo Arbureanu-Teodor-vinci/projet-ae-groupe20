@@ -2,6 +2,8 @@ package be.vinci.pae.domain.internship;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYear;
+import be.vinci.pae.domain.academicyear.AcademicYearDTO;
+import be.vinci.pae.domain.academicyear.AcademicYearUCC;
 import be.vinci.pae.domain.contact.Contact;
 import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.Supervisor;
@@ -18,7 +20,8 @@ import java.util.List;
  */
 public class InternshipUCCImpl implements InternshipUCC {
 
-
+  @Inject
+  private AcademicYearUCC academicYearUCC;
   @Inject
   private ContactDAO contactDAO;
   @Inject
@@ -79,6 +82,8 @@ public class InternshipUCCImpl implements InternshipUCC {
       if (internshipDAO.getOneInternshipByStudentId(contact.getStudent().getId()) != null) {
         throw new BusinessException("student already has an internship");
       }
+      AcademicYearDTO academicYear = academicYearUCC.getOrAddActualAcademicYear();
+      internshipToAdd.setAcademicYear(academicYear);
       internship = internshipDAO.addInternship(internshipToAdd);
     } catch (Throwable e) {
       dalServices.rollbackTransaction();

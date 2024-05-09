@@ -62,7 +62,7 @@ async function renderPage() {
             <td>${user.telephoneNumber}</td>
             <td>${user.role}</td>
             <td>${user.registrationDate}</td>
-            <td>${user.role === 'Etudiant' ? user.academicYear.replace(/.*year=/, '').replace(']', '') : ' - '}</td>
+            <td>${user.role === 'Etudiant' ? user.academicYear.year : ' - '}</td>
             <td>${user.role === 'Etudiant' ? `<button id="${user.id}" class="btn btn-primary viewInfo">Voir les informations de cet(tte) étudiant(e)</button>` : ''}</td>
         </tr>
         `;

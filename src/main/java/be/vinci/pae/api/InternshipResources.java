@@ -44,7 +44,7 @@ public class InternshipResources {
   @Path("/getOneInternshipByStudentId:{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Authorize(rolesAllowed = {"Etudiant"})
+  @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getOneInternshipByStudentId(@PathParam("id") int id) {
     Logger.logEntry("GET /internships/getOneInternshipByStudentId" + id);
     if (id <= 0) {
@@ -100,8 +100,7 @@ public class InternshipResources {
     Logger.logEntry("POST /internships/addInternship");
     if (internshipDTO == null || internshipDTO.getSupervisor().getId() <= 0
         || internshipDTO.getContact().getId() <= 0
-        || internshipDTO.getSignatureDate() == null
-        || internshipDTO.getAcademicYear().getId() <= 0) {
+        || internshipDTO.getSignatureDate() == null) {
       throw new WebApplicationException("parameters missing.",
           Status.BAD_REQUEST);
     }
