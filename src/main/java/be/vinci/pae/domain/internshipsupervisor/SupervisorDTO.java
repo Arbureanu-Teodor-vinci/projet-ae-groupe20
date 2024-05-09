@@ -80,7 +80,7 @@ public interface SupervisorDTO {
   void setPhoneNumber(String phoneNumber);
 
   /**
-   * Get enterpriseDTO
+   * Get enterpriseDTO.
    *
    * @return enterpriseDTO EnterpriseDTO
    */

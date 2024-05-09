@@ -53,7 +53,7 @@ public class ContactResource {
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode getOneContact(@PathParam("id") Integer id, @Context ContainerRequest request) {
     Logger.logEntry("GET /contacts/getOne:" + id);
-    
+
     // Verify the token
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {
@@ -198,7 +198,7 @@ public class ContactResource {
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
 
-    if (student.getId() != (authentifiedUser.getId())) {
+    if (student.getId() != authentifiedUser.getId()) {
       throw new WebApplicationException("You can only add a contact for yourself.",
           Status.FORBIDDEN);
     }
@@ -249,10 +249,6 @@ public class ContactResource {
           .put("id", contact.getStudent().getStudentAcademicYear().getId())
           .put("year", contact.getStudent().getStudentAcademicYear().getYear());
 
-      ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
-          .put("id", contact.getAcademicYear().getId())
-          .put("year", contact.getAcademicYear().getYear());
-
       ObjectNode studentNode = jsonMapper.createObjectNode()
           .put("id", contact.getStudent().getId())
           .put("firstName", contact.getStudent().getFirstName())
@@ -275,6 +271,10 @@ public class ContactResource {
           .put("blackListed", contact.getEnterprise().isBlackListed())
           .put("blackListMotivation", contact.getEnterprise().getBlackListMotivation())
           .put("version", contact.getEnterprise().getVersion());
+
+      ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
+          .put("id", contact.getAcademicYear().getId())
+          .put("year", contact.getAcademicYear().getYear());
 
       ObjectNode contactNode = jsonMapper.createObjectNode()
           .put("id", contact.getId())

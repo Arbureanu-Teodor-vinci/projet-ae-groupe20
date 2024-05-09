@@ -49,7 +49,7 @@ public class SupervisorResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Authorize(rolesAllowed = {"Administratif", "Professeur", "Etudiant"})
   public ObjectNode addSupervisor(SupervisorDTO newSupervisor, @Context ContainerRequest request) {
-    UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
+    final UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     Logger.logEntry("POST /supervisors/add" + newSupervisor.getEmail());
 
     // if the supervisor is null, throw an exception

@@ -82,7 +82,7 @@ public interface ContactDTO {
   void setStateContact(String stateContact);
 
   /**
-   * Get studentDTO
+   * Get studentDTO.
    *
    * @return studentDTO StudentDTO
    */

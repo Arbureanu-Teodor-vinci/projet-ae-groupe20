@@ -97,9 +97,9 @@ public class StudentImpl extends UserImpl implements Student {
 
   @Override
   public String toString() {
-    return "StudentImpl{" +
-        "id=" + id +
-        ", academicYear=" + academicYear +
-        '}';
+    return "StudentImpl{"
+        + "id=" + id
+        + ", academicYear=" + academicYear
+        + '}';
   }
 }

@@ -177,11 +177,7 @@ public class InternshipResources {
     ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getStudentAcademicYear().getId())
         .put("year", internshipDTO.getContact().getStudent().getStudentAcademicYear().getYear());
-
-    ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
-        .put("id", internshipDTO.getContact().getAcademicYear().getId())
-        .put("year", internshipDTO.getContact().getAcademicYear().getYear());
-
+    
     ObjectNode contactStudentNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getId())
         .put("firstName", internshipDTO.getContact().getStudent().getFirstName())
@@ -206,6 +202,10 @@ public class InternshipResources {
         .put("blackListMotivation",
             internshipDTO.getContact().getEnterprise().getBlackListMotivation())
         .put("version", internshipDTO.getContact().getEnterprise().getVersion());
+
+    ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
+        .put("id", internshipDTO.getContact().getAcademicYear().getId())
+        .put("year", internshipDTO.getContact().getAcademicYear().getYear());
 
     ObjectNode contactNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getId())

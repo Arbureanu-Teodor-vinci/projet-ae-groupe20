@@ -130,7 +130,7 @@ public class SupervisorUCCTest {
   }
 
   @Test
-  @DisplayName("Add a supervisor with valid data and a student user but not accepted by the enterprise")
+  @DisplayName("Add a supervisor with valid data and a student user but not accepted")
   public void testAddSupervisorStudentNotAccepted() {
     SupervisorDTO supervisorToAdd = domainFactory.getSupervisorDTO();
     supervisorToAdd.setEmail("test@test.gmail.com");

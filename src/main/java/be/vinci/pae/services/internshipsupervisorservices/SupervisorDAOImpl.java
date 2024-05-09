@@ -29,13 +29,16 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     List<SupervisorDTO> internshipSupervisors = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor,\n"
-              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
-              + "        e.id_enterprise, e.trade_name, e.designation, e.address,\n"
-              + "        e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,\n"
-              + "        e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
-              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
-              + "WHERE e.id_enterprise = isup.enterprise"
+          """
+              SELECT isup.id_internship_supervisor, isup.last_name_supervisor,
+                     isup.first_name_supervisor,
+                     isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,
+                     e.id_enterprise, e.trade_name, e.designation, e.address,
+                     e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
+                     e.black_listed,e.black_listed_motivation, e.version as version_enterprise
+              FROM InternshipManagement.enterprise e,
+                   InternshipManagement.internship_supervisor isup
+              WHERE e.id_enterprise = isup.enterprise"""
       );
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
@@ -57,13 +60,17 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     SupervisorDTO internshipSupervisor = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
-              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
-              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
-              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
-              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
-              + "WHERE e.id_enterprise = isup.enterprise\n"
-              + "AND isup.id_internship_supervisor = ?"
+          """
+              SELECT isup.id_internship_supervisor, isup.last_name_supervisor,
+                     isup.first_name_supervisor,
+                     isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,
+                     e.id_enterprise, e.trade_name, e.designation, e.address,
+                     e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
+                     e.black_listed,e.black_listed_motivation, e.version as version_enterprise
+              FROM InternshipManagement.enterprise e,
+                   InternshipManagement.internship_supervisor isup
+              WHERE e.id_enterprise = isup.enterprise
+              AND isup.id_internship_supervisor = ?"""
       );
       ps.setInt(1, id);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -86,13 +93,17 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     List<SupervisorDTO> internshipSupervisors = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
-              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
-              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
-              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
-              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
-              + "WHERE e.id_enterprise = isup.enterprise\n"
-              + "AND isup.enterprise = ?"
+          """
+              SELECT isup.id_internship_supervisor, isup.last_name_supervisor,
+                     isup.first_name_supervisor,
+                     isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,
+                     e.id_enterprise, e.trade_name, e.designation, e.address,
+                     e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
+                     e.black_listed,e.black_listed_motivation, e.version as version_enterprise
+              FROM InternshipManagement.enterprise e,
+                   InternshipManagement.internship_supervisor isup
+              WHERE e.id_enterprise = isup.enterprise
+              AND isup.enterprise = ?"""
       );
       ps.setInt(1, idEnterprise);
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -115,13 +126,17 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     SupervisorDTO internshipSupervisor = null;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT isup.id_internship_supervisor, isup.last_name_supervisor, isup.first_name_supervisor, "
-              + "        isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,\n"
-              + "        e.id_enterprise, e.trade_name, e.designation, e.address, e.phone_number as phone_number_enterprise,"
-              + "        e.city, e.email as email_enterprise, e.black_listed,e.black_listed_motivation, e.version as version_enterprise\n"
-              + "FROM InternshipManagement.enterprise e, InternshipManagement.internship_supervisor isup\n"
-              + "WHERE e.id_enterprise = isup.enterprise\n"
-              + "AND isup.email = ?"
+          """
+              SELECT isup.id_internship_supervisor, isup.last_name_supervisor,
+                     isup.first_name_supervisor,
+                     isup.phone_number as phone_number_supervisor, isup.email as email_supervisor,
+                     e.id_enterprise, e.trade_name, e.designation, e.address,
+                     e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
+                     e.black_listed,e.black_listed_motivation, e.version as version_enterprise
+              FROM InternshipManagement.enterprise e,
+                   InternshipManagement.internship_supervisor isup
+              WHERE e.id_enterprise = isup.enterprise
+              AND isup.email = ?"""
       );
       ps.setString(1, email);
       try (ResultSet resultSet = ps.executeQuery()) {
