@@ -62,6 +62,16 @@ public class SupervisorUCCTest {
 
     supervisorDTO.setEnterprise(enterpriseDTO);
 
+    contactDTO.setId(1);
+    contactDTO.setEnterprise(enterpriseDTO);
+    contactDTO.setStateContact("accepté");
+    contactDTO.setStudent(studentDTO);
+
+    List<ContactDTO> contacts = new ArrayList<>();
+    contacts.add(contactDTO);
+
+    Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contacts);
+
   }
 
   @Test
@@ -111,14 +121,6 @@ public class SupervisorUCCTest {
     supervisorToAdd.setPhoneNumber("0123456789");
     supervisorToAdd.setEnterprise(enterpriseDTO);
 
-    contactDTO.setId(1);
-    contactDTO.setEnterprise(enterpriseDTO);
-    contactDTO.setStateContact("accepté");
-    contactDTO.setStudent(studentDTO);
-    List<ContactDTO> contacts = new ArrayList<>();
-    contacts.add(contactDTO);
-
-    Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contacts);
     Mockito.when(contactDAO.addContact(1, 1, 1)).thenReturn(contactDTO);
     Mockito.when(supervisorDAO.addSupervisor(supervisorToAdd))
         .thenReturn(supervisorToAdd);
@@ -137,14 +139,8 @@ public class SupervisorUCCTest {
     supervisorToAdd.setPhoneNumber("0123456789");
     supervisorToAdd.setEnterprise(enterpriseDTO);
 
-    contactDTO.setId(1);
-    contactDTO.setEnterprise(enterpriseDTO);
     contactDTO.setStateContact("pris");
-    contactDTO.setStudent(studentDTO);
-    List<ContactDTO> contacts = new ArrayList<>();
-    contacts.add(contactDTO);
 
-    Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contacts);
     Mockito.when(contactDAO.addContact(1, 1, 1)).thenReturn(contactDTO);
     Mockito.when(supervisorDAO.addSupervisor(supervisorToAdd))
         .thenReturn(supervisorToAdd);
@@ -178,6 +174,7 @@ public class SupervisorUCCTest {
     supervisorToAdd.setFirstName("Test");
     supervisorToAdd.setLastName("Test");
     supervisorToAdd.setPhoneNumber("aaaaaaaaa");
+    supervisorToAdd.setEnterprise(enterpriseDTO);
 
     assertThrows(BusinessException.class,
         () -> supervisorUCC.addSupervisor(supervisorToAdd, studentDTO));
@@ -191,6 +188,7 @@ public class SupervisorUCCTest {
     supervisorToAdd.setFirstName("test");
     supervisorToAdd.setLastName("Test");
     supervisorToAdd.setPhoneNumber("0123456789");
+    supervisorToAdd.setEnterprise(enterpriseDTO);
 
     assertThrows(BusinessException.class,
         () -> supervisorUCC.addSupervisor(supervisorToAdd, studentDTO));
@@ -204,6 +202,7 @@ public class SupervisorUCCTest {
     supervisorToAdd.setFirstName("Test");
     supervisorToAdd.setLastName("test");
     supervisorToAdd.setPhoneNumber("0123456789");
+    supervisorToAdd.setEnterprise(enterpriseDTO);
 
     assertThrows(BusinessException.class,
         () -> supervisorUCC.addSupervisor(supervisorToAdd, studentDTO));
@@ -217,6 +216,7 @@ public class SupervisorUCCTest {
     supervisorToAdd.setFirstName("Test");
     supervisorToAdd.setLastName("Test");
     supervisorToAdd.setPhoneNumber("0123456789");
+    supervisorToAdd.setEnterprise(enterpriseDTO);
 
     assertThrows(BusinessException.class,
         () -> supervisorUCC.addSupervisor(supervisorToAdd, studentDTO));
