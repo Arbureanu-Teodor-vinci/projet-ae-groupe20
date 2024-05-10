@@ -81,7 +81,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact());
       contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod());
       contact.checkContactRefusalReasonUpdate();
-      contact.checkContactToolUpdate();
       contactBeforeUpdate.checkContactAcademicYear();
       contactDTO = contactDAO.updateContact(contact);
 
