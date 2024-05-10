@@ -103,7 +103,6 @@ async function renderCreationContactPage() {
     form.addEventListener('submit', async (event) => {
         const valueCompany = companySelect.value;
         const { token, ...student } = getAuthenticatedUser();
-        console.log(valueCompany);
         if(valueCompany === ''){
             event.preventDefault();
             Navigate('/creationCompany');
@@ -126,7 +125,7 @@ async function renderCreationContactPage() {
             event.preventDefault();
             Navigate('/profil');
           } else {
-            alert(`${responseCreateContact.status} : ${responseCreateContact.statusText}`);
+            alert(`${responseCreateContact.status} : ${await responseCreateContact.text()}`);
           }
         }
     });

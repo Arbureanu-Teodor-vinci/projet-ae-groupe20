@@ -103,6 +103,7 @@ async function renderProfilPage() {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Année académique</th>
                                 <th>Entreprise</th>
                                 <th>Moyen de contact</th>
                                 <th>Outil de contact</th>
@@ -117,6 +118,7 @@ async function renderProfilPage() {
                             .map(
                                 (contact) => `
                         <tr>
+                                <td class="text-center">${contact.academicYear.year}</td>
                                 <td class="text-center" style="color: ${
                                     contact.enterprise.blackListed ? 'red' : 'black'
                                 }; font-weight: ${

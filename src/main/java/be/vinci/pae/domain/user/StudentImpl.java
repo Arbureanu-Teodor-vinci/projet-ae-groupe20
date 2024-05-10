@@ -43,13 +43,13 @@ public class StudentImpl extends UserImpl implements Student {
   }
 
   @Override
-  public void checkContactExists(EnterpriseDTO enterpriseDTO,
+  public void checkContactExists(EnterpriseDTO enterpriseDTO, AcademicYearDTO actualAcademicYear,
       List<ContactDTO> contactsExisting) {
     boolean contactExists = false;
     for (ContactDTO contact : contactsExisting) {
-      if (contact.getStudent() == this
-          && contact.getEnterprise() == enterpriseDTO
-          && contact.getAcademicYear() == this.academicYear) {
+      if (contact.getStudent().equals(this)
+          && contact.getEnterprise().equals(enterpriseDTO)
+          && contact.getAcademicYear().equals(actualAcademicYear)) {
         contactExists = true;
       }
     }
@@ -60,12 +60,13 @@ public class StudentImpl extends UserImpl implements Student {
   }
 
   @Override
-  public void checkContactAccepted(List<ContactDTO> contactsExisting) {
+  public void checkContactAccepted(List<ContactDTO> contactsExisting,
+      AcademicYearDTO actualAcademicYear) {
     boolean contactAccepted = false;
     for (ContactDTO contact : contactsExisting) {
-      if (contact.getStudent() == this
+      if (contact.getStudent().equals(this)
           && contact.getStateContact().equals("accepté")
-          && contact.getAcademicYear() == this.academicYear) {
+          && contact.getAcademicYear().equals(actualAcademicYear)) {
         contactAccepted = true;
       }
     }

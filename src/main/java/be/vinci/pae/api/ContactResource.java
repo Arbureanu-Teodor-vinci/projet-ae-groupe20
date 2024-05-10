@@ -4,8 +4,6 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.contact.ContactDTO;
 import be.vinci.pae.domain.contact.ContactUCC;
-import be.vinci.pae.domain.enterprise.EnterpriseDTO;
-import be.vinci.pae.domain.user.StudentDTO;
 import be.vinci.pae.domain.user.UserDTO;
 import be.vinci.pae.utils.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -191,19 +189,19 @@ public class ContactResource {
     Logger.logEntry("POST /contacts/add");
     // Verify the token
 
-    EnterpriseDTO enterprise = contact.getEnterprise();
-    StudentDTO student = contact.getStudent();
+    //EnterpriseDTO enterprise = contact.getEnterprise();
+    //StudentDTO student = contact.getStudent();
 
-    if (enterprise == null) {
+    if (contact.getEnterprise() == null) {
       throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
     }
 
-    if (student.getId() != authentifiedUser.getId()) {
+    if (contact.getStudent().getId() != authentifiedUser.getId()) {
       throw new WebApplicationException("You can only add a contact for yourself.",
           Status.FORBIDDEN);
     }
     // Try to add the contact
-    ContactDTO addedContact = contactUCC.addContact(student, enterprise);
+    ContactDTO addedContact = contactUCC.addContact(contact);
     // if the contact is null, throw an exception
     if (addedContact == null) {
       throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
