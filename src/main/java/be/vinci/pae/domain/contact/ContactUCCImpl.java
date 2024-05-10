@@ -83,7 +83,6 @@ public class ContactUCCImpl implements ContactUCC {
       contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact());
       contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod());
       contact.checkContactRefusalReasonUpdate();
-      contact.checkContactToolUpdate();
       contactDTO = contactDAO.updateContact(contact);
 
       //if contact id updated to accepted, all other contacts of the student are suspended
