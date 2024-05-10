@@ -181,16 +181,6 @@ public class ContactImpl implements Contact {
   }
 
   @Override
-  public void checkContactToolUpdate() {
-    // tool cannot be null if interviewMethod is 'A distance'
-    if (Objects.equals(this.interviewMethod, "A distance") && (this.tool == null
-        || this.tool.isBlank())) {
-      throw new BusinessException("Tool cannot be null if interviewMethod is 'A distance'");
-    }
-
-  }
-
-  @Override
   public void checkContactRefusalReasonUpdate() {
     //can only update contactRefusal on refused state
     if (this.stateContact.equals(POSSIBLESTATES[3])) {

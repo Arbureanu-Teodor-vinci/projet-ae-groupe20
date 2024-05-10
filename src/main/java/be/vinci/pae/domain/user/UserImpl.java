@@ -202,7 +202,7 @@ public class UserImpl implements User {
     if (phoneNumber == null) {
       return;
     }
-    if (!phoneNumber.matches("^[0-9]{10}$")) {
+    if (!phoneNumber.matches("^\\d(\\d| (?=\\d)){8,}$")) {
       throw new BusinessException("Phone number is not valid.");
     }
   }

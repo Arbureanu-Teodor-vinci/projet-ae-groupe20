@@ -204,6 +204,9 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public void checkEmailFormat(String email) {
+    if (email.trim().isEmpty()) {
+      return;
+    }
     int firstIndex = email.indexOf("@");
     int lastIndex = email.lastIndexOf("@");
     if (firstIndex != lastIndex || firstIndex == -1) {
@@ -213,10 +216,10 @@ public class EnterpriseImpl implements Enterprise {
 
   @Override
   public void checkPhoneNumberFormat(String phoneNumber) {
-    if (phoneNumber == null) {
+    if (phoneNumber.trim().isEmpty()) {
       return;
     }
-    if (!phoneNumber.matches("^[0-9]{4,}$")) {
+    if (!phoneNumber.matches("^[0-9.\\s]{4,}$")) {
       throw new BusinessException("Phone number is invalid");
     }
   }
