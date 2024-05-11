@@ -58,6 +58,7 @@ async function renderEnterprisePage(enterpriseId) {
                 <th>Moyen de contact</th>
                 <th>Outil de contact</th>
                 <th>Raison de refus</th>
+                <th>Année académique</th>
             </tr>
         </thead>
         <tbody>
@@ -111,6 +112,7 @@ async function renderEnterprisePage(enterpriseId) {
                 <td>${contact.interviewMethod}</td>
                 <td>${contact.tool ? contact.tool : ' - '}</td>
                 <td>${contact.refusalReason ? contact.refusalReason : ' - '}</td>
+                <td>${contact.academicYear.year}</td>
             </tr>
         `;
   });

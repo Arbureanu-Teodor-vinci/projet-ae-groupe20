@@ -1,3 +1,5 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
 /* eslint-disable import/no-extraneous-dependencies */
 // eslint-disable-next-line import/no-unresolved
 import Chart from 'chart.js/auto';
@@ -87,7 +89,7 @@ async function renderBoardPage() {
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="text-center" data-column="tradeName" data-sort-order="asc">Entreprise</th>
+                        <th class="text-center" data-column="tradeName" data-sort-order="asc">Entreprise ▼</th>
                         <th class="text-center" data-column="designation" data-sort-order="asc">Appelation</th>
                         <th class="text-center" data-column="address" data-sort-order="asc">Adresse</th>
                         <th class="text-center" data-column="phoneNumber" data-sort-order="asc">Numéro de téléphone</th>
@@ -307,6 +309,12 @@ async function renderBoardPage() {
 
             // Flip the sort order
             const newSortOrder = sortOrder[header.dataset.column] === 'asc' ? 'desc' : 'asc';
+
+            // Remove arrows from all headers
+        headers.forEach(h => h.textContent = h.textContent.replace(/ ▲| ▼/g, ''));
+
+        // Add arrow up or down to the current header
+        header.textContent += newSortOrder === 'asc' ? ' ▲' : ' ▼';
 
             // Sort the enterprises
             enterprisesWithInternshipCount.sort((a, b) => {
