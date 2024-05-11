@@ -28,7 +28,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     List<String> academicYears = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT academic_year FROM InternshipManagement.academic_year");
+          "SELECT academic_year FROM InternshipManagement.academic_years");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           academicYears.add(rs.getString(1));
@@ -50,7 +50,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.academic_year"
+          "SELECT * FROM InternshipManagement.academic_years"
               + " ORDER BY id_academic_year DESC LIMIT 1");
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
@@ -73,7 +73,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.academic_year WHERE academic_year = ?");
+          "SELECT * FROM InternshipManagement.academic_years WHERE academic_year = ?");
       ps.setString(1, academicYear);
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
@@ -96,7 +96,7 @@ public class AcademicYearDAOImpl implements AcademicYearDAO {
     AcademicYearDTO academicYearDTO = domainFactory.getAcademicYearDTO();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.academic_year (academic_year)"
+          "INSERT INTO InternshipManagement.academic_years (academic_year)"
               + " VALUES (?) RETURNING id_academic_year, academic_year;");
 
       ps.setString(1, academicYear);

@@ -31,7 +31,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.enterprise WHERE id_enterprise = ?"
+          "SELECT * FROM InternshipManagement.enterprises WHERE id_enterprise = ?"
       );
       ps.setInt(1, id);
 
@@ -57,7 +57,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     List<EnterpriseDTO> enterprises = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT * FROM InternshipManagement.enterprise"
+          "SELECT * FROM InternshipManagement.enterprises"
       );
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
@@ -81,7 +81,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
 
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.enterprise (trade_name, designation, address, "
+          "INSERT INTO InternshipManagement.enterprises (trade_name, designation, address, "
               + "phone_number, city, email, version) VALUES (?, ?, ?, ?, ?, ?, 1) "
               + "RETURNING *"
       );
@@ -113,7 +113,7 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
     Logger.logEntry("Enterprise DAO - updateEnterprise");
     try {
       PreparedStatement ps = dalConn.getPS(
-          "UPDATE InternshipManagement.enterprise SET trade_name = ?, designation = ?,"
+          "UPDATE InternshipManagement.enterprises SET trade_name = ?, designation = ?,"
               + " address = ?, phone_number = ?, city = ?, email = ?, black_listed = ?,"
               + " black_listed_motivation = ?, version = ?"
               + " WHERE id_enterprise = ? AND version = ? RETURNING *"
