@@ -100,7 +100,7 @@ public class InternshipResources {
     Logger.logEntry("POST /internships/addInternship");
     if (internshipDTO == null || internshipDTO.getSupervisor().getId() <= 0
         || internshipDTO.getContact().getId() <= 0
-        || internshipDTO.getSignatureDate() == null) {
+        || internshipDTO.getSignatureDate() == null || internshipDTO.getSignatureDate().isEmpty()) {
       throw new WebApplicationException("parameters missing.",
           Status.BAD_REQUEST);
     }
@@ -177,7 +177,7 @@ public class InternshipResources {
     ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getStudentAcademicYear().getId())
         .put("year", internshipDTO.getContact().getStudent().getStudentAcademicYear().getYear());
-    
+
     ObjectNode contactStudentNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getId())
         .put("firstName", internshipDTO.getContact().getStudent().getFirstName())
