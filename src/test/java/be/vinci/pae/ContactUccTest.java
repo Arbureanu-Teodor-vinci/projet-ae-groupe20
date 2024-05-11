@@ -3,6 +3,7 @@ package be.vinci.pae;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import be.vinci.pae.api.filters.BusinessException;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
@@ -47,8 +48,7 @@ public class ContactUccTest {
   void setUp() {
     contactDTO.setId(1);
     contactDTO2.setId(2);
-    contactAccepted.setId(3);
-    contactAccepted.setStateContact("accepted");
+
     contactDTO.setStateContact("pending");
 
     Mockito.when(contactDAO.getOneContactByid(1)).thenReturn(contactDTO);
@@ -60,10 +60,12 @@ public class ContactUccTest {
     studentDTO.setId(1);
     studentDTO.setAcademicYear(academicYearDTO);
 
-    contactDTO.setStudent(studentDTO);
-    contactDTO2.setStudent(studentDTO);
-
     enterpriseDTO.setId(1);
+
+    contactDTO.setStudent(studentDTO);
+    contactDTO.setEnterprise(enterpriseDTO);
+    contactDTO.setAcademicYear(academicYearDTO);
+    contactDTO2.setStudent(studentDTO);
 
     Mockito.when(contactDAO.addContact(1, 1, 1)).thenReturn(contactDTO);
     //when contact is updated return the updated contact
@@ -72,7 +74,7 @@ public class ContactUccTest {
 
     Mockito.when(academicYearDAO.getActualAcademicYear()).thenReturn(academicYearDTO);
     academicYearUCC = Mockito.mock(AcademicYearUCC.class);
-    Mockito.when(academicYearUCC.getNewAcademicYear()).thenReturn(academicYearDTO.getYear());
+    Mockito.when(academicYearUCC.getActualAcademicYear()).thenReturn(academicYearDTO.getYear());
 
   }
 
@@ -142,37 +144,51 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 1")
   void addContact() {
-    assertEquals(contactDTO, contactUCC.addContact(studentDTO, enterpriseDTO));
+    List<ContactDTO> expectedContacts = new ArrayList<>();
+
+    Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(expectedContacts);
+    assertEquals(contactDTO, contactUCC.addContact(contactDTO));
   }
 
   @Test
   @DisplayName("Add contact for student 2 while he already has a contact accepted")
   void addContact2() {
     List<ContactDTO> contactsExisting = new ArrayList<>();
+    contactAccepted.setId(3);
+    contactAccepted.setStateContact("accepté");
+    contactAccepted.setStudent(studentDTO);
+    contactAccepted.setEnterprise(domainFactory.getEnterpriseDTO());
+    contactAccepted.setAcademicYear(academicYearDTO);
     contactsExisting.add(contactAccepted);
 
-    Mockito.when(contactDAO.getContactsByUser(2)).thenReturn(contactsExisting);
+    Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
 
-    try {
-      contactUCC.addContact(studentDTO, enterpriseDTO);
-    } catch (Exception e) {
-      assertEquals("Student already has a contact for this academic year", e.getMessage());
-    }
+    BusinessException thrown = assertThrowsExactly(BusinessException.class, () -> {
+      contactUCC.addContact(contactDTO);
+    }, "Student already has an accepted contact for this academic year");
+
+    assertEquals("Student already has an accepted contact for this academic year",
+        thrown.getResponse().getEntity());
+
   }
 
   @Test
   @DisplayName("Add contact for student 1 while he already has a contact with the same enterprise")
   void addContact3() {
     List<ContactDTO> contactsExisting = new ArrayList<>();
-    contactsExisting.add(contactDTO);
+    contactDTO2.setEnterprise(enterpriseDTO);
+    contactDTO2.setAcademicYear(academicYearDTO);
+    contactDTO2.setStudent(studentDTO);
+    contactsExisting.add(contactDTO2);
 
     Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
 
-    try {
-      contactUCC.addContact(studentDTO, enterpriseDTO);
-    } catch (Exception e) {
-      assertEquals("Contact already exists", e.getMessage());
-    }
+    BusinessException thrown = assertThrowsExactly(BusinessException.class, () -> {
+      contactUCC.addContact(contactDTO);
+    }, "Student already has a contact with this enterprise and academic year");
+
+    assertEquals("Student already has a contact with this enterprise and academic year",
+        thrown.getResponse().getEntity());
   }
 
 

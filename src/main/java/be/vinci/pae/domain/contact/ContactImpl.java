@@ -1,6 +1,7 @@
 package be.vinci.pae.domain.contact;
 
 import be.vinci.pae.api.filters.BusinessException;
+import be.vinci.pae.domain.academicyear.AcademicYear;
 import be.vinci.pae.domain.academicyear.AcademicYearDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.user.StudentDTO;
@@ -217,6 +218,14 @@ public class ContactImpl implements Contact {
     }
     if (!isTakenState) {
       throw new BusinessException("The contact has to be in accepted state.");
+    }
+  }
+
+  @Override
+  public void checkContactAcademicYear() {
+    AcademicYear contactAcademicYear = (AcademicYear) this.academicYear;
+    if (!contactAcademicYear.isActual()) {
+      throw new BusinessException("The contact is not from actual academic year.");
     }
   }
 

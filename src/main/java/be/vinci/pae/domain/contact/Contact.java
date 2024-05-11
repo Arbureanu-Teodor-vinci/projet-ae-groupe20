@@ -37,4 +37,11 @@ public interface Contact extends ContactDTO {
    * Check if the contact is taken.
    */
   void checkIfContactIsAccepted() throws BusinessException;
+
+  /**
+   * Check if the is from actual academic year.
+   *
+   * @throws BusinessException if the contact is not from actual academic year.
+   */
+  void checkContactAcademicYear() throws BusinessException;
 }
