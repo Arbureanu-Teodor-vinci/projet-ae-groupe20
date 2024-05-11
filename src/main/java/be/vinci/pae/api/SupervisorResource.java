@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorDTO;
 import be.vinci.pae.domain.internshipsupervisor.SupervisorUCC;
 import be.vinci.pae.domain.user.UserDTO;
@@ -33,8 +32,6 @@ public class SupervisorResource {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private SupervisorUCC supervisorUCC;
-  @Inject
-  private DomainFactory domainFactory;
 
   /**
    * Add a supervisor.
@@ -56,16 +53,16 @@ public class SupervisorResource {
     if (newSupervisor.getEmail() == null || newSupervisor.getFirstName() == null
         || newSupervisor.getLastName() == null || newSupervisor.getPhoneNumber() == null) {
       Logger.logEntry("Supervisor is missing.");
-      throw new WebApplicationException("You must enter a supervisor.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez un superviseur", Status.BAD_REQUEST);
     }
     if (newSupervisor.getEnterprise().getId() == 0) {
-      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez une entreprise", Status.BAD_REQUEST);
     }
 
     SupervisorDTO supervisorDTO = supervisorUCC.addSupervisor(newSupervisor, authentifiedUser);
     if (supervisorDTO == null) {
-      Logger.logEntry("Cannot add supervisor");
-      throw new WebApplicationException("Cannot add supervisor", Status.BAD_REQUEST);
+      Logger.logEntry("cannot add the supervisor");
+      throw new WebApplicationException("Impossible d'ajouter le superviseur", Status.BAD_REQUEST);
     }
 
     return toJson(supervisorDTO);
@@ -87,12 +84,12 @@ public class SupervisorResource {
     Logger.logEntry("GET /supervisors/getOne:" + id);
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez un id", Status.BAD_REQUEST);
     }
     SupervisorDTO supervisor = supervisorUCC.getOneSupervisorById(id);
     if (supervisor == null) {
       Logger.logEntry("No supervisor found with this id");
-      throw new WebApplicationException("No supervisor found with this id", Status.NOT_FOUND);
+      throw new WebApplicationException("Aucun superviseur trouvé avec cet id", Status.NOT_FOUND);
     }
     return toJson(supervisor);
   }
@@ -117,13 +114,14 @@ public class SupervisorResource {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {
       Logger.logEntry("tries to access without token.");
-      throw new WebApplicationException("Authorization header must be provided",
+      throw new WebApplicationException("Impossible d'accéder sans être authentifié.",
           Status.UNAUTHORIZED);
     }
     // if the idEnterprise is null, throw an exception
     if (idEnterprise == null) {
       Logger.logEntry("idEnterprise is missing.");
-      throw new WebApplicationException("You must enter an idEnterprise.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez l'id d'une entreprise.",
+          Status.BAD_REQUEST);
     }
     // Try to get the supervisors by enterprise
     ArrayNode supervisorsListNode = jsonMapper.createArrayNode();

@@ -38,7 +38,7 @@ public class StudentImpl extends UserImpl implements Student {
   @Override
   public void checkUniqueStudent(StudentDTO studentDTO) {
     if (studentDTO.getId() != 0) {
-      throw new BusinessException("Student already exists");
+      throw new BusinessException("L'étudiant existe déjà");
     }
   }
 
@@ -55,7 +55,7 @@ public class StudentImpl extends UserImpl implements Student {
     }
     if (contactExists) {
       throw new BusinessException(
-          "Student already has a contact with this enterprise and academic year");
+          "L'étudiant a déjà un contact avec cette entreprise pour cette année académique");
     }
   }
 
@@ -70,7 +70,8 @@ public class StudentImpl extends UserImpl implements Student {
       }
     }
     if (contactAccepted) {
-      throw new BusinessException("Student already has an accepted contact for this academic year");
+      throw new BusinessException(
+          "L'étudiant a déjà un contact accepté pour cette année académique");
     }
   }
 

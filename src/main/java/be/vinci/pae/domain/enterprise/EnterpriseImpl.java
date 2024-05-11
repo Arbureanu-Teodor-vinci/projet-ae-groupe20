@@ -164,12 +164,12 @@ public class EnterpriseImpl implements Enterprise {
       if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim()) && designation.trim()
           .isEmpty()) {
         throw new BusinessException(
-            "The designation can't be empty because this trade name already exists.");
+            "L'appellation ne peut pas être car il existe déjà une entreprise avec ce nom.");
       }
       if (enterprise.getTradeName().trim().equalsIgnoreCase(tradeName.trim())
           && enterprise.getDesignation() != null && enterprise.getDesignation().trim()
           .equalsIgnoreCase(designation.trim())) {
-        throw new BusinessException("This designation already exists for this trade name.");
+        throw new BusinessException("Cette appellation existe déjà pour cette entreprise.");
       }
     }
   }
@@ -177,14 +177,14 @@ public class EnterpriseImpl implements Enterprise {
   @Override
   public void checkIsBlackListed() {
     if (blackListed) {
-      throw new BusinessException("This enterprise is blacklisted.");
+      throw new BusinessException("Cette entreprise est déjà blacklistée.");
     }
   }
 
   @Override
   public void checkBlackListMotivation() {
     if (blackListed && blackListMotivation.trim().isEmpty()) {
-      throw new BusinessException("This enterprise is blacklisted but has no motivation.");
+      throw new BusinessException("La raison de la mise en blacklist est obligatoire.");
     }
   }
 
@@ -198,7 +198,7 @@ public class EnterpriseImpl implements Enterprise {
         || !Objects.equals(enterprise.getCity(), city)
         || !Objects.equals(enterprise.getEmail(), email)) {
       throw new BusinessException(
-          "You can't update other data than the blacklisted status and the motivation.");
+          "Vous ne pouvez pas modifier d'autres données que blacklisté et la raison.");
     }
   }
 
@@ -207,7 +207,7 @@ public class EnterpriseImpl implements Enterprise {
     int firstIndex = email.indexOf("@");
     int lastIndex = email.lastIndexOf("@");
     if (firstIndex != lastIndex || firstIndex == -1) {
-      throw new BusinessException("Email is invalid");
+      throw new BusinessException("Le format de l'email est invalide.");
     }
   }
 
@@ -217,7 +217,9 @@ public class EnterpriseImpl implements Enterprise {
       return;
     }
     if (!phoneNumber.matches("^[0-9]{4,}$")) {
-      throw new BusinessException("Phone number is invalid");
+      throw new BusinessException(
+          "Le numéro de téléphone doit être composé d'au moins 4 chiffres et "
+              + "ne doit contenir que des chiffres.");
     }
   }
 

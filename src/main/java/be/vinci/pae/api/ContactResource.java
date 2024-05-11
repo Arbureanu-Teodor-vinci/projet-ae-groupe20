@@ -58,14 +58,15 @@ public class ContactResource {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {
       Logger.logEntry("tries to access without token.");
-      throw new WebApplicationException("Authorization header must be provided",
+      throw new WebApplicationException("Vous n'avez pas accès à cette ressource.",
           Status.UNAUTHORIZED);
     }
 
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
+      throw new WebApplicationException("L'id doit être fourni."
+          , Status.BAD_REQUEST);
     }
 
     // Try to get the contact
@@ -74,7 +75,8 @@ public class ContactResource {
     if (contact == null || contact.getStudent().getId() != authentifiedUser.getId()
         && authentifiedUser.getRole().equals("Etudiant")) {
       Logger.logEntry("Contact not found.");
-      throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
+      throw new WebApplicationException("Le contact n'a pas été trouvé."
+          , Status.NOT_FOUND);
     }
 
     return contactNodeMaker(contact);
@@ -96,7 +98,7 @@ public class ContactResource {
     // Verify the token
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser == null) {
-      throw new WebApplicationException("Authorization header must be provided",
+      throw new WebApplicationException("Vous n'avez pas accès à cette ressource.",
           Status.UNAUTHORIZED);
     }
     // Try to get all contacts
@@ -125,7 +127,7 @@ public class ContactResource {
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
+      throw new WebApplicationException("L'id doit être fourni.", Status.BAD_REQUEST);
     }
 
     // Try to get the contacts by enterprise
@@ -156,13 +158,15 @@ public class ContactResource {
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (authentifiedUser.getRole().equals("Etudiant") && !id.equals(authentifiedUser.getId())) {
       Logger.logEntry("Tried to access another student's contacts.");
-      throw new WebApplicationException("You can only access your own contacts.", Status.FORBIDDEN);
+      throw new WebApplicationException(
+          "Vous ne pouvez pas accéder aux contacts d'un autre étudiant."
+          , Status.FORBIDDEN);
     }
 
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("Id must be provided", Status.BAD_REQUEST);
+      throw new WebApplicationException("L'id doit être fourni.", Status.BAD_REQUEST);
     }
 
     // Try to get the contacts by user id
@@ -195,18 +199,21 @@ public class ContactResource {
     StudentDTO student = contact.getStudent();
 
     if (enterprise == null) {
-      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrer les informations de l'entreprise."
+          , Status.BAD_REQUEST);
     }
 
     if (student.getId() != authentifiedUser.getId()) {
-      throw new WebApplicationException("You can only add a contact for yourself.",
+      throw new WebApplicationException(
+          "Vous ne pouvez pas ajouter un contact pour un autre étudiant.",
           Status.FORBIDDEN);
     }
     // Try to add the contact
     ContactDTO addedContact = contactUCC.addContact(student, enterprise);
     // if the contact is null, throw an exception
     if (addedContact == null) {
-      throw new WebApplicationException("Contact not added", Status.NOT_FOUND);
+      throw new WebApplicationException("Le contact n'a pas pu être ajouté."
+          , Status.NOT_FOUND);
     }
 
     return contactNodeMaker(addedContact);
@@ -229,7 +236,8 @@ public class ContactResource {
 
     if (contactDTO == null || contactDTO.getId() == 0) {
       Logger.logEntry("Tried to update contact without id.");
-      throw new WebApplicationException("You must enter a contact id.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrer l'id du contact à modifier."
+          , Status.BAD_REQUEST);
     }
 
     ContactDTO updatedContact = contactUCC.updateContact(contactDTO);
@@ -290,7 +298,7 @@ public class ContactResource {
 
       return contactNode;
     } catch (Exception e) {
-      System.out.println("Can't create contact");
+      System.out.println("Impossible de créer le contact");
       return null;
     }
   }

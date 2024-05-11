@@ -32,7 +32,7 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   @Override
   public SupervisorDTO getOneSupervisorById(int id) {
     if (id <= 0) {
-      throw new BusinessException("id must be positive");
+      throw new BusinessException("L'id doit être positif");
     }
     return supervisorDS.getOneSupervisorById(id);
   }
@@ -40,7 +40,7 @@ public class SupervisorUCCImpl implements SupervisorUCC {
   @Override
   public List<SupervisorDTO> getSupervisorsByEnterprise(int idEnterprise) {
     if (idEnterprise <= 0) {
-      throw new BusinessException("id must be positive");
+      throw new BusinessException("L'id doit être positif");
     }
     return supervisorDS.getSupervisorsByEnterprise(idEnterprise);
   }
@@ -57,10 +57,10 @@ public class SupervisorUCCImpl implements SupervisorUCC {
         }
       }
       if (contactDTO == null) {
-        throw new BusinessException("You don't have a contact with this enterprise");
+        throw new BusinessException("Vous n'avez pas de contact avec cette entreprise");
       }
       if (!contactDTO.getStateContact().equals("accepté")) {
-        throw new BusinessException("The student must be accepted by the enterprise");
+        throw new BusinessException("Vous devez être accepté par l'entreprise");
       }
     }
     try {

@@ -40,22 +40,19 @@ async function renderUpdateContactPage() {
     const contact = await response.json();
 
     let stateOptions = '';
-    if (['initié', 'pris'].includes(contact.stateContact)) {
-        stateOptions = `
-            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivis">Non suivis</option>
-            
-        `;
     if (contact.stateContact === 'initié') {
-            stateOptions += `<option value="pris">Pris</option>`;
+            stateOptions += `
+            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
+            <option value="pris">Pris</option>
+            `;
         }
     if (contact.stateContact === 'pris') {
         stateOptions += `
+            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
+            <option value="non suivis">Non suivis</option>
             <option value="accepté">Accepté</option>
             <option value="refusé">Refusé</option>
         `;
-    }
-
     } else if (['accepté', 'refusé', 'non suivis','suspendu'].includes(contact.stateContact)) {
         stateOptions = `<option value="${contact.stateContact}" selected>${contact.stateContact}</option>`;
     }

@@ -1,7 +1,6 @@
 package be.vinci.pae.api;
 
 import be.vinci.pae.api.filters.Authorize;
-import be.vinci.pae.domain.factory.DomainFactory;
 import be.vinci.pae.domain.internship.InternshipDTO;
 import be.vinci.pae.domain.internship.InternshipUCC;
 import be.vinci.pae.utils.Logger;
@@ -30,8 +29,6 @@ public class InternshipResources {
   private final ObjectMapper jsonMapper = new ObjectMapper();
   @Inject
   private InternshipUCC internshipUCC;
-  @Inject
-  private DomainFactory domainFactory;
 
   /**
    * Get 1 internship by student id.
@@ -49,12 +46,12 @@ public class InternshipResources {
     Logger.logEntry("GET /internships/getOneInternshipByStudentId" + id);
     if (id <= 0) {
       Logger.logEntry("Id must be positive.");
-      throw new WebApplicationException("Id must be positive.", Status.BAD_REQUEST);
+      throw new WebApplicationException("L'id doit être positif", Status.BAD_REQUEST);
     }
     InternshipDTO internship = internshipUCC.getOneInternshipByStudentId(id);
     if (internship == null) {
       Logger.logEntry("Internship not found.");
-      throw new WebApplicationException("Internship not found.");
+      throw new WebApplicationException("Stage non trouvé", Status.NOT_FOUND);
     }
     return toJsonObject(internship);
   }
@@ -74,11 +71,11 @@ public class InternshipResources {
   public ObjectNode updateSubject(InternshipDTO internshipDTO) {
     Logger.logEntry("POST /internships/updateSubject id: " + internshipDTO.getId());
     if (internshipDTO == null || internshipDTO.getId() <= 0) {
-      throw new WebApplicationException("Tried to update a contact without id.",
+      throw new WebApplicationException("Essayer de mettre à jour un stage inexistant.",
           Status.BAD_REQUEST);
     }
     if (internshipDTO.getSubject() == null) {
-      throw new WebApplicationException("Subject is null.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Le sujet du stage est null", Status.BAD_REQUEST);
     }
     InternshipDTO internship = internshipUCC.updateSubject(internshipDTO);
     return toJsonObject(internship);
@@ -101,7 +98,7 @@ public class InternshipResources {
     if (internshipDTO == null || internshipDTO.getSupervisor().getId() <= 0
         || internshipDTO.getContact().getId() <= 0
         || internshipDTO.getSignatureDate() == null) {
-      throw new WebApplicationException("parameters missing.",
+      throw new WebApplicationException("Informations manquantes pour ajouter un stage.",
           Status.BAD_REQUEST);
     }
     InternshipDTO internship = internshipUCC.addInternship(internshipDTO);
@@ -127,7 +124,7 @@ public class InternshipResources {
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez un id.", Status.BAD_REQUEST);
     }
 
     // Try to get the number of internships in the enterprise
@@ -156,7 +153,7 @@ public class InternshipResources {
     // if the id or academicYear is null, throw an exception
     if (id == null || academicYear == null) {
       Logger.logEntry("id or academicYear is missing.");
-      throw new WebApplicationException("You must enter an id and an academic year.",
+      throw new WebApplicationException("Veuillez entrez un id et une année académique.",
           Status.BAD_REQUEST);
     }
 
@@ -177,7 +174,7 @@ public class InternshipResources {
     ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getStudentAcademicYear().getId())
         .put("year", internshipDTO.getContact().getStudent().getStudentAcademicYear().getYear());
-    
+
     ObjectNode contactStudentNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getId())
         .put("firstName", internshipDTO.getContact().getStudent().getFirstName())
