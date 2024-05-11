@@ -37,8 +37,8 @@ public class UserDAOImpl implements UserDAO {
        */
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
-              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay on "
+              + " LEFT JOIN InternshipManagement.students s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_years ay on "
               + " ay.id_academic_year=s.academic_year"
               + " WHERE u.id_user = ?"
       );
@@ -74,8 +74,8 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
-              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay on "
+              + " LEFT JOIN InternshipManagement.students s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_years ay on "
               + " ay.id_academic_year=s.academic_year"
               + " WHERE u.email = ?");
       ps.setString(1, email);
@@ -101,8 +101,8 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT u.*,ay.academic_year FROM InternshipManagement.users u"
-              + " LEFT JOIN InternshipManagement.student s on u.id_user = s.id_user"
-              + " Left Join InternshipManagement.academic_year ay "
+              + " LEFT JOIN InternshipManagement.students s on u.id_user = s.id_user"
+              + " Left Join InternshipManagement.academic_years ay "
               + " on ay.id_academic_year=s.academic_year");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
@@ -195,7 +195,7 @@ public class UserDAOImpl implements UserDAO {
               + "FROM InternshipManagement.internship i "
               + "JOIN InternshipManagement.contacts c "
               + "ON i.contact = c.id_contacts "
-              + "JOIN InternshipManagement.student s "
+              + "JOIN InternshipManagement.students s "
               + "ON c.student = s.id_user;");
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -218,7 +218,7 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(*) as number_of_students_without_internship "
-              + "FROM InternshipManagement.student s "
+              + "FROM InternshipManagement.students s "
               + "WHERE s.id_user NOT IN ("
               + "    SELECT DISTINCT c.student "
               + "    FROM InternshipManagement.internship i "
@@ -248,9 +248,9 @@ public class UserDAOImpl implements UserDAO {
               + "FROM InternshipManagement.internship i "
               + "JOIN InternshipManagement.contacts c "
               + "ON i.contact = c.id_contacts "
-              + "JOIN InternshipManagement.student s "
+              + "JOIN InternshipManagement.students s "
               + "ON c.student = s.id_user "
-              + "JOIN InternshipManagement.academic_year ay "
+              + "JOIN InternshipManagement.academic_years ay "
               + "ON s.academic_year = ay.id_academic_year "
               + "WHERE ay.academic_year = ? "
               + "GROUP BY ay.academic_year;");
@@ -276,8 +276,8 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(*) as number_of_students_without_internship, ay.academic_year "
-              + "FROM InternshipManagement.student s "
-              + "JOIN InternshipManagement.academic_year ay "
+              + "FROM InternshipManagement.students s "
+              + "JOIN InternshipManagement.academic_years ay "
               + "ON s.academic_year = ay.id_academic_year "
               + "WHERE ay.academic_year = ? "
               + "AND s.id_user NOT IN ("
@@ -307,7 +307,7 @@ public class UserDAOImpl implements UserDAO {
     List<String> academicYears = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT academic_year FROM InternshipManagement.academic_year");
+          "SELECT academic_year FROM InternshipManagement.academic_years");
       try (ResultSet rs = ps.executeQuery()) {
         while (rs.next()) {
           academicYears.add(rs.getString(1));

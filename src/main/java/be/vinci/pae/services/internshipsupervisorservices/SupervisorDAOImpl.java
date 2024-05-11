@@ -36,8 +36,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
                      e.id_enterprise, e.trade_name, e.designation, e.address,
                      e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
                      e.black_listed,e.black_listed_motivation, e.version as version_enterprise
-              FROM InternshipManagement.enterprise e,
-                   InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.enterprises e,
+                   InternshipManagement.internship_supervisors isup
               WHERE e.id_enterprise = isup.enterprise"""
       );
       try (ResultSet resultSet = ps.executeQuery()) {
@@ -67,8 +67,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
                      e.id_enterprise, e.trade_name, e.designation, e.address,
                      e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
                      e.black_listed,e.black_listed_motivation, e.version as version_enterprise
-              FROM InternshipManagement.enterprise e,
-                   InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.enterprises e,
+                   InternshipManagement.internship_supervisors isup
               WHERE e.id_enterprise = isup.enterprise
               AND isup.id_internship_supervisor = ?"""
       );
@@ -100,8 +100,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
                      e.id_enterprise, e.trade_name, e.designation, e.address,
                      e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
                      e.black_listed,e.black_listed_motivation, e.version as version_enterprise
-              FROM InternshipManagement.enterprise e,
-                   InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.enterprises e,
+                   InternshipManagement.internship_supervisors isup
               WHERE e.id_enterprise = isup.enterprise
               AND isup.enterprise = ?"""
       );
@@ -133,8 +133,8 @@ public class SupervisorDAOImpl implements SupervisorDAO {
                      e.id_enterprise, e.trade_name, e.designation, e.address,
                      e.phone_number as phone_number_enterprise, e.city, e.email as email_enterprise,
                      e.black_listed,e.black_listed_motivation, e.version as version_enterprise
-              FROM InternshipManagement.enterprise e,
-                   InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.enterprises e,
+                   InternshipManagement.internship_supervisors isup
               WHERE e.id_enterprise = isup.enterprise
               AND isup.email = ?"""
       );
@@ -158,7 +158,7 @@ public class SupervisorDAOImpl implements SupervisorDAO {
     Logger.logEntry("Supervisor DAO - addSupervisor");
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.internship_supervisor "
+          "INSERT INTO InternshipManagement.internship_supervisors "
               + "(last_name_supervisor, first_name_supervisor, email, phone_number, enterprise) "
               + "VALUES (?, ?, ?, ?, ?) RETURNING *"
       );

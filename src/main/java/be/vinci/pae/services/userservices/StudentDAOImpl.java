@@ -29,7 +29,7 @@ public class StudentDAOImpl implements StudentDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT s.id_user,ay.id_academic_year, ay.academic_year"
-              + " FROM InternshipManagement.student s, InternshipManagement.academic_year ay\n"
+              + " FROM InternshipManagement.students s, InternshipManagement.academic_years ay\n"
               + " WHERE s.academic_year = ay.id_academic_year\n"
               + " AND s.id_user = ?"
       );
@@ -55,9 +55,9 @@ public class StudentDAOImpl implements StudentDAO {
     Logger.logEntry("Student DAO - addStudent" + student);
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.student (id_user, academic_year) VALUES (?, ?)"
+          "INSERT INTO InternshipManagement.students (id_user, academic_year) VALUES (?, ?)"
               + " RETURNING id_user, academic_year, "
-              + " (SELECT academic_year FROM InternshipManagement.academic_year "
+              + " (SELECT academic_year FROM InternshipManagement.academic_years "
               + " WHERE id_academic_year = ?)"
       );
       ps.setInt(1, student.getId());

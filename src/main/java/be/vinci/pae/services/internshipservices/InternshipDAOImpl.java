@@ -50,7 +50,7 @@ public class InternshipDAOImpl implements InternshipDAO {
               eisup.black_listed as supervisor_black_listed_enterprise,
               eisup.black_listed_motivation as supervisor_black_listed_motivation_enterprise,
               eisup.version as supervisor_version_enterprise,
-              c.id_contacts, c.interview_method,c.tool, c.refusal_reason,c.state_contact,
+              c.id_contact, c.interview_method,c.tool, c.refusal_reason,c.state_contact,
               c.version as contact_version,
               ec.id_enterprise as contact_id_enterprise,
               ec.trade_name as contact_trade_name_enterprise,
@@ -72,16 +72,16 @@ public class InternshipDAOImpl implements InternshipDAO {
               u.version as contact_version_student,
               astu.id_academic_year as student_id_academic_year,
               astu.academic_year as student_academic_year
-              FROM InternshipManagement.internship i
-              JOIN internshipmanagement.academic_year ai on ai.id_academic_year = i.academic_year
-              JOIN InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.internships i
+              JOIN internshipmanagement.academic_years ai on ai.id_academic_year = i.academic_year
+              JOIN InternshipManagement.internship_supervisors isup
               ON i.internship_supervisor = isup.id_internship_supervisor
-              JOIN InternshipManagement.enterprise eisup ON isup.enterprise = eisup.id_enterprise
-              JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts
-              JOIN InternshipManagement.academic_year ac ON c.academic_year = ac.id_academic_year
-              JOIN InternshipManagement.enterprise ec ON c.enterprise = ec.id_enterprise
-              JOIN InternshipManagement.student s ON c.student = s.id_user
-              JOIN InternshipManagement.academic_year astu
+              JOIN InternshipManagement.enterprises eisup ON isup.enterprise = eisup.id_enterprise
+              JOIN InternshipManagement.contacts c ON i.contact = c.id_contact
+              JOIN InternshipManagement.academic_years ac ON c.academic_year = ac.id_academic_year
+              JOIN InternshipManagement.enterprises ec ON c.enterprise = ec.id_enterprise
+              JOIN InternshipManagement.students s ON c.student = s.id_user
+              JOIN InternshipManagement.academic_years astu
               ON s.academic_year = astu.id_academic_year
               JOIN InternshipManagement.users u ON s.id_user = u.id_user
               WHERE i.id_internship = ?"""
@@ -128,7 +128,7 @@ public class InternshipDAOImpl implements InternshipDAO {
               eisup.black_listed as supervisor_black_listed_enterprise,
               eisup.black_listed_motivation as supervisor_black_listed_motivation_enterprise,
               eisup.version as supervisor_version_enterprise,
-              c.id_contacts, c.interview_method,c.tool, c.refusal_reason,c.state_contact,
+              c.id_contact, c.interview_method,c.tool, c.refusal_reason,c.state_contact,
               c.version as contact_version,
               ec.id_enterprise as contact_id_enterprise,
               ec.trade_name as contact_trade_name_enterprise,
@@ -150,16 +150,16 @@ public class InternshipDAOImpl implements InternshipDAO {
               u.version as contact_version_student,
               astu.id_academic_year as student_id_academic_year,
               astu.academic_year as student_academic_year
-              FROM InternshipManagement.internship i
-              JOIN internshipmanagement.academic_year ai on ai.id_academic_year = i.academic_year
-              JOIN InternshipManagement.internship_supervisor isup
+              FROM InternshipManagement.internships i
+              JOIN internshipmanagement.academic_years ai on ai.id_academic_year = i.academic_year
+              JOIN InternshipManagement.internship_supervisors isup
               ON i.internship_supervisor = isup.id_internship_supervisor
-              JOIN InternshipManagement.enterprise eisup ON isup.enterprise = eisup.id_enterprise
-              JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts
-              JOIN InternshipManagement.academic_year ac ON c.academic_year = ac.id_academic_year
-              JOIN InternshipManagement.enterprise ec ON c.enterprise = ec.id_enterprise
-              JOIN InternshipManagement.student s ON c.student = s.id_user
-              JOIN InternshipManagement.academic_year astu
+              JOIN InternshipManagement.enterprises eisup ON isup.enterprise = eisup.id_enterprise
+              JOIN InternshipManagement.contacts c ON i.contact = c.id_contact
+              JOIN InternshipManagement.academic_years ac ON c.academic_year = ac.id_academic_year
+              JOIN InternshipManagement.enterprises ec ON c.enterprise = ec.id_enterprise
+              JOIN InternshipManagement.students s ON c.student = s.id_user
+              JOIN InternshipManagement.academic_years astu
               ON s.academic_year = astu.id_academic_year
               JOIN InternshipManagement.users u ON s.id_user = u.id_user
               WHERE s.id_user = ?"""
@@ -189,7 +189,7 @@ public class InternshipDAOImpl implements InternshipDAO {
 
     try {
       PreparedStatement ps = dalConn.getPS(
-          "UPDATE InternshipManagement.internship SET subject = ?, version = ? "
+          "UPDATE InternshipManagement.internships SET subject = ?, version = ? "
               + "WHERE id_internship = ? AND version = ? RETURNING *"
       );
       ps.setString(1, internshipToUpdate.getSubject());
@@ -226,7 +226,7 @@ public class InternshipDAOImpl implements InternshipDAO {
 
     try {
       PreparedStatement ps = dalConn.getPS(
-          "INSERT INTO InternshipManagement.internship "
+          "INSERT INTO InternshipManagement.internships "
               + "(subject, signature_date, internship_supervisor, contact, academic_year, version) "
               + "VALUES (?, ?, ?, ?, ?, 1) RETURNING *"
       );
@@ -257,8 +257,8 @@ public class InternshipDAOImpl implements InternshipDAO {
     int nbInternships = 0;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT COUNT(*) FROM InternshipManagement.internship i "
-              + " JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+          "SELECT COUNT(*) FROM InternshipManagement.internships i "
+              + " JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
               + " WHERE c.enterprise = ?"
       );
       ps.setInt(1, id);
@@ -285,10 +285,10 @@ public class InternshipDAOImpl implements InternshipDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(*) AS number_of_internships "
-              + "FROM InternshipManagement.internship i "
-              + "JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
-              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise "
-              + "JOIN InternshipManagement.academic_year a ON i.academic_year = a.id_academic_year "
+              + "FROM InternshipManagement.internships i "
+              + "JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
+              + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise "
+              + "JOIN InternshipManagement.academic_years a ON i.academic_year = a.id_academic_year "
               + "WHERE e.id_enterprise = ? AND a.academic_year = ?;"
       );
       ps.setInt(1, id);
@@ -344,7 +344,7 @@ public class InternshipDAOImpl implements InternshipDAO {
     contactAcademicYear.setYear(resultSet.getString("contact_academic_year"));
 
     ContactDTO internshipContact = domainFactory.getContactDTO();
-    internshipContact.setId(resultSet.getInt("id_contacts"));
+    internshipContact.setId(resultSet.getInt("id_contact"));
     internshipContact.setInterviewMethod(resultSet.getString("interview_method"));
     internshipContact.setTool(resultSet.getString("tool"));
     internshipContact.setRefusalReason(resultSet.getString("refusal_reason"));
