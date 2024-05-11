@@ -3,29 +3,33 @@ import Navigate from '../Router/Navigate';
 import { getAuthenticatedUser } from '../../utils/auths';
 
 const ProfilPage = async () => {
-    if (!getAuthenticatedUser()) {
-        Navigate('/login');
-        return;
-      };
+  if (!getAuthenticatedUser()) {
+    Navigate('/login');
+    return;
+  }
 
-    clearPage();
-    await renderProfilPage();
+  clearPage();
+  await renderProfilPage();
 };
 
 async function renderProfilPage() {
-    const user = getAuthenticatedUser();
-    const options = {
-        method: 'GET',
-        headers : {
-            'Content-Type': 'application/json',
-            "Authorization": `${getAuthenticatedUser().token}`,
-        },
-    };
+  const user = getAuthenticatedUser();
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${getAuthenticatedUser().token}`,
+    },
+  };
+
+  const responseContacts = await fetch(`/api/contacts/getByUser:${user.id}`, options);
+  const responseAcademicYear = await fetch(`/api/academicYear`, options);
+
+  if (responseContacts.ok) {
+    const contacts = await responseContacts.json();
+   const actualAcademicYear = await responseAcademicYear.json();
+   contacts.sort((a, b) => b.academicYear.year.localeCompare(a.academicYear.year)); 
     
-    const response = await fetch(`/api/contacts/getByUser:${user.id}`, options);
-    
-    if (response.ok) {
-        const contacts = await response.json();
 
     const main = document.querySelector('main');
     main.innerHTML = `
@@ -103,6 +107,7 @@ async function renderProfilPage() {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Année académique</th>
                                 <th>Entreprise</th>
                                 <th>Moyen de contact</th>
                                 <th>Outil de contact</th>
@@ -114,34 +119,39 @@ async function renderProfilPage() {
                         </thead>
                         <tbody>
                         ${contacts
-                            .map(
-                                (contact) => `
+                          .map(
+                            (contact) => `
                         <tr>
+                                <td class="text-center">${contact.academicYear.year}</td>
                                 <td class="text-center" style="color: ${
-                                    contact.enterprise.blackListed ? 'red' : 'black'
+                                  contact.enterprise.blackListed ? 'red' : 'black'
                                 }; font-weight: ${
-                                    contact.enterprise.blackListed ? 'bold' : 'normal'
-                                }">${contact.enterprise.tradeName} ${contact.enterprise.designation ? ` - ${contact.enterprise.designation}` : ''}</td>
-                                <td class="text-center">${contact.interViewMethod || ' - '}</td>
+                              contact.enterprise.blackListed ? 'bold' : 'normal'
+                            }">${contact.enterprise.tradeName} ${
+                              contact.enterprise.designation
+                                ? ` - ${contact.enterprise.designation}`
+                                : ''
+                            }</td>
+                                <td class="text-center">${contact.interviewMethod || ' - '}</td>
                                 <td class="text-center">${contact.tool || ' - '}</td>
                                 <td class="text-center">${contact.stateContact || ' - '}</td>
                                 <td class="text-center">${contact.refusalReason || ' - '}</td>
                                 <td class="text-center">
                                         <button id="editButton${
-                                            contact.id
+                                          contact.id
                                         }" class="btn btn-primary">Modifier</button>
                                 </td>
                                 <td class="text-center">
                                         ${
-                                            contact.stateContact === 'accepté'
-                                                ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>`
-                                                : ''
+                                          contact.stateContact === 'accepté'
+                                            ? `<button id="${contact.id}" class="btn btn-success addStage">Ajouter un stage</button>`
+                                            : ''
                                         }
                                 </td>
                         </tr>
                         `,
-                            )
-                            .join('')}
+                          )
+                          .join('')}
                         </tbody>
                     </table>
                 </div>
@@ -157,123 +167,146 @@ async function renderProfilPage() {
     const editInternshipSubjectButton = document.getElementById('editInternshipSubject');
 
     let acceptedContact = false;
-    contacts.forEach(contact => {
-        const button = document.getElementById(`editButton${contact.id}`);
-        if(contact.stateContact === 'accepté' || contact.stateContact === 'refusé' || contact.stateContact === 'suspendu' || contact.stateContact === 'non suivis') {
-            button.disabled = true;
-        }else{
-            button.addEventListener('click', () => {
-                Navigate(`/updateContact?contactId=${contact.id}`);
-            });
-        }
-        if(contact.stateContact === 'accepté'){
-            linkContact.disabled = true;
-            acceptedContact = true;
-        }
-           
+    contacts.forEach((contact) => {
+      const button = document.getElementById(`editButton${contact.id}`);
+      if (
+        contact.stateContact === 'accepté' ||
+        contact.stateContact === 'refusé' ||
+        contact.stateContact === 'suspendu' ||
+        contact.stateContact === 'non suivis' ||
+        contact.academicYear.id !== actualAcademicYear.id
+      ) {
+        button.disabled = true;
+      } else {
+        button.addEventListener('click', () => {
+          Navigate(`/updateContact?contactId=${contact.id}`);
+        });
+      }
+      if (contact.stateContact === 'accepté') {
+        linkContact.disabled = true;
+        acceptedContact = true;
+      }
     });
 
-    if(acceptedContact){
-        linkContact.disabled = true;
-        contacts.forEach(contact => {
-                const button = document.getElementById(`editButton${contact.id}`);
-                button.disabled = true;
-        });
-        const responseInternship = await fetch(`/api/internships/getOneInternshipByStudentId:${user.id}`, options);
-        let internship = null;
-        if(responseInternship.ok){
-            internship = await responseInternship.json();
-            if(internship){
-                internshipSubject.textContent = internship.subject;
-                document.getElementById('signatureDate').textContent = internship.signatureDate;
-                const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
-                internshipEnterpriseTableLine.textContent = internship.contact.enterprise.tradeName;
-                if (internship.contact.enterprise.blackListed) {
-                    internshipEnterpriseTableLine.style.color = 'red';
-                    internshipEnterpriseTableLine.style.fontWeight = 'bold';
-                    internshipEnterpriseTableLine.textContent += ' (blacklisted)';
-                }
-                document.getElementById('internshipSupervisor').textContent = `${internship.supervisor.firstName  } ${  internship.supervisor.lastName}`;
-                const addStageButtons = document.querySelector('.addStage');
-                addStageButtons.disabled = true;
-            }
-        }
-
-        editInternshipSubjectButton.addEventListener('click', async () => {
-            // Si le bouton dit 'Modifier mon sujet de stage', changez le sujet de stage en un champ de saisie
-          // et changez le texte du bouton en 'Envoyer modification'
-          if (editInternshipSubjectButton.textContent === 'Modifier mon sujet de stage') {
-              const subjectText = internshipSubject.textContent;
-              internshipSubject.innerHTML = `<input type="text" id="subjectInput" value="${subjectText}">`;
-              editInternshipSubjectButton.textContent = 'Envoyer modification';
-              document.getElementById('subjectInput').focus();
-          } 
-          // Si le bouton dit 'Envoyer modification', changez le champ de saisie en texte
-          // et changez le texte du bouton en 'Modifier mon sujet de stage'
-          else if (editInternshipSubjectButton.textContent === 'Envoyer modification') {
-              const subjectInput = document.getElementById('subjectInput');
-              const responseUpdateInternship = await fetch(`/api/internships/updateSubject`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `${getAuthenticatedUser().token}`,
-                },
-                body: JSON.stringify({ 
-                  id: internship.id,
-                  subject: subjectInput.value,
-                  academicYear: internship.academicYear,
-                  version: internship.version,
-                  contact: internship.contact,
-                  supervisor: internship.supervisor,
-                  signatureDate: internship.signatureDate, }),
-            });
-            if (responseUpdateInternship.ok) {
-                internshipSubject.textContent = document.getElementById('subjectInput').value;
-                internship = await responseUpdateInternship.json();
-            }else{
-              // eslint-disable-next-line no-alert
-              alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
-              Navigate('/profil');
-            }
-              editInternshipSubjectButton.textContent = 'Modifier mon sujet de stage';
+    if (acceptedContact) {
+      linkContact.disabled = true;
+      contacts.forEach((contact) => {
+        const button = document.getElementById(`editButton${contact.id}`);
+        button.disabled = true;
+      });
+      const responseInternship = await fetch(
+        `/api/internships/getOneInternshipByStudentId:${user.id}`,
+        options,
+      );
+      let internship = null;
+      if (responseInternship.ok) {
+        internship = await responseInternship.json();
+        if (internship) {
+          internshipSubject.textContent = internship.subject;
+          document.getElementById('signatureDate').textContent = internship.signatureDate;
+          const internshipEnterpriseTableLine = document.getElementById('internshipEnterprise');
+          internshipEnterpriseTableLine.textContent = internship.contact.enterprise.tradeName;
+          if (internship.contact.enterprise.blackListed) {
+            internshipEnterpriseTableLine.style.color = 'red';
+            internshipEnterpriseTableLine.style.fontWeight = 'bold';
+            internshipEnterpriseTableLine.textContent += ' (blacklisted)';
           }
-      
-          });
-
-         
-    }else{
-        const internshipTable = document.querySelector('.internshipTable');
-        if (internshipTable) {
-            internshipTable.style.display = 'none';
+          document.getElementById(
+            'internshipSupervisor',
+          ).textContent = `${internship.supervisor.firstName} ${internship.supervisor.lastName}`;
+          const addStageButtons = document.querySelector('.addStage');
+          addStageButtons.disabled = true;
         }
-    }
+      }
 
-    
+      editInternshipSubjectButton.addEventListener('click', async () => {
+        // Si le bouton dit 'Modifier mon sujet de stage', changez le sujet de stage en un champ de saisie
+        // et changez le texte du bouton en 'Envoyer modification'
+        if (editInternshipSubjectButton.textContent === 'Modifier mon sujet de stage') {
+          const subjectText = internshipSubject.textContent;
+          internshipSubject.innerHTML = `<input type="text" id="subjectInput" value="${subjectText}">`;
+          editInternshipSubjectButton.textContent = 'Envoyer modification';
+          document.getElementById('subjectInput').focus();
+        }
+        // Si le bouton dit 'Envoyer modification', changez le champ de saisie en texte
+        // et changez le texte du bouton en 'Modifier mon sujet de stage'
+        else if (editInternshipSubjectButton.textContent === 'Envoyer modification') {
+          const subjectInput = document.getElementById('subjectInput');
+          const responseUpdateInternship = await fetch(`/api/internships/updateSubject`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `${getAuthenticatedUser().token}`,
+            },
+            body: JSON.stringify({
+              id: internship.id,
+              subject: subjectInput.value,
+              academicYear: internship.academicYear,
+              version: internship.version,
+              contact: internship.contact,
+              supervisor: internship.supervisor,
+              signatureDate: internship.signatureDate,
+            }),
+          });
+          if (responseUpdateInternship.ok) {
+            internshipSubject.textContent = document.getElementById('subjectInput').value;
+            internship = await responseUpdateInternship.json();
+          } else {
+            // eslint-disable-next-line no-alert
+            alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
+            Navigate('/profil');
+          }
+          editInternshipSubjectButton.textContent = 'Modifier mon sujet de stage';
+        }
+      });
+    } else {
+      const internshipTable = document.querySelector('.internshipTable');
+      if (internshipTable) {
+        internshipTable.style.display = 'none';
+      }
+    }
 
     const addStageButtons = document.querySelector('.addStage');
-    if (addStageButtons){
-        addStageButtons.addEventListener('click', (e) => {
-            e.preventDefault();
-            Navigate(`/creationStage?contactId=${e.target.id}`);
-        });
+    if (addStageButtons) {
+      addStageButtons.addEventListener('click', (e) => {
+        e.preventDefault();
+        Navigate(`/creationStage?contactId=${e.target.id}`);
+      });
     }
-    
+
     const link = document.querySelector('#editUserInfos');
+    
+
     link.addEventListener('click', (e) => {
         e.preventDefault();
         Navigate('/updateUserInfos');
     });
 
-        if (user.role === 'Etudiant') {
+    if (user.role === 'Etudiant') {
         linkContact.addEventListener('click', (e) => {
             e.preventDefault();
             Navigate('/creationContact');
-            });
-        }
+        });
+    }
+    
+  }
 }
 
-}
+/* function getActualAcademicYear() {
+    // Get the current date
+    const date = new Date();
+    let startYear;
+    let endYear;
 
+    if (date.getMonth() < 8) { // If the current month is before September
+            startYear = date.getFullYear() - 1; // The academic year start is the year before the current year
+            endYear = date.getFullYear(); // The academic year end is the current year
+    } else { // If the current month is in or after September
+            startYear = date.getFullYear(); // The academic year start is the current year
+            endYear = date.getFullYear() + 1; // The academic year end is the year after the current year
+    }
 
+    return `${startYear  }-${  endYear}`; // Return the academic year
+} */
 
 export default ProfilPage;

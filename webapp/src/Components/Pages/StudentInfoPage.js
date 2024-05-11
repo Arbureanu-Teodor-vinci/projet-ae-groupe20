@@ -136,6 +136,7 @@ async function renderStudentInfoPage() {
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Année académique</th>
                                 <th>Entreprise</th>
                                 <th>Moyen de contact</th>
                                 <th>Outil de contact</th>
@@ -146,6 +147,7 @@ async function renderStudentInfoPage() {
                         <tbody>
                         ${contacts.map(contact => `
                         <tr>
+                        <td class="text-center">${contact.academicYear.year}</td>
                         <td class="text-center" style="color: ${
                             contact.enterprise.blackListed ? 'red' : 'black'
                         }; font-weight: ${

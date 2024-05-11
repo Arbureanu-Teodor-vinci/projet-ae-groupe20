@@ -97,7 +97,7 @@ public class InternshipResources {
     Logger.logEntry("POST /internships/addInternship");
     if (internshipDTO == null || internshipDTO.getSupervisor().getId() <= 0
         || internshipDTO.getContact().getId() <= 0
-        || internshipDTO.getSignatureDate() == null) {
+        || internshipDTO.getSignatureDate() == null || internshipDTO.getSignatureDate().isEmpty()) {
       throw new WebApplicationException("Informations manquantes pour ajouter un stage.",
           Status.BAD_REQUEST);
     }

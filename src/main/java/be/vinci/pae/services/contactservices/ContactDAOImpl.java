@@ -34,7 +34,7 @@ public class ContactDAOImpl implements ContactDAO {
     try {
 
       PreparedStatement ps = dalConn.getPS(
-          "SELECT c.id_contacts, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
+          "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
               + "       a1.academic_year as contact_academic_year,\n"
               + "       c.version as contact_version,\n"
@@ -49,14 +49,14 @@ public class ContactDAOImpl implements ContactDAO {
               + "       e.black_listed, e.black_listed_motivation,\n"
               + "       e.version as enterprise_version\n"
               + "FROM InternshipManagement.contacts c\n"
-              + "JOIN InternshipManagement.academic_year a1\n"
+              + "JOIN InternshipManagement.academic_years a1\n"
               + "    ON c.academic_year = a1.id_academic_year\n"
               + "JOIN InternshipManagement.users u ON c.student = u.id_user\n"
-              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise\n"
-              + "JOIN InternshipManagement.student s ON c.student = s.id_user\n"
-              + "JOIN InternshipManagement.academic_year a2\n"
+              + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise\n"
+              + "JOIN InternshipManagement.students s ON c.student = s.id_user\n"
+              + "JOIN InternshipManagement.academic_years a2\n"
               + "    ON s.academic_year = a2.id_academic_year\n"
-              + "WHERE c.id_contacts = ?"
+              + "WHERE c.id_contact = ?"
       );
       ps.setInt(1, id);
 
@@ -82,7 +82,7 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT c.id_contacts, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
+          "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
               + "       a1.academic_year as contact_academic_year,\n"
               + "       c.version as contact_version,\n"
@@ -97,12 +97,12 @@ public class ContactDAOImpl implements ContactDAO {
               + "       e.black_listed, e.black_listed_motivation,\n"
               + "       e.version as enterprise_version\n"
               + "FROM InternshipManagement.contacts c\n"
-              + "JOIN InternshipManagement.academic_year a1\n"
+              + "JOIN InternshipManagement.academic_years a1\n"
               + "   ON c.academic_year = a1.id_academic_year\n"
               + "JOIN InternshipManagement.users u ON c.student = u.id_user\n"
-              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise\n"
-              + "JOIN InternshipManagement.student s ON c.student = s.id_user\n"
-              + "JOIN InternshipManagement.academic_year a2\n"
+              + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise\n"
+              + "JOIN InternshipManagement.students s ON c.student = s.id_user\n"
+              + "JOIN InternshipManagement.academic_years a2\n"
               + "    ON s.academic_year = a2.id_academic_year"
       );
 
@@ -126,7 +126,7 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT c.id_contacts, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
+          "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
               + "       a1.academic_year as contact_academic_year,\n"
               + "       c.version as contact_version,\n"
@@ -141,12 +141,12 @@ public class ContactDAOImpl implements ContactDAO {
               + "       e.black_listed, e.black_listed_motivation,\n"
               + "       e.version as enterprise_version\n"
               + "FROM InternshipManagement.contacts c\n"
-              + "JOIN InternshipManagement.academic_year a1\n"
+              + "JOIN InternshipManagement.academic_years a1\n"
               + "   ON c.academic_year = a1.id_academic_year\n"
               + "JOIN InternshipManagement.users u ON c.student = u.id_user\n"
-              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise\n"
-              + "JOIN InternshipManagement.student s ON c.student = s.id_user\n"
-              + "JOIN InternshipManagement.academic_year a2\n"
+              + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise\n"
+              + "JOIN InternshipManagement.students s ON c.student = s.id_user\n"
+              + "JOIN InternshipManagement.academic_years a2\n"
               + "    ON s.academic_year = a2.id_academic_year\n"
               + "WHERE c.enterprise = ?"
       );
@@ -172,7 +172,7 @@ public class ContactDAOImpl implements ContactDAO {
     List<ContactDTO> contacts = new ArrayList<>();
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT c.id_contacts, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
+          "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
               + "       a1.academic_year as contact_academic_year,\n"
               + "       c.version as contact_version,\n"
@@ -187,12 +187,12 @@ public class ContactDAOImpl implements ContactDAO {
               + "       e.black_listed, e.black_listed_motivation,\n"
               + "       e.version as enterprise_version\n"
               + "FROM InternshipManagement.contacts c\n"
-              + "JOIN InternshipManagement.academic_year a1\n"
+              + "JOIN InternshipManagement.academic_years a1\n"
               + "   ON c.academic_year = a1.id_academic_year\n"
               + "JOIN InternshipManagement.users u ON c.student = u.id_user\n"
-              + "JOIN InternshipManagement.enterprise e ON c.enterprise = e.id_enterprise\n"
-              + "JOIN InternshipManagement.student s ON c.student = s.id_user\n"
-              + "JOIN InternshipManagement.academic_year a2\n"
+              + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise\n"
+              + "JOIN InternshipManagement.students s ON c.student = s.id_user\n"
+              + "JOIN InternshipManagement.academic_years a2\n"
               + "    ON s.academic_year = a2.id_academic_year\n"
               + "WHERE c.student = ?"
       );
@@ -228,7 +228,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(3, enterpriseID);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
-          contact = getOneContactByid(rs.getInt("id_contacts"));
+          contact = getOneContactByid(rs.getInt("id_contact"));
         }
       }
       ps.close();
@@ -247,7 +247,7 @@ public class ContactDAOImpl implements ContactDAO {
       PreparedStatement ps = dalConn.getPS(
           "UPDATE InternshipManagement.contacts SET interview_method = ?, tool = ?,"
               + " refusal_reason = ?, state_contact = ?, version = ?"
-              + " WHERE id_contacts = ? AND version = ? RETURNING *"
+              + " WHERE id_contact = ? AND version = ? RETURNING *"
       );
       ps.setString(1, contact.getInterviewMethod());
       ps.setString(2, contact.getTool());
@@ -258,7 +258,7 @@ public class ContactDAOImpl implements ContactDAO {
       ps.setInt(7, contact.getVersion());
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
-          contact = getOneContactByid(resultSet.getInt("id_contacts"));
+          contact = getOneContactByid(resultSet.getInt("id_contact"));
         } else {
           if (getOneContactByid(contact.getId()) == null) {
             throw new NullPointerException("Contact not found");
@@ -337,7 +337,7 @@ public class ContactDAOImpl implements ContactDAO {
     enterprise.setVersion(resultSet.getInt("enterprise_version"));
     // Create contact with all the information
     ContactDTO contact = domainFactory.getContactDTO();
-    contact.setId(resultSet.getInt("id_contacts"));
+    contact.setId(resultSet.getInt("id_contact"));
     contact.setInterviewMethod(resultSet.getString("interview_method"));
     contact.setTool(resultSet.getString("tool"));
     contact.setRefusalReason(resultSet.getString("refusal_reason"));

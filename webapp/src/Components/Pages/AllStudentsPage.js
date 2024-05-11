@@ -23,8 +23,12 @@ async function renderPage() {
           'Authorization': `${getAuthenticatedUser().token}`
         },
       };
-      const response = await fetch('/api/auths/users', options);
-      let users = await response.json();
+    const response = await fetch('/api/auths/users', options);
+    let users = await response.json();
+
+    // Fetch all academic years
+    const responseAcademicYears = await fetch('/api/academicYear/all', options);
+    const academicYears = await responseAcademicYears.json();
 
     const urlParams = new URLSearchParams(window.location.search);
     const search = urlParams.get('search');
@@ -38,6 +42,10 @@ async function renderPage() {
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tout les utilisateurs</h1>
+                <select id="academicYearFilter">
+                    <option value="">Tous les années</option>
+                    ${academicYears.reverse().map(year => `<option value="${year}">${year}</option>`).join('')}
+                </select>
                 <p>Voici la liste de tout les étudiants :</p>
             <table class="table">
                 <thead>
@@ -71,6 +79,31 @@ async function renderPage() {
         </tr>
         `;
         }
+    });
+
+    const academicYearFilter = document.querySelector('#academicYearFilter');
+
+    academicYearFilter.addEventListener('change', function filterUsersByYear() {
+        let filteredUsers = users;
+        if (this.value) {
+            filteredUsers = users.filter(user => user.academicYear && user.academicYear.year === this.value);
+        }
+        usersTable.innerHTML = '';
+        filteredUsers.forEach(user => {
+            if(user.role === 'Etudiant'){
+                usersTable.innerHTML += `
+                <tr>
+                    <td>${user.email}</td>
+                    <td>${user.firstName}</td>
+                    <td>${user.lastName}</td>
+                    <td>${user.telephoneNumber}</td>
+                    <td>${user.registrationDate}</td>
+                    <td>${user.academicYear.year}</td>
+                    <td><button id="${user.id}" class="btn btn-primary viewInfo">Voir les informations de cet(tte) étudiant(e)</button></td>
+                </tr>
+                `;
+            }
+        });
     });
 
     

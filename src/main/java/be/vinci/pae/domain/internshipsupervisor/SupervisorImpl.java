@@ -122,8 +122,8 @@ public class SupervisorImpl implements Supervisor {
     if (phoneNumber == null) {
       return;
     }
-    if (!phoneNumber.matches("^[0-9]{10}$")) {
-      throw new BusinessException("Le numéro de téléphone doit contenir 10 chiffres");
+    if (!phoneNumber.matches("^\\+? ?\\d(\\d| (?=\\d))*$")) {
+      throw new BusinessException("Le numéro de téléphone est invalide");
     }
   }
 

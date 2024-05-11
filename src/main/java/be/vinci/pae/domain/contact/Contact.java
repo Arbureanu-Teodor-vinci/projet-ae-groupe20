@@ -29,11 +29,6 @@ public interface Contact extends ContactDTO {
   void checkInterviewMethodUpdate(String interviewMethodBeforeUpdate) throws BusinessException;
 
   /**
-   * check if tool is valid for interview method.
-   */
-  void checkContactToolUpdate() throws BusinessException;
-
-  /**
    * Check if the refusal reason is updatable from state.
    */
   void checkContactRefusalReasonUpdate() throws BusinessException;
@@ -42,4 +37,11 @@ public interface Contact extends ContactDTO {
    * Check if the contact is taken.
    */
   void checkIfContactIsAccepted() throws BusinessException;
+
+  /**
+   * Check if the is from actual academic year.
+   *
+   * @throws BusinessException if the contact is not from actual academic year.
+   */
+  void checkContactAcademicYear() throws BusinessException;
 }
