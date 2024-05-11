@@ -244,16 +244,14 @@ public class UserDAOImpl implements UserDAO {
     int nbStudents = 0;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT COUNT(DISTINCT s.id_user) as number_of_students, ay.academic_year "
-              + "FROM InternshipManagement.internships i "
-              + "JOIN InternshipManagement.contacts c "
-              + "ON i.contact = c.id_contact "
-              + "JOIN InternshipManagement.students s "
-              + "ON c.student = s.id_user "
-              + "JOIN InternshipManagement.academic_years ay "
-              + "ON s.academic_year = ay.id_academic_year "
-              + "WHERE ay.academic_year = ? "
-              + "GROUP BY ay.academic_year;");
+          "SELECT count(DISTINCT u.*)\n"
+              + "FROM InternshipManagement.users u, InternshipManagement.students s,\n"
+              + "InternshipManagement.academic_years ay,\n"
+              + "InternshipManagement.internships i, InternshipManagement.contacts c\n"
+              + "WHERE u.id_user = s.id_user AND i.academic_year = ay.id_academic_year\n"
+              + "AND c.academic_year = ay.id_academic_year\n"
+              + "AND c.student = s.id_user AND i.contact = c.id_contact\n"
+              + "AND ay.academic_year = ?");
       ps.setString(1, academicYear);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -275,17 +273,19 @@ public class UserDAOImpl implements UserDAO {
     int nbStudents = 0;
     try {
       PreparedStatement ps = dalConn.getPS(
-          "SELECT COUNT(*) as number_of_students_without_internship, ay.academic_year "
-              + "FROM InternshipManagement.students s "
-              + "JOIN InternshipManagement.academic_years ay "
-              + "ON s.academic_year = ay.id_academic_year "
-              + "WHERE ay.academic_year = ? "
-              + "AND s.id_user NOT IN ("
-              + "    SELECT DISTINCT c.student "
-              + "    FROM InternshipManagement.internships i "
-              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
-              + ") "
-              + "GROUP BY ay.academic_year;");
+          "SELECT count(DISTINCT u.*)\n"
+              + "FROM InternshipManagement.users u, InternshipManagement.students s,\n"
+              + "InternshipManagement.academic_years ay, InternshipManagement.contacts c\n"
+              + "WHERE u.id_user = s.id_user AND c.student = s.id_user\n"
+              + "AND c.academic_year = ay.id_academic_year\n"
+              + "AND ay.academic_year = ?\n"
+              + "AND s.id_user NOT IN (\n"
+              + "    SELECT s.id_user\n"
+              + "    FROM InternshipManagement.internships i\n"
+              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contact\n"
+              + "    JOIN InternshipManagement.students s ON c.student = s.id_user\n"
+              + "    WHERE c.academic_year = ay.id_academic_year\n"
+              + ")");
       ps.setString(1, academicYear);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
