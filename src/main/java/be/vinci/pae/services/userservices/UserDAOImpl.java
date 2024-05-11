@@ -192,9 +192,9 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(DISTINCT s.id_user) as number_of_students "
-              + "FROM InternshipManagement.internship i "
+              + "FROM InternshipManagement.internships i "
               + "JOIN InternshipManagement.contacts c "
-              + "ON i.contact = c.id_contacts "
+              + "ON i.contact = c.id_contact "
               + "JOIN InternshipManagement.students s "
               + "ON c.student = s.id_user;");
       try (ResultSet rs = ps.executeQuery()) {
@@ -221,8 +221,8 @@ public class UserDAOImpl implements UserDAO {
               + "FROM InternshipManagement.students s "
               + "WHERE s.id_user NOT IN ("
               + "    SELECT DISTINCT c.student "
-              + "    FROM InternshipManagement.internship i "
-              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + "    FROM InternshipManagement.internships i "
+              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
               + ")");
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -245,9 +245,9 @@ public class UserDAOImpl implements UserDAO {
     try {
       PreparedStatement ps = dalConn.getPS(
           "SELECT COUNT(DISTINCT s.id_user) as number_of_students, ay.academic_year "
-              + "FROM InternshipManagement.internship i "
+              + "FROM InternshipManagement.internships i "
               + "JOIN InternshipManagement.contacts c "
-              + "ON i.contact = c.id_contacts "
+              + "ON i.contact = c.id_contact "
               + "JOIN InternshipManagement.students s "
               + "ON c.student = s.id_user "
               + "JOIN InternshipManagement.academic_years ay "
@@ -282,8 +282,8 @@ public class UserDAOImpl implements UserDAO {
               + "WHERE ay.academic_year = ? "
               + "AND s.id_user NOT IN ("
               + "    SELECT DISTINCT c.student "
-              + "    FROM InternshipManagement.internship i "
-              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contacts "
+              + "    FROM InternshipManagement.internships i "
+              + "    JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
               + ") "
               + "GROUP BY ay.academic_year;");
       ps.setString(1, academicYear);
