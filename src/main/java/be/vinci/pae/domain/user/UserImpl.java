@@ -221,8 +221,9 @@ public class UserImpl implements User {
     if (phoneNumber == null) {
       return;
     }
-    if (!phoneNumber.matches("^\\d(\\d| (?=\\d)){8,}$")) {
-      throw new BusinessException("Le numéro de téléphone doit contenir au moins 9 chiffres et peut inclure des espaces.");
+    if (!phoneNumber.matches("^\\+?\\d(\\d| (?=\\d)){8,}$")) {
+      throw new BusinessException(
+          "Le numéro de téléphone doit contenir au moins 9 chiffres et peut inclure des espaces.");
     }
   }
 
@@ -230,7 +231,7 @@ public class UserImpl implements User {
   public void checkNamesFormat(String name) {
     if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]+$")) {
       throw new BusinessException(
-          "Le nom doit commencer par une majuscule et ne contenir que des lettres.");
+          "Le nom et le prénom doivent commencer par une majuscule et ne peuvent contenir que des lettres et des tirets.");
     }
   }
 

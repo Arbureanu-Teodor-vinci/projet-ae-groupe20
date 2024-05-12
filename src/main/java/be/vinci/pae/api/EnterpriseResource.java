@@ -104,12 +104,30 @@ public class EnterpriseResource {
     Logger.logEntry("POST /enterprises/add");
 
     // if the enterprise is null, throw an exception
-    if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
-        || enterpriseDTO.getAddress().trim().isEmpty()
-        || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
-        .isEmpty()) {
-      Logger.logEntry("Enterprise is missing.");
-      throw new WebApplicationException("Veuillez entrez une entreprise", Status.BAD_REQUEST);
+    if (enterpriseDTO == null) {
+      Logger.logEntry("EnterpriseDTO is null.");
+      throw new WebApplicationException("Veuillez entrer une entreprise", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getTradeName().trim().isEmpty()) {
+      Logger.logEntry("Trade name is missing.");
+      throw new WebApplicationException("Veuillez entrer un nom commercial", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getCity().trim().isEmpty()) {
+      Logger.logEntry("City is missing.");
+      throw new WebApplicationException("Veuillez entrer une ville", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getAddress().trim().isEmpty()) {
+      Logger.logEntry("Address is missing.");
+      throw new WebApplicationException("Veuillez entrer une adresse", Status.BAD_REQUEST);
+    }
+    
+    if (enterpriseDTO.getPhoneNumber().trim().isEmpty()) {
+      Logger.logEntry("Phone number is missing.");
+      throw new WebApplicationException("Veuillez entrer un numéro de téléphone",
+          Status.BAD_REQUEST);
     }
 
     // Try to add the enterprise

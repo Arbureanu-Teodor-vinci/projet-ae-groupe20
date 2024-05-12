@@ -121,20 +121,32 @@ public class UserResource {
       throw new WebApplicationException("L'utilisateur ne peut pas être null.", Status.BAD_REQUEST);
     }
 
-    if (user.getEmail() == null || user.getEmail().isBlank()) {
-      throw new WebApplicationException("Veuillez entrer un email.", Status.BAD_REQUEST);
-    }
-
-    if (user.getPassword() == null || user.getPassword().isBlank()) {
-      throw new WebApplicationException("Veuillez entrer un mot de passe.", Status.BAD_REQUEST);
-    }
-
     if (user.getFirstName() == null || user.getFirstName().isBlank()) {
       throw new WebApplicationException("Veuillez entrer un prénom.", Status.BAD_REQUEST);
     }
 
     if (user.getLastName() == null || user.getLastName().isBlank()) {
       throw new WebApplicationException("Veuillez entrer un nom de famille.", Status.BAD_REQUEST);
+    }
+    // get the email
+    String email = user.getEmail();
+    if (email == null || email.isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un email.", Status.BAD_REQUEST);
+    } else {
+      // parse the email to check if it's valid
+      String[] emailParts = email.split("@");
+      if (emailParts.length < 2 || emailParts[0].isBlank()) {
+        throw new WebApplicationException("Veuillez entrer un nom d'utilisateur pour l'email.",
+            Status.BAD_REQUEST);
+      }
+    }
+    if (!user.getEmail().endsWith("@vinci.be") && !user.getEmail().endsWith("@student.vinci.be")) {
+      throw new WebApplicationException("Veuillez saisir une adresse email Vinci.",
+          Status.BAD_REQUEST);
+    }
+
+    if (user.getPassword() == null || user.getPassword().isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un mot de passe.", Status.BAD_REQUEST);
     }
 
     if (user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank()) {
@@ -144,11 +156,6 @@ public class UserResource {
 
     if (user.getRole() == null) {
       throw new WebApplicationException("Veuillez choisir un rôle.", Status.BAD_REQUEST);
-    }
-
-    if (!user.getEmail().endsWith("@vinci.be") && !user.getEmail().endsWith("@student.vinci.be")) {
-      throw new WebApplicationException("Veuillez saisir une adresse email Vinci.",
-          Status.BAD_REQUEST);
     }
 
     StudentDTO studentDTO = domainFactory.getStudentDTO();
@@ -251,12 +258,12 @@ public class UserResource {
 
     if (user.getFirstName() == null || user.getFirstName().isBlank() || user.getFirstName()
         .isEmpty()) {
-      throw new WebApplicationException("Vous ne pouvez pas mettre votre prénom à null.",
+      throw new WebApplicationException("Veuillez indiquez votre prénom.",
           Status.BAD_REQUEST);
     }
     if (user.getLastName() == null || user.getLastName().isBlank() || user.getLastName()
         .isEmpty()) {
-      throw new WebApplicationException("Vous ne pouvez pas mettre votre nom à null.",
+      throw new WebApplicationException("Veuillez indiquez votre nom.",
           Status.BAD_REQUEST);
     }
     if (!user.getEmail().equals(authentifiedUser.getEmail()) || !user.getRole()

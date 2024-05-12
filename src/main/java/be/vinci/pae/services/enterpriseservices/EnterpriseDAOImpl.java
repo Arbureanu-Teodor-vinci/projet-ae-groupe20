@@ -135,9 +135,10 @@ public class EnterpriseDAOImpl implements EnterpriseDAO {
           enterprise = getResultSet(rs);
         } else {
           if (getOneEnterpriseByid(enterprise.getId()) == null) {
-            throw new NullPointerException("Enterprise not found");
+            throw new NullPointerException("Entreprise introuvable.");
           } else {
-            throw new FatalException("This enterprise has been updated by another user");
+            throw new FatalException(
+                "Cette entreprise a été mise à jour par un autre utilisateur.");
           }
         }
       }

@@ -205,7 +205,7 @@ public class InternshipDAOImpl implements InternshipDAO {
             throw new NullPointerException("Internship not found");
           } else {
             throw new FatalException(
-                "Internship has already been updated by someone else. Please try again.");
+                "Le stage a déjà été mis à jour par quelqu'un d'autre. Veuillez réessayer.");
           }
         }
       }

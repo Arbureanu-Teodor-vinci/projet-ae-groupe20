@@ -124,14 +124,14 @@ public class InternshipImpl implements Internship {
   @Override
   public void checkOnlySubjectUpdated(InternshipDTO previousInternship) {
     if (this.equals(previousInternship)) {
-      throw new IllegalArgumentException("The internship has not been updated");
+      throw new IllegalArgumentException("Le stage n'a pas été mis à jour");
     }
     if (this.getSubject().equals(previousInternship.getSubject())) {
-      throw new IllegalArgumentException("Subject has not been updated");
+      throw new IllegalArgumentException("Le sujet du stage n'a pas été mis à jour");
     }
     if (this.getSignatureDate() != null && !this.getSignatureDate()
         .equals(previousInternship.getSignatureDate())) {
-      throw new IllegalArgumentException("Signature date can not be updated");
+      throw new IllegalArgumentException("La date de signature ne peut pas être mise à jour");
     }
   }
 
