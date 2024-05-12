@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { clearPage } from '../../utils/render';
 import {
   getAuthenticatedUser,
@@ -189,7 +190,7 @@ async function renderUpdateUserInfos() {
         Navigate('/profil');
       }
       else {
-        errorMessage.innerHTML = await responseUpdateProfile.text();
+        alert(`${responseUpdateProfile.status} : ${await responseUpdateProfile.text()}`);
       }
     }
   });

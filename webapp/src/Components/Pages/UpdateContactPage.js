@@ -44,8 +44,6 @@ async function renderUpdateContactPage() {
       stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
             <option value="non suivis">Non suivis</option>
-            <option value="cache">Cache</option>
-            <option value="accepté">Accepté</option>
             
         `;
       if (contact.stateContact === 'initié') {
@@ -230,8 +228,21 @@ async function renderUpdateContactPage() {
         } else if (responseUpdateContact.status === 200) {
           Navigate('/profil');
         } else {
-          const errorMessage = document.querySelector('.errorMessage');
-          errorMessage.innerHTML = await responseUpdateContact.text();
+          const errorMessage = await responseUpdateContact.text();
+          alert(`${responseUpdateContact.status} : ${errorMessage}`);
+          Navigate(`/updateContact?contactId=${contactId}`);
+          main.innerHTML = `
+            <section>
+                <div class="container h-100">
+                    <div class="row d-flex
+                    justify-content-center align-items-center h-100">
+                        <div class="col-12 text-center">
+                            <h1>${responseUpdateContact.status} : ${errorMessage}</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `;
         }
       });
     }

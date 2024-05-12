@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-console */
 import { getAuthenticatedUser } from "../../utils/auths"
@@ -168,8 +169,7 @@ async function renderCreationCompanyPage(){
             Navigate('/creationContact');
         }
         else{
-            const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = await responseCreateCompany.text();
+            alert(`${responseCreateCompany.status} : ${responseCreateCompany.statusText}`);
         }
     });
 

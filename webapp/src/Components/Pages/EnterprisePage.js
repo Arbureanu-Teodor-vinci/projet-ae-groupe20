@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { clearPage } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
@@ -107,8 +108,9 @@ async function renderEnterprisePage(enterpriseId) {
       if (responseBlackList.status === 200) {
         Navigate('/board');
       }else{
-        const errorMessage = document.querySelector('.errorMessage');
-        errorMessage.innerHTML = await responseBlackList.text();
+        const errorMessage = await responseBlackList.text();
+        alert(`${responseBlackList.status} : ${errorMessage}`);
+        Navigate(`/enterprise?enterpriseId=${enterprise.id}`);
         
       }
     });

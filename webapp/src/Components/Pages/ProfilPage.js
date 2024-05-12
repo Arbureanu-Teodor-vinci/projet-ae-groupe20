@@ -255,8 +255,8 @@ async function renderProfilPage() {
             internship = await responseUpdateInternship.json();
           } else {
             // eslint-disable-next-line no-alert
-            const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = await responseUpdateInternship.text()
+            alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
+            Navigate('/profil');
           }
           editInternshipSubjectButton.textContent = 'Modifier mon sujet de stage';
         }
