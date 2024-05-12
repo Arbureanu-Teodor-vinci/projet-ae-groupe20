@@ -51,8 +51,6 @@ async function renderUpdateContactPage() {
       }
       if (contact.stateContact === 'pris') {
         stateOptions += `
-            <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
-            <option value="non suivis">Non suivis</option>
             <option value="accepté">Accepté</option>
             <option value="refusé">Refusé</option>
         `;
