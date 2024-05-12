@@ -2,21 +2,28 @@ import { clearPage } from '../../utils/render';
 import Navigate from '../Router/Navigate';
 import { getAuthenticatedUser } from '../../utils/auths';
 
-const StudentInfoPage = async () => {
-    if (!getAuthenticatedUser()){
-        Navigate('/login');
-        return;
-    }
+const main = document.querySelector('main');
 
+const StudentInfoPage = async () => {
+    if (!getAuthenticatedUser() || getAuthenticatedUser().role === 'Etudiant'){
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+    } else {
     clearPage();
     await renderStudentInfoPage();
+    }
 };
 
 async function renderStudentInfoPage() {
-    if (getAuthenticatedUser().role === 'Etudiant'){
-        Navigate('/');
-        return;
-    }
     const urlParams = new URLSearchParams(window.location.search);
     const studentId = urlParams.get('userId');
     // eslint-disable-next-line no-console
@@ -44,29 +51,7 @@ async function renderStudentInfoPage() {
         }
     
     if (responseContacts.ok) {
-        const contacts = await responseContacts.json();
-    
-        // Récupérez les détails de l'entreprise pour chaque contact
-        // const entreprisePromises = contacts.map(contact => fetch(`/api/enterprises/getOne:${contact.enterpriseId}`, options));
-    
-        // Recupérez les réponses de chaque requête
-       // const entrepriseResponses = await Promise.all(entreprisePromises);
-    
-        // Récupérez les détails de l'entreprise pour chaque contact
-        // eslint-disable-next-line no-shadow
-        /* const contactsWithEnterprise = await Promise.all(entrepriseResponses.map(async (responseContacts, i) => {
-            if (responseContacts.ok) {
-                const entreprise = await responseContacts.json();
-                // Ajoutez les détails de l'entreprise au contact
-                return { ...contacts[i], entreprise };
-            } 
-                // eslint-disable-next-line no-console
-                console.log(`Erreur lors de la récupération de l'entreprise : ${responseContacts.statusText}`);
-                return contacts[i];
-            
-        })); */
-      
-    const main = document.querySelector('main');
+        const contacts = await responseContacts.json();  
     main.innerHTML = `
     <section>
     <div style="margin-top: 100px" class="container h-100">

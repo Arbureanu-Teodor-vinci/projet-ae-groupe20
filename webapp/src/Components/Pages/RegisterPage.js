@@ -113,6 +113,7 @@ async function renderRegisterPage() {
 
                             <div class="px-5 py-4">
                                 <input type="submit" class="btn btn-primary btn-lg" id="submit" value="Inscription">
+                                <p class = "errorMessage"><p>
                             </div>
                         </form>
                 </div>
@@ -187,8 +188,8 @@ async function register(e) {
   const response = await fetch(`/api/auths/register`, options);
 
   if (!response.ok) {
-    const errorMessage = await response.text();
-    alert(`${response.status} : ${errorMessage}`);
+    const errorMessage = document.querySelector('.errorMessage');
+    errorMessage.innerHTML = await response.text();
   } else {
     Navigate('/login');
     Navbar();

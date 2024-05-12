@@ -2,14 +2,24 @@ import { clearPage} from '../../utils/render';
 import {  getAuthenticatedUser } from '../../utils/auths'
 import Navigate from '../Router/Navigate';
 
+const main = document.querySelector('main');
+
 const AllUsersPage = () => {
-    if(!getAuthenticatedUser()){
-        Navigate('/login');
-      }else if(getAuthenticatedUser().role === 'Etudiant'){
-          Navigate('/');
-        }else{
+    if(!getAuthenticatedUser() || getAuthenticatedUser().role === 'Etudiant'){
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+      }else{
             clearPage();
-        renderPage();
+            renderPage();
         }
 };
 
@@ -36,9 +46,9 @@ async function renderPage() {
         const filteredUsers = users.filter(user => user.firstName.toLowerCase().includes(search.toLowerCase()) || user.lastName.toLowerCase().includes(search.toLowerCase()));
         users = filteredUsers;
     }
-    const main = document.querySelector('main');
     main.innerHTML = `
-    <div class="container">
+    <section>
+    <div style="margin-top: 100px" class="container h-100">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tout les utilisateurs</h1>
@@ -63,6 +73,8 @@ async function renderPage() {
             </table>
             </div>
         </div>
+    </div>
+    </section>
         `;
     const usersTable = document.querySelector('.table tbody');
     users.forEach(user => {

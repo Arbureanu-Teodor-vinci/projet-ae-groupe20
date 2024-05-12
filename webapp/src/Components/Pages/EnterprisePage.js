@@ -2,17 +2,34 @@ import { clearPage } from '../../utils/render';
 import { getAuthenticatedUser } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
+const main = document.querySelector('main');
+
 const EnterprisePage = async () => {
-  clearPage();
 
-  // Get the current URL
-  const url = new URL(window.location.href);
+  if(!getAuthenticatedUser() || getAuthenticatedUser().role === 'Etudiant'){
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+        }else{
+        clearPage();
 
-  // Get the enterpriseId parameter from the URL
-  const enterpriseId = url.searchParams.get('enterpriseId');
+    // Get the current URL
+    const url = new URL(window.location.href);
 
-  // Pass the enterpriseId to the render function
-  await renderEnterprisePage(enterpriseId);
+    // Get the enterpriseId parameter from the URL
+    const enterpriseId = url.searchParams.get('enterpriseId');
+
+    // Pass the enterpriseId to the render function
+    await renderEnterprisePage(enterpriseId);
+  }
 };
 
 async function renderEnterprisePage(enterpriseId) {
@@ -31,7 +48,6 @@ async function renderEnterprisePage(enterpriseId) {
 
   const contacts = await response2.json();
 
-  const main = document.querySelector('main');
   main.innerHTML = `
 <section>
 <div style="margin-top: 100px" class="container h-100">
@@ -90,9 +106,9 @@ async function renderEnterprisePage(enterpriseId) {
       if (responseBlackList.status === 200) {
         Navigate('/board');
       }else{
-        const errorMessage = await responseBlackList.text();
-        alert(`${responseBlackList.status} : ${errorMessage}`);
-        Navigate(`/enterprise?enterpriseId=${enterprise.id}`);
+        const errorMessage = document.querySelector('.errorMessage');
+        errorMessage.innerHTML = await responseBlackList.text();
+        
       }
     });
   }else{

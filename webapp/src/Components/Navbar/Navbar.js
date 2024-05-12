@@ -98,9 +98,7 @@ function renderNavbar() {
     </div>
   `
     };
-    /*
-    const searchForm = document.querySelector('#searchForm');
-    */
+
     const searchInput = document.querySelector('#searchInput');
     
     const searchButton = document.querySelector('#searchSubmit');

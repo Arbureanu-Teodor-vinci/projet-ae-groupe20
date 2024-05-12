@@ -22,19 +22,20 @@ async function renderUpdateContactPage() {
   };
   const response = await fetch(`/api/contacts/getOne:${contactId}`, options);
 
-  if (!response.ok) {
-    main.innerHTML = `
-        <section>
-            <div class="container h-100">
-                <div class="row d-flex
-                justify-content-center align-items-center h-100">
-                    <div class="col-12 text-center">
-                        <h1>${response.status} : ${response.statusText}</h1>
-                    </div>
+  if (!response.ok ) {
+    if(response.status === 404){
+      main.innerHTML = `
+    <section>
+        <div style="margin-top: 100px" class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 text-center">
+                    <h1>Erreur 404</h1>
+                    <p>Le contact demandé n'existe pas</p>
                 </div>
             </div>
-        </section>
-    `;
+        </div>
+    </section>`;
+    }
   } else {
     const contact = await response.json();
 
@@ -43,6 +44,8 @@ async function renderUpdateContactPage() {
       stateOptions = `
             <option value="${contact.stateContact}" selected>${contact.stateContact}</option>
             <option value="non suivis">Non suivis</option>
+            <option value="cache">Cache</option>
+            <option value="accepté">Accepté</option>
             
         `;
       if (contact.stateContact === 'initié') {
@@ -117,6 +120,7 @@ async function renderUpdateContactPage() {
                             ? '<p class="text-danger">Vous ne pouvez pas changer l\'état du contact une fois qu\'il est passé à "accepté", "refusé", "suspendu" ou "non suivis"</p>'
                             : '<button id="updateContactButton" type="submit" class="btn btn-primary" style="margin-top: 20px;">Modifier le contact</button>'
                         }
+                        <p class = "errorMessage"><p>
                     </form>
                 </div>
             </div>
@@ -226,21 +230,8 @@ async function renderUpdateContactPage() {
         } else if (responseUpdateContact.status === 200) {
           Navigate('/profil');
         } else {
-          const errorMessage = await responseUpdateContact.text();
-          alert(`${responseUpdateContact.status} : ${errorMessage}`);
-          Navigate(`/updateContact?contactId=${contactId}`);
-          main.innerHTML = `
-            <section>
-                <div class="container h-100">
-                    <div class="row d-flex
-                    justify-content-center align-items-center h-100">
-                        <div class="col-12 text-center">
-                            <h1>${responseUpdateContact.status} : ${errorMessage}</h1>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        `;
+          const errorMessage = document.querySelector('.errorMessage');
+          errorMessage.innerHTML = await responseUpdateContact.text();
         }
       });
     }
