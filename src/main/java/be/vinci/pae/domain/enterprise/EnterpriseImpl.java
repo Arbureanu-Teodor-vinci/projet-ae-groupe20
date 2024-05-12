@@ -220,7 +220,7 @@ public class EnterpriseImpl implements Enterprise {
       return;
     }
     if (!phoneNumber.matches("^[0-9.\\s]{4,}$")) {
-      throw new BusinessException("Le numéro de téléphone doit être composé d'au moins 4 chiffres.");
+      throw new BusinessException("Minimum 4 chiffres pour le numéro de téléphone.");
     }
   }
 

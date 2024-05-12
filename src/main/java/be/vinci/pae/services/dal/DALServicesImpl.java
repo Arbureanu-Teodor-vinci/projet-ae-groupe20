@@ -18,7 +18,7 @@ public class DALServicesImpl implements DALTransactionServices, DALServices {
   private static final BasicDataSource dataSourcePool = new BasicDataSource();
   // ThreadLocal is used to store a connection for each thread
   private static final ThreadLocal<Connection> threadConnection = new ThreadLocal<Connection>();
-  // ThreadLocal is used to store the number of transactions for each thread to manage nested transactions
+  // ThreadLocal is used to store the number of transactions for each to manage nested transactions
   private static final ThreadLocal<Integer> transactionCount = new ThreadLocal<Integer>() {
     @Override
     protected Integer initialValue() {

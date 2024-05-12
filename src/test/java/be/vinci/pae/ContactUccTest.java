@@ -153,12 +153,13 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 2 while he already has a contact accepted")
   void addContact2() {
-    List<ContactDTO> contactsExisting = new ArrayList<>();
     contactAccepted.setId(3);
     contactAccepted.setStateContact("accepté");
     contactAccepted.setStudent(studentDTO);
     contactAccepted.setEnterprise(domainFactory.getEnterpriseDTO());
     contactAccepted.setAcademicYear(academicYearDTO);
+
+    List<ContactDTO> contactsExisting = new ArrayList<>();
     contactsExisting.add(contactAccepted);
 
     Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);
@@ -175,10 +176,12 @@ public class ContactUccTest {
   @Test
   @DisplayName("Add contact for student 1 while he already has a contact with the same enterprise")
   void addContact3() {
-    List<ContactDTO> contactsExisting = new ArrayList<>();
+
     contactDTO2.setEnterprise(enterpriseDTO);
     contactDTO2.setAcademicYear(academicYearDTO);
     contactDTO2.setStudent(studentDTO);
+
+    List<ContactDTO> contactsExisting = new ArrayList<>();
     contactsExisting.add(contactDTO2);
 
     Mockito.when(contactDAO.getContactsByUser(1)).thenReturn(contactsExisting);

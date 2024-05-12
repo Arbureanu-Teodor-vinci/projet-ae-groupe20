@@ -181,7 +181,7 @@ public class ContactImpl implements Contact {
       // on other states cant update interviewMethod from previous value when it was on taken state
       if (!Objects.equals(this.interviewMethod, interviewMethodBeforeUpdate)) {
         throw new BusinessException(
-            "Impossible de mettre le moyen de contact à jour si l'état du contact est différent de pris.");
+            "Impossible de mettre le moyen de contact à jour si l'état du contact n'est pas à pris.");
       }
     }
   }

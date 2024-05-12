@@ -63,8 +63,7 @@ public class ContactResource {
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("L'id doit être fourni."
-          , Status.BAD_REQUEST);
+      throw new WebApplicationException("L'id doit être fourni.", Status.BAD_REQUEST);
     }
 
     // Try to get the contact
@@ -73,8 +72,7 @@ public class ContactResource {
     if (contact == null || contact.getStudent().getId() != authentifiedUser.getId()
         && authentifiedUser.getRole().equals("Etudiant")) {
       Logger.logEntry("Contact not found.");
-      throw new WebApplicationException("Le contact n'a pas été trouvé."
-          , Status.NOT_FOUND);
+      throw new WebApplicationException("Le contact n'a pas été trouvé.", Status.NOT_FOUND);
     }
 
     // Create a JSON object with the contact information
@@ -159,8 +157,7 @@ public class ContactResource {
     if (authentifiedUser.getRole().equals("Etudiant") && !id.equals(authentifiedUser.getId())) {
       Logger.logEntry("Tried to access another student's contacts.");
       throw new WebApplicationException(
-          "Vous ne pouvez pas accéder aux contacts d'un autre étudiant."
-          , Status.FORBIDDEN);
+          "Vous ne pouvez pas accéder aux contacts d'un autre étudiant.", Status.FORBIDDEN);
     }
 
     // if the id is null, throw an exception
@@ -199,19 +196,20 @@ public class ContactResource {
     //StudentDTO student = contact.getStudent();
 
     if (contact.getEnterprise() == null) {
-      throw new WebApplicationException("Veuillez entrer les informations de l'entreprise.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrer les informations de l'entreprise.",
+          Status.BAD_REQUEST);
     }
 
     if (contact.getStudent().getId() != authentifiedUser.getId()) {
-      throw new WebApplicationException("Vous ne pouvez pas ajouter un contact pour un autre étudiant.",
+      throw new WebApplicationException(
+          "Vous ne pouvez pas ajouter un contact pour autrui.",
           Status.FORBIDDEN);
     }
     // Try to add the contact
     ContactDTO addedContact = contactUCC.addContact(contact);
     // if the contact is null, throw an exception
     if (addedContact == null) {
-      throw new WebApplicationException("Le contact n'a pas pu être ajouté."
-          , Status.NOT_FOUND);
+      throw new WebApplicationException("Le contact n'a pas pu être ajouté.", Status.NOT_FOUND);
     }
 
     return contactNodeMaker(addedContact);
@@ -234,8 +232,8 @@ public class ContactResource {
 
     if (contactDTO == null || contactDTO.getId() == 0) {
       Logger.logEntry("Tried to update contact without id.");
-      throw new WebApplicationException("Veuillez entrer l'id du contact à modifier."
-          , Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrer l'id du contact à modifier.",
+          Status.BAD_REQUEST);
     }
 
     ContactDTO updatedContact = contactUCC.updateContact(contactDTO);

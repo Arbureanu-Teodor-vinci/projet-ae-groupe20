@@ -231,7 +231,7 @@ public class UserImpl implements User {
   public void checkNamesFormat(String name) {
     if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]+$")) {
       throw new BusinessException(
-          "Le nom et le prénom doivent commencer par une majuscule et ne peuvent contenir que des lettres et des tirets.");
+          "Nom et prénom : initiale en majuscule, lettres et tirets uniquement.");
     }
   }
 
