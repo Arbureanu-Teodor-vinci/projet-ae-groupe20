@@ -188,8 +188,8 @@ async function register(e) {
   const response = await fetch(`/api/auths/register`, options);
 
   if (!response.ok) {
-    const errorMessage = document.querySelector('.errorMessage');
-    errorMessage.innerHTML = await response.text();
+    const errorMessage = await response.text();
+    alert(`${response.status} : ${errorMessage}`);
   } else {
     Navigate('/login');
     Navbar();

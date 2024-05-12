@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
@@ -127,8 +128,7 @@ async function renderCreationStagePage() {
             Navigate('/profil');
         }
         else{
-            const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = await responseCreateInternship.text();
+            alert(`${responseCreateInternship.status} : ${responseCreateInternship.statusText}`);
         }
     
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
@@ -135,8 +136,7 @@ async function renderCreationContactPage() {
             event.preventDefault();
             Navigate('/profil');
           } else {
-            const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = await responseCreateContact.text();
+            alert(`${responseCreateContact.status} : ${responseCreateContact.statusText}`);
           }
         }
     });

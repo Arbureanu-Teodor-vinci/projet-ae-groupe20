@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
@@ -105,8 +106,7 @@ async function renderCreationSupervisorPage() {
             Navigate(previousPage);
         }
         else{
-            const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = await responseCreateSupervisor.text();
+            alert(`${responseCreateSupervisor.status} : ${responseCreateSupervisor.statusText}`);
         }
     });
 }
