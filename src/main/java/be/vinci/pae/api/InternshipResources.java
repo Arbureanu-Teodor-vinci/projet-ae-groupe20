@@ -51,6 +51,7 @@ public class InternshipResources {
       Logger.logEntry("Id must be positive.");
       throw new WebApplicationException("Id must be positive.", Status.BAD_REQUEST);
     }
+    // Try to get the internship with the correct id.
     InternshipDTO internship = internshipUCC.getOneInternshipByStudentId(id);
     if (internship == null) {
       Logger.logEntry("Internship not found.");
@@ -174,10 +175,12 @@ public class InternshipResources {
    */
   private ObjectNode toJsonObject(InternshipDTO internshipDTO) {
 
+    // Create the JSON object of the student academic year.
     ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getStudentAcademicYear().getId())
         .put("year", internshipDTO.getContact().getStudent().getStudentAcademicYear().getYear());
 
+    // Create the JSON object of the student.
     ObjectNode contactStudentNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getStudent().getId())
         .put("firstName", internshipDTO.getContact().getStudent().getFirstName())
@@ -190,6 +193,7 @@ public class InternshipResources {
         .put("version", internshipDTO.getContact().getStudent().getVersion());
     contactStudentNode.set("academicYear", studentAcademicYearNode);
 
+    // Create the JSON object of the enterprise.
     ObjectNode contactEnterpriseNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getEnterprise().getId())
         .put("tradeName", internshipDTO.getContact().getEnterprise().getTradeName())
@@ -203,10 +207,12 @@ public class InternshipResources {
             internshipDTO.getContact().getEnterprise().getBlackListMotivation())
         .put("version", internshipDTO.getContact().getEnterprise().getVersion());
 
+    // Create the JSON object of the academic year.
     ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getAcademicYear().getId())
         .put("year", internshipDTO.getContact().getAcademicYear().getYear());
 
+    // Create the JSON object of the contact.
     ObjectNode contactNode = jsonMapper.createObjectNode()
         .put("id", internshipDTO.getContact().getId())
         .put("interviewMethod", internshipDTO.getContact().getInterviewMethod())
@@ -215,10 +221,12 @@ public class InternshipResources {
         .put("stateContact", internshipDTO.getContact().getStateContact())
         .put("version", internshipDTO.getContact().getVersion());
 
+    // Set the student, enterprise and academic year in the contact JSON object.
     contactNode.set("student", contactStudentNode);
     contactNode.set("enterprise", contactEnterpriseNode);
     contactNode.set("academicYear", contactAcademicYearNode);
 
+    // Create the JSON object of the supervisor enterprise.
     ObjectNode supervisorEnterpriseNode = jsonMapper.createObjectNode();
     supervisorEnterpriseNode.put("id", internshipDTO.getSupervisor().getEnterprise().getId());
     supervisorEnterpriseNode.put("tradeName",
@@ -238,6 +246,7 @@ public class InternshipResources {
     supervisorEnterpriseNode.put("version",
         internshipDTO.getSupervisor().getEnterprise().getVersion());
 
+    // Create the JSON object of the supervisor.
     ObjectNode supervisorNode = jsonMapper.createObjectNode();
     supervisorNode.put("id", internshipDTO.getSupervisor().getId());
     supervisorNode.put("email", internshipDTO.getSupervisor().getEmail());
@@ -246,10 +255,12 @@ public class InternshipResources {
     supervisorNode.put("phoneNumber", internshipDTO.getSupervisor().getPhoneNumber());
     supervisorNode.set("enterprise", supervisorEnterpriseNode);
 
+    // Create the JSON object of the internship academic year.
     ObjectNode internshipAcademicYearNode = jsonMapper.createObjectNode();
     internshipAcademicYearNode.put("id", internshipDTO.getAcademicYear().getId());
     internshipAcademicYearNode.put("year", internshipDTO.getAcademicYear().getYear());
 
+    // Create the JSON object of the internship.
     ObjectNode internship = jsonMapper.createObjectNode();
     internship.put("id", internshipDTO.getId());
     internship.put("subject", internshipDTO.getSubject());
