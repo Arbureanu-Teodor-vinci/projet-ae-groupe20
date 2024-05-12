@@ -26,7 +26,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO getOneContact(int id) {
     if (id <= 0) {
-      throw new BusinessException("id must be positive");
+      throw new BusinessException("L'id doit être positif");
     }
 
     return contactDAO.getOneContactByid(id);
@@ -40,7 +40,7 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public List<ContactDTO> getContactsByEnterprise(int id) {
     if (id <= 0) {
-      throw new BusinessException("id must be positive");
+      throw new BusinessException("L'id doit être positif");
     }
     return contactDAO.getContactsByEnterprise(id);
   }

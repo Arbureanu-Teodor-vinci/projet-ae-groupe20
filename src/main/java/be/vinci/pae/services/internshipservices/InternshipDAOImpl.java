@@ -205,7 +205,7 @@ public class InternshipDAOImpl implements InternshipDAO {
             throw new NullPointerException("Internship not found");
           } else {
             throw new FatalException(
-                "Internship has already been updated by someone else. Please try again.");
+                "Le stage a déjà été mis à jour par quelqu'un d'autre. Veuillez réessayer.");
           }
         }
       }
@@ -288,7 +288,7 @@ public class InternshipDAOImpl implements InternshipDAO {
               + "FROM InternshipManagement.internships i "
               + "JOIN InternshipManagement.contacts c ON i.contact = c.id_contact "
               + "JOIN InternshipManagement.enterprises e ON c.enterprise = e.id_enterprise "
-              + "JOIN InternshipManagement.academic_years a ON i.academic_year = a.id_academic_year "
+              + "JOIN InternshipManagement.academic_years a ON i.academic_year = a.id_academic_year"
               + "WHERE e.id_enterprise = ? AND a.academic_year = ?;"
       );
       ps.setInt(1, id);

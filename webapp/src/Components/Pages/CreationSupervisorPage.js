@@ -3,24 +3,34 @@ import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 
+const main = document.querySelector('main');
+
 const creationSupervisorPage = async () => {
     if (!getAuthenticatedUser()) {
-        Navigate('/login');
-        return;
-    };
-
-    clearPage();
-    await renderCreationSupervisorPage();
-};
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+    }else{
+        clearPage();
+        await renderCreationSupervisorPage();    
+    }
+   };
 
 async function renderCreationSupervisorPage() {
-    if (getAuthenticatedUser().role !== 'Etudiant'){
+    const urlParams = new URLSearchParams(window.location.search);
+    const enterpriseIdParam = urlParams.get('enterpriseId');
+    if (getAuthenticatedUser().role !== 'Etudiant' || !enterpriseIdParam) {
         Navigate('/');
         return;
     }
-    const main = document.querySelector('main');
-    const urlParams = new URLSearchParams(window.location.search);
-    const enterpriseIdParam = urlParams.get('enterpriseId');
     const options = {
         method: 'GET',
         headers : {

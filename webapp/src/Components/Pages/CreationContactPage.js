@@ -2,14 +2,25 @@ import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 
+const main = document.querySelector('main');
+
 const creationContactPage = async () => {
     if (!getAuthenticatedUser()) {
-        Navigate('/login');
-        return;
-    };
-
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+    }else{
     clearPage();
     await renderCreationContactPage();
+    }
 };
 
 async function renderCreationContactPage() {
@@ -24,7 +35,6 @@ async function renderCreationContactPage() {
       const response = await fetch('/api/enterprises/getAll', options);
       const companies = await response.json();
 
-    const main = document.querySelector('main');
 
     main.innerHTML = `
     <section>
@@ -44,7 +54,7 @@ async function renderCreationContactPage() {
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary" id="create">Créer</button>
-                        <p class = "contactExist errorMessage"><p>
+                        <p class = "errorMessage"><p>
                     </form>
                 </div>
             </div>
@@ -61,7 +71,7 @@ async function renderCreationContactPage() {
     const companySelect = document.querySelector('#company');
     const companyFilterInput = document.querySelector('#company-filter');
 
-    // Filtrer les options lors de la saisie dans le champ de filtre
+    // Filter the options when typing in the filter field
     if (companyFilterInput){
         renderCompaniesOptions(companies);
         companyFilterInput.addEventListener('input', (event) => {
@@ -71,23 +81,23 @@ async function renderCreationContactPage() {
         });
     }
 
-    // Fonction qui permet de générer les options du select
+    // Function that allows generating the select options
     function renderCompaniesOptions(companiesToRender) {
-        // Réinitialiser les options du select
+        // Reset the select options
         companySelect.innerHTML = '';
 
-        // Trier les entreprises par nom
+        // Sort companies by name
         companiesToRender.sort((a, b) => a.tradeName.localeCompare(b.tradeName));
 
         if(companiesToRender.length === 0) {
-            // Si aucune entreprise n'a été trouvée, ajoutez une option avec le message d'erreur
+            // If no company was found, add an option with the error message
             const option = document.createElement('option');
             option.text = "Aucun résultat n'a été trouvé.";
             option.value = '';
             companySelect.appendChild(option);
         } else {
 
-        // Ajouter les options filtrées ou toutes les options
+        // Add the filtered options or all options
         companiesToRender.forEach(company => {
             if(company.blackListed === false){
             const option = document.createElement('option');
@@ -125,28 +135,14 @@ async function renderCreationContactPage() {
             event.preventDefault();
             Navigate('/profil');
           } else {
-            alert(`${responseCreateContact.status} : ${await responseCreateContact.text()}`);
+            const errorMessage = document.querySelector('.errorMessage');
+            errorMessage.innerHTML = await responseCreateContact.text();
           }
         }
     });
 
-    // Initialiser les options avec toutes les entreprises
+    // Initialize the options with all companies
     renderCompaniesOptions(companies);
-
-    /* function renderCompaniesOptions(companiesToRender) {
-        // Réinitialiser les options du select
-        companySelect.innerHTML = '';
-
-        // Ajouter les options filtrées ou toutes les options
-        companiesToRender.forEach(company => {
-            if(company.blackListed === false){
-            const option = document.createElement('option');
-            option.text = company.tradeName;
-            option.setAttribute('data-company', JSON.stringify(company));
-            companySelect.appendChild(option);
-            }
-        });
-    } */
 }
 
 export default creationContactPage;

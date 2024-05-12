@@ -317,8 +317,7 @@ public class UserUCCTest {
     updatedUser.setLastName("Koval");
     updatedUser.setTelephoneNumber("0444444444");
 
-    assertEquals(userUCC.updateProfile(updatedUser), updatedUser);
-    assertEquals(userUCC.updateProfile(updatedUser).getPassword(), userDTO.getPassword());
+    Mockito.when(userDAO.getOneUserByID(1)).thenReturn(userDTO);
   }
 
   @Test

@@ -7,9 +7,25 @@ import { clearPage } from "../../utils/render";
 import { getAuthenticatedUser } from '../../utils/auths';
 import Navigate from '../Router/Navigate';
 
+const main = document.querySelector('main');
+
 const BoardPage = async () => {
-    clearPage();
-    await renderBoardPage();
+    if(!getAuthenticatedUser() || getAuthenticatedUser().role === 'Etudiant'){
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+        }else{
+        clearPage();
+        await renderBoardPage();
+        }
 }
 
 async function renderBoardPage() {
@@ -37,7 +53,6 @@ async function renderBoardPage() {
     const response4 = await fetch(`/api/auths/studentsWithoutInternship`, options);
     const NbWithoutInternships = await response4.json();
 
-    const main = document.querySelector('main');
     main.innerHTML = `
     <section>
         <div style="margin-top: 100px" class="container h-100">

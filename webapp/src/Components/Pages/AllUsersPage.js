@@ -2,11 +2,21 @@ import { clearPage} from '../../utils/render';
 import {  getAuthenticatedUser } from '../../utils/auths'
 import Navigate from '../Router/Navigate';
 
-const AllUsersPage = () => {
-    if(!getAuthenticatedUser()){
-        Navigate('/login');
-      }else if(getAuthenticatedUser().role === 'Etudiant'){
-          Navigate('/');
+const main = document.querySelector('main');
+
+const AllUsersPage = async () => {
+    if(!getAuthenticatedUser() || getAuthenticatedUser().role === 'Etudiant'){
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
         }else{
             clearPage();
         renderPage();
@@ -15,7 +25,6 @@ const AllUsersPage = () => {
 
 
 async function renderPage() {
-
     const options = {
         method: 'GET',
         headers : {
@@ -26,10 +35,8 @@ async function renderPage() {
       const response = await fetch('/api/auths/users', options);
       const users = await response.json();
 
-
-    const main = document.querySelector('main');
     main.innerHTML = `
-    <div class="container">
+    <div style="margin-top: 100px" class="container h-100">
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-primary text-decoration-underline mb-4 mt-3">Tout les utilisateurs</h1>

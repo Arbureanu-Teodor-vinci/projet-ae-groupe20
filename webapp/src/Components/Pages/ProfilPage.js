@@ -93,6 +93,8 @@ async function renderProfilPage() {
                             <th>Date de signature du stage</th>
                             <td class="text-center" id="signatureDate"> - </td>
                         </tr>
+                        <p class = "errorMessage"><p>
+
                     </tbody>
                 </table>
             </div>
@@ -220,16 +222,16 @@ async function renderProfilPage() {
       }
 
       editInternshipSubjectButton.addEventListener('click', async () => {
-        // Si le bouton dit 'Modifier mon sujet de stage', changez le sujet de stage en un champ de saisie
-        // et changez le texte du bouton en 'Envoyer modification'
+        // If the button says 'Modify my internship subject', change the internship subject to an input field
+        // and change the button text to 'Send modification'
         if (editInternshipSubjectButton.textContent === 'Modifier mon sujet de stage') {
           const subjectText = internshipSubject.textContent;
           internshipSubject.innerHTML = `<input type="text" id="subjectInput" value="${subjectText}">`;
           editInternshipSubjectButton.textContent = 'Envoyer modification';
           document.getElementById('subjectInput').focus();
         }
-        // Si le bouton dit 'Envoyer modification', changez le champ de saisie en texte
-        // et changez le texte du bouton en 'Modifier mon sujet de stage'
+        // If the button says 'Send modification', change the input field back to text
+        // and change the button text to 'Modify my internship subject'
         else if (editInternshipSubjectButton.textContent === 'Envoyer modification') {
           const subjectInput = document.getElementById('subjectInput');
           const responseUpdateInternship = await fetch(`/api/internships/updateSubject`, {
@@ -253,8 +255,8 @@ async function renderProfilPage() {
             internship = await responseUpdateInternship.json();
           } else {
             // eslint-disable-next-line no-alert
-            alert(`${responseUpdateInternship.status} : ${await responseUpdateInternship.text()}`);
-            Navigate('/profil');
+            const errorMessage = document.querySelector('.errorMessage');
+            errorMessage.innerHTML = await responseUpdateInternship.text()
           }
           editInternshipSubjectButton.textContent = 'Modifier mon sujet de stage';
         }
@@ -288,25 +290,7 @@ async function renderProfilPage() {
             Navigate('/creationContact');
         });
     }
-    
   }
 }
-
-/* function getActualAcademicYear() {
-    // Get the current date
-    const date = new Date();
-    let startYear;
-    let endYear;
-
-    if (date.getMonth() < 8) { // If the current month is before September
-            startYear = date.getFullYear() - 1; // The academic year start is the year before the current year
-            endYear = date.getFullYear(); // The academic year end is the current year
-    } else { // If the current month is in or after September
-            startYear = date.getFullYear(); // The academic year start is the current year
-            endYear = date.getFullYear() + 1; // The academic year end is the year after the current year
-    }
-
-    return `${startYear  }-${  endYear}`; // Return the academic year
-} */
 
 export default ProfilPage;

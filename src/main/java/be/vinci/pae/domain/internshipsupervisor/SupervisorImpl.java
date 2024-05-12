@@ -113,7 +113,7 @@ public class SupervisorImpl implements Supervisor {
   @Override
   public void checkUniqueEmail(SupervisorDTO supervisorDTO) {
     if (supervisorDTO != null) {
-      throw new BusinessException("Email for this supervisor already exists");
+      throw new BusinessException("L'émail est déjà utilisé");
     }
   }
 
@@ -123,14 +123,15 @@ public class SupervisorImpl implements Supervisor {
       return;
     }
     if (!phoneNumber.matches("^\\+? ?\\d(\\d| (?=\\d))*$")) {
-      throw new BusinessException("Phone number is invalid");
+      throw new BusinessException("Le numéro de téléphone est invalide");
     }
   }
 
   @Override
   public void checkNamesFormat(String name) {
     if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]{1,50}$")) {
-      throw new BusinessException("Name is invalid");
+      throw new BusinessException(
+          "Le nom doit commencer par une majuscule et ne doit pas contenir de chiffres");
     }
   }
 
@@ -139,7 +140,7 @@ public class SupervisorImpl implements Supervisor {
     int firstIndex = email.indexOf("@");
     int lastIndex = email.lastIndexOf("@");
     if (firstIndex != lastIndex || firstIndex == -1) {
-      throw new BusinessException("Email is invalid");
+      throw new BusinessException("Le format de l'email est incorrect (1 @)");
     }
   }
 

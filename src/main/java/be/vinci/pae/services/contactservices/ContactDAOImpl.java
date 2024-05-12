@@ -289,7 +289,7 @@ public class ContactDAOImpl implements ContactDAO {
             throw new NullPointerException("Contact not found");
           } else {
             throw new FatalException(
-                "Contact has already been updated by someone else. Please try again.");
+                "Le contact a déjà été mis à jour par quelqu'un d'autre. Veuillez réessayer.");
           }
         }
       }

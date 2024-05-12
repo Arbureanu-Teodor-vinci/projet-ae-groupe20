@@ -124,25 +124,29 @@ public class ContactImpl implements Contact {
     // if state is one of final states which cant be updated
     if (previousState.equals(POSSIBLESTATES[5]) || previousState.equals(POSSIBLESTATES[4])
         || previousState.equals(POSSIBLESTATES[3]) || previousState.equals(POSSIBLESTATES[2])) {
-      throw new BusinessException("Cant update contact from this final state");
+      throw new BusinessException("Impossible de mettre à jour le contact dans cet état");
     }
     // if updated state is initialised the previous state can only be initialised
     if (this.stateContact.equals(POSSIBLESTATES[0]) && !previousState.equals(POSSIBLESTATES[0])) {
-      throw new BusinessException("Cant update contact to initialised state from previous state");
+      throw new BusinessException(
+          "Vous ne pouvez pas mettre à jour le contact en état inité à partir de cet état.");
     }
     // if updated state is taken the previous state can only be initialised or taken
     if (this.stateContact.equals(POSSIBLESTATES[1]) && !previousState.equals(POSSIBLESTATES[0])
         && !previousState.equals(POSSIBLESTATES[1])) {
-      throw new BusinessException("Cant update contact to taken state from previous state");
+      throw new BusinessException(
+          "Vous ne pouvez pas mettre à jour le contact en état pris à partir de cet état.");
     }
     // if updated state is suspended the previous state can only be initialised, taken or suspended
     if (this.stateContact.equals(POSSIBLESTATES[2]) && !previousState.equals(POSSIBLESTATES[0])
         && !previousState.equals(POSSIBLESTATES[1])) {
-      throw new BusinessException("Cant update contact to suspended state from previous state");
+      throw new BusinessException(
+          "Vous ne pouvez pas mettre à jour le contact en état suspendu à partir de cet état.");
     }
     // if updated state is refused the previous state can only be taken
     if (this.stateContact.equals(POSSIBLESTATES[3]) && !previousState.equals(POSSIBLESTATES[1])) {
-      throw new BusinessException("Cant update contact to refused state from previous state");
+      throw new BusinessException(
+          "Vous ne pouvez pas mettre à jour le contact en état refusé à partir de cet état.");
     }
     /* if updated state is not followed the previous state can only be initialised,
        taken or not followed
@@ -150,11 +154,12 @@ public class ContactImpl implements Contact {
     if (this.stateContact.equals(POSSIBLESTATES[4]) && !previousState.equals(POSSIBLESTATES[0])
         && !previousState.equals(POSSIBLESTATES[1])) {
       throw new BusinessException(
-          "Cant update contact to not followed state from previous state");
+          "Vous ne pouvez pas mettre à jour le contact en état non suivi à partir de cet état.");
     }
     // if updated state is accepted the previous state can only be taken
     if (this.stateContact.equals(POSSIBLESTATES[5]) && !previousState.equals(POSSIBLESTATES[1])) {
-      throw new BusinessException("Cant update contact to accepted state from previous state");
+      throw new BusinessException(
+          "Vous ne pouvez pas mettre à jour le contact en état accepté à partir de cet état.");
     }
   }
 
@@ -163,20 +168,20 @@ public class ContactImpl implements Contact {
     // initial state can only have null interviewMethod
     if (this.stateContact.equals(POSSIBLESTATES[0])) {
       if (this.interviewMethod != null) {
-        throw new BusinessException("Cant update interview method if state is initialised");
+        throw new BusinessException("Impossible de mettre à jour le moyen de contact si l'état est "
+            + POSSIBLESTATES[0]);
       }
     } else if (this.stateContact.equals(
         POSSIBLESTATES[1])) { // taken state can update interviewMethod
       if (this.interviewMethod == null || this.interviewMethod.isBlank()) {
         throw new BusinessException(
-            "Cant update interview method to null or empty when state is taken");
+            "Le moyen de contact est obligatoire si l'état est " + POSSIBLESTATES[1]);
       }
     } else {
       // on other states cant update interviewMethod from previous value when it was on taken state
       if (!Objects.equals(this.interviewMethod, interviewMethodBeforeUpdate)) {
         throw new BusinessException(
-            "Cant update interview method from previous value when state is not taken");
-
+            "Impossible de mettre le moyen de contact à jour si l'état du contact n'est pas à pris.");
       }
     }
   }
@@ -186,11 +191,12 @@ public class ContactImpl implements Contact {
     //can only update contactRefusal on refused state
     if (this.stateContact.equals(POSSIBLESTATES[3])) {
       if (this.refusalReason == null) {
-        throw new BusinessException("Refusal reason needs to be not null on refused state");
+        throw new BusinessException("La raison du refus est obligatoire si l'état est refusé.");
       }
     } else {
       if (this.refusalReason != null && !this.refusalReason.isBlank()) {
-        throw new BusinessException("Refusal reason needs to be updatable only on refused state");
+        throw new BusinessException(
+            "Impossible de mettre à jour la raison du refus si l'état n'est pas refusé.");
       }
     }
   }
@@ -206,7 +212,7 @@ public class ContactImpl implements Contact {
       }
     }
     if (!validState) {
-      throw new BusinessException("Invalid state");
+      throw new BusinessException("L'état du contact n'est pas valide.");
     }
   }
 
@@ -217,7 +223,7 @@ public class ContactImpl implements Contact {
       isTakenState = true;
     }
     if (!isTakenState) {
-      throw new BusinessException("The contact has to be in accepted state.");
+      throw new BusinessException("L'état du contact n'est pas 'accepté'");
     }
   }
 
@@ -225,7 +231,7 @@ public class ContactImpl implements Contact {
   public void checkContactAcademicYear() {
     AcademicYear contactAcademicYear = (AcademicYear) this.academicYear;
     if (!contactAcademicYear.isActual()) {
-      throw new BusinessException("The contact is not from actual academic year.");
+      throw new BusinessException("Le contact n'est pas de l'année académique actuelle.");
     }
   }
 

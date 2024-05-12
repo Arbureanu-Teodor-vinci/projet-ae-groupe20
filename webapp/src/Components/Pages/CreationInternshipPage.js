@@ -2,24 +2,34 @@ import { getAuthenticatedUser } from "../../utils/auths"
 import { clearPage } from "../../utils/render";
 import Navigate from "../Router/Navigate";
 
+const main = document.querySelector('main');
+
 const creationStagePage = async () => {
     if (!getAuthenticatedUser()) {
-        Navigate('/login');
-        return;
-    };
-
+        main.innerHTML = `
+        <section>
+            <div style="margin-top: 100px" class="container h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 text-center">
+                        <h1>Erreur 404</h1>
+                        <p>Page non trouvée</p>
+                    </div>
+                </div>
+            </div>
+        </section>`;
+    }else{
     clearPage();
     await renderCreationStagePage();
+    }
 };
 
 async function renderCreationStagePage() {
-    if (getAuthenticatedUser().role !== 'Etudiant'){
+    const urlParams = new URLSearchParams(window.location.search);
+    const contactIdParam = urlParams.get('contactId');
+    if (getAuthenticatedUser().role !== 'Etudiant' || !contactIdParam) {
         Navigate('/');
         return;
     }
-    const main = document.querySelector('main');
-    const urlParams = new URLSearchParams(window.location.search);
-    const contactIdParam = urlParams.get('contactId');
     // eslint-disable-next-line no-console
     console.log(contactIdParam);
     const options = {
@@ -118,7 +128,7 @@ async function renderCreationStagePage() {
         }
         else{
             const errorMessage = document.querySelector('.errorMessage');
-            errorMessage.innerHTML = 'Erreur lors de la création du stage';
+            errorMessage.innerHTML = await responseCreateInternship.text();
         }
     
 

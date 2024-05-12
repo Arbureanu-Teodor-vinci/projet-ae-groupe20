@@ -4,9 +4,7 @@ package be.vinci.pae.api;
 import be.vinci.pae.api.filters.Authorize;
 import be.vinci.pae.domain.enterprise.EnterpriseDTO;
 import be.vinci.pae.domain.enterprise.EnterpriseUCC;
-import be.vinci.pae.utils.Config;
 import be.vinci.pae.utils.Logger;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -29,7 +27,6 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/enterprises")
 public class EnterpriseResource {
 
-  private final Algorithm jwtAlgorithm = Algorithm.HMAC256(Config.getProperty("JWTSecret"));
   private final ObjectMapper jsonMapper = new ObjectMapper();
 
   @Inject
@@ -54,7 +51,7 @@ public class EnterpriseResource {
     // if the id is null, throw an exception
     if (id == null) {
       Logger.logEntry("id is missing.");
-      throw new WebApplicationException("You must enter an id.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez un id", Status.BAD_REQUEST);
     }
 
     // Try to get the enterprise
@@ -62,7 +59,7 @@ public class EnterpriseResource {
     // if the enterprise is null, throw an exception
     if (enterprise == null) {
       Logger.logEntry("No enterprise found with this id");
-      throw new WebApplicationException("No enterprise found with this id",
+      throw new WebApplicationException("Aucune entreprise trouvée avec cet id.",
           Status.NOT_FOUND);
     }
 
@@ -107,12 +104,30 @@ public class EnterpriseResource {
     Logger.logEntry("POST /enterprises/add");
 
     // if the enterprise is null, throw an exception
-    if (enterpriseDTO == null || enterpriseDTO.getTradeName().trim().isEmpty()
-        || enterpriseDTO.getAddress().trim().isEmpty()
-        || enterpriseDTO.getPhoneNumber().trim().isEmpty() || enterpriseDTO.getCity().trim()
-        .isEmpty()) {
-      Logger.logEntry("Enterprise is missing.");
-      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+    if (enterpriseDTO == null) {
+      Logger.logEntry("EnterpriseDTO is null.");
+      throw new WebApplicationException("Veuillez entrer une entreprise", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getTradeName().trim().isEmpty()) {
+      Logger.logEntry("Trade name is missing.");
+      throw new WebApplicationException("Veuillez entrer un nom commercial", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getCity().trim().isEmpty()) {
+      Logger.logEntry("City is missing.");
+      throw new WebApplicationException("Veuillez entrer une ville", Status.BAD_REQUEST);
+    }
+
+    if (enterpriseDTO.getAddress().trim().isEmpty()) {
+      Logger.logEntry("Address is missing.");
+      throw new WebApplicationException("Veuillez entrer une adresse", Status.BAD_REQUEST);
+    }
+    
+    if (enterpriseDTO.getPhoneNumber().trim().isEmpty()) {
+      Logger.logEntry("Phone number is missing.");
+      throw new WebApplicationException("Veuillez entrer un numéro de téléphone",
+          Status.BAD_REQUEST);
     }
 
     // Try to add the enterprise
@@ -120,7 +135,7 @@ public class EnterpriseResource {
     // if the enterprise is null, throw an exception
     if (enterprise == null) {
       Logger.logEntry("Can't add enterprise");
-      throw new WebApplicationException("Can't add enterprise", Status.NOT_FOUND);
+      throw new WebApplicationException("Impossible d'ajouter une entreprise", Status.NOT_FOUND);
     }
 
     return enterpriseNodeMaker(enterprise);
@@ -142,11 +157,11 @@ public class EnterpriseResource {
 
     // if the enterprise is null, throw an exception
     if (enterpriseDTO == null || enterpriseDTO.getId() == 0) {
-      throw new WebApplicationException("You must enter an enterprise.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez entrez une entreprise", Status.BAD_REQUEST);
     }
     if (enterpriseDTO.getBlackListMotivation().trim().isEmpty()
         || enterpriseDTO.getBlackListMotivation() == null) {
-      throw new WebApplicationException("You must enter a black list motivation.",
+      throw new WebApplicationException("Veuillez entrez une motivation pour le blacklist",
           Status.BAD_REQUEST);
     }
     // Try to add the enterprise
@@ -154,7 +169,8 @@ public class EnterpriseResource {
     // if the enterprise is null, throw an exception
     if (enterpriseUpdated == null) {
       Logger.logEntry("Can't blacklist enterprise");
-      throw new WebApplicationException("Can't blacklist enterprise", Status.NOT_FOUND);
+      throw new WebApplicationException("Impossible de blacklist cette entreprise",
+          Status.NOT_FOUND);
     }
     return enterpriseUpdated;
   }
@@ -182,7 +198,7 @@ public class EnterpriseResource {
       return enterpriseNode;
     } catch (Exception e) {
       Logger.logEntry("Can't create enterprise", e, 2);
-      System.out.println("Can't create enterprise");
+      System.out.println("Impossible de créer l'entreprise");
       return null;
     }
   }

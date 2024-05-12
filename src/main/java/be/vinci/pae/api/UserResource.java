@@ -69,7 +69,7 @@ public class UserResource {
     Logger.logEntry("POST /auths/login");
     if (!json.hasNonNull("email") || !json.hasNonNull("password") || json.get("email").asText()
         .isEmpty() || json.get("password").asText().isEmpty()) {
-      throw new WebApplicationException("You must enter an email and a password.",
+      throw new WebApplicationException("Veuillez entrer un email et un mot de passe.",
           Status.BAD_REQUEST);
     }
     String email = json.get("email").asText();
@@ -117,19 +117,45 @@ public class UserResource {
     Logger.logEntry("POST /auths/register");
 
     // Check if all fields are present
-    if (user == null || user.getEmail() == null || user.getEmail().isBlank()
-        || user.getPassword() == null || user.getPassword().isBlank()
-        || user.getFirstName() == null || user.getFirstName().isBlank()
-        || user.getLastName() == null || user.getLastName().isBlank()
-        || user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank()
-        || user.getRole() == null) {
-      throw new WebApplicationException(
-          "You must enter an email, a password, a first name, a last name and a phone number.",
-          Status.BAD_REQUEST);
+    if (user == null) {
+      throw new WebApplicationException("L'utilisateur ne peut pas être null.", Status.BAD_REQUEST);
+    }
+
+    if (user.getFirstName() == null || user.getFirstName().isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un prénom.", Status.BAD_REQUEST);
+    }
+
+    if (user.getLastName() == null || user.getLastName().isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un nom de famille.", Status.BAD_REQUEST);
+    }
+    // get the email
+    String email = user.getEmail();
+    if (email == null || email.isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un email.", Status.BAD_REQUEST);
+    } else {
+      // parse the email to check if it's valid
+      String[] emailParts = email.split("@");
+      if (emailParts.length < 2 || emailParts[0].isBlank()) {
+        throw new WebApplicationException("Veuillez entrer un nom d'utilisateur pour l'email.",
+            Status.BAD_REQUEST);
+      }
     }
     if (!user.getEmail().endsWith("@vinci.be") && !user.getEmail().endsWith("@student.vinci.be")) {
-      throw new WebApplicationException("You must enter a vinci email address.",
+      throw new WebApplicationException("Veuillez saisir une adresse email Vinci.",
           Status.BAD_REQUEST);
+    }
+
+    if (user.getPassword() == null || user.getPassword().isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un mot de passe.", Status.BAD_REQUEST);
+    }
+
+    if (user.getTelephoneNumber() == null || user.getTelephoneNumber().isBlank()) {
+      throw new WebApplicationException("Veuillez entrer un numéro de téléphone.",
+          Status.BAD_REQUEST);
+    }
+
+    if (user.getRole() == null) {
+      throw new WebApplicationException("Veuillez choisir un rôle.", Status.BAD_REQUEST);
     }
 
     StudentDTO studentDTO = domainFactory.getStudentDTO();
@@ -223,26 +249,28 @@ public class UserResource {
     Logger.logEntry("PATCH /auths/updateProfile");
     UserDTO authentifiedUser = (UserDTO) request.getProperty("user");
     if (user == null) {
-      throw new WebApplicationException("You must be logged in.", Status.UNAUTHORIZED);
+      throw new WebApplicationException("Vous devez être connecté.", Status.UNAUTHORIZED);
     }
     if (user.getId() != authentifiedUser.getId()) {
-      throw new WebApplicationException("You can't update another user's profile.",
+      throw new WebApplicationException("Vous ne pouvez pas modifier un autre utilisateur.",
           Status.UNAUTHORIZED);
     }
 
     if (user.getFirstName() == null || user.getFirstName().isBlank() || user.getFirstName()
         .isEmpty()) {
-      throw new WebApplicationException("You cant put your first name to null.",
+      throw new WebApplicationException("Veuillez indiquez votre prénom.",
           Status.BAD_REQUEST);
     }
     if (user.getLastName() == null || user.getLastName().isBlank() || user.getLastName()
         .isEmpty()) {
-      throw new WebApplicationException("You cant put your last name to null.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez indiquez votre nom.",
+          Status.BAD_REQUEST);
     }
     if (!user.getEmail().equals(authentifiedUser.getEmail()) || !user.getRole()
         .equals(authentifiedUser.getRole()) || !user.getRegistrationDate()
         .equals(authentifiedUser.getRegistrationDate())) {
-      throw new WebApplicationException("You can't change your email, role and registration date.",
+      throw new WebApplicationException(
+          "Vous ne pouvez pas modifier votre email, votre rôle ou votre date d'inscription.",
           Status.BAD_REQUEST);
     }
 
@@ -292,7 +320,8 @@ public class UserResource {
   public int getNumberOfStudentsWithInternship(@PathParam("academicYear") String academicYear) {
     Logger.logEntry("GET /auths/studentsWithInternship:" + academicYear);
     if (academicYear == null || academicYear.isEmpty()) {
-      throw new WebApplicationException("You must enter an academic year.", Status.BAD_REQUEST);
+      throw new WebApplicationException("Veuillez saisir une année académique.",
+          Status.BAD_REQUEST);
     }
 
     return userController.getNumberOfStudentsWithInternship(academicYear);

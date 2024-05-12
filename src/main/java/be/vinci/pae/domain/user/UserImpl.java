@@ -155,7 +155,7 @@ public class UserImpl implements User {
   @Override
   public boolean checkPassword(String password) {
     if (!BCrypt.checkpw(password, this.password)) {
-      throw new BusinessException("Password is incorrect.");
+      throw new BusinessException("Le mot de passe est incorrect.");
     }
     return true;
   }
@@ -163,14 +163,14 @@ public class UserImpl implements User {
   @Override
   public void checkVinciEmail(String email) {
     if (!email.endsWith("@vinci.be") && !email.endsWith("@student.vinci.be")) {
-      throw new BusinessException("Email is not a vinci email.");
+      throw new BusinessException("L'email n'est pas un email de la haute école (vinci.be).");
     }
   }
 
   @Override
   public void checkUniqueEmail(UserDTO userDTO) {
     if (userDTO != null) {
-      throw new BusinessException("Email already exists.");
+      throw new BusinessException("L'email est déjà utilisé.");
     }
   }
 
@@ -178,22 +178,41 @@ public class UserImpl implements User {
   public void checkRole(String role) throws BusinessException {
     if (!role.equals(POSSIBLE_ROLES[0]) && !role.equals(POSSIBLE_ROLES[1]) && !role.equals(
         POSSIBLE_ROLES[2])) {
-      throw new BusinessException("Role is not valid.");
+      throw new BusinessException("Le rôle n'est pas valide.");
     }
 
     if (!(role.equals(POSSIBLE_ROLES[0]) && email.endsWith("@student.vinci.be"))
         && !(role.equals(POSSIBLE_ROLES[1]) && email.endsWith("@vinci.be"))
         && !(role.equals(POSSIBLE_ROLES[2]) && email.endsWith("@vinci.be"))) {
-      throw new BusinessException("Role and email combination is not valid.");
+      throw new BusinessException("Le rôle ne correspond pas à l'email.");
     }
   }
 
   @Override
   public void checkNotNull() {
-    if (this.id == 0 && this.lastName == null && this.firstName == null && this.email == null
-        && this.telephoneNumber == null && this.role == null && this.password == null
-        && this.registrationDate == null) {
-      throw new BusinessException("User is null.");
+    if (this.id == 0) {
+      throw new BusinessException("L'id est vide.");
+    }
+    if (this.lastName == null) {
+      throw new BusinessException("Le nom est vide.");
+    }
+    if (this.firstName == null) {
+      throw new BusinessException("Le prénom est vide.");
+    }
+    if (this.email == null) {
+      throw new BusinessException("L'email est vide.");
+    }
+    if (this.telephoneNumber == null) {
+      throw new BusinessException("Le numéro de téléphone est vide.");
+    }
+    if (this.role == null) {
+      throw new BusinessException("Le rôle est vide.");
+    }
+    if (this.password == null) {
+      throw new BusinessException("Le mot de passe est vide.");
+    }
+    if (this.registrationDate == null) {
+      throw new BusinessException("La date d'inscription est vide.");
     }
   }
 
@@ -202,15 +221,17 @@ public class UserImpl implements User {
     if (phoneNumber == null) {
       return;
     }
-    if (!phoneNumber.matches("^\\d(\\d| (?=\\d)){8,}$")) {
-      throw new BusinessException("Phone number is not valid.");
+    if (!phoneNumber.matches("^\\+?\\d(\\d| (?=\\d)){8,}$")) {
+      throw new BusinessException(
+          "Le numéro de téléphone doit contenir au moins 9 chiffres et peut inclure des espaces.");
     }
   }
 
   @Override
   public void checkNamesFormat(String name) {
     if (!Character.isUpperCase(name.charAt(0)) || !name.matches("^[a-zA-Z-]+$")) {
-      throw new BusinessException("Name need to start with a capital letter.");
+      throw new BusinessException(
+          "Nom et prénom : initiale en majuscule, lettres et tirets uniquement.");
     }
   }
 
