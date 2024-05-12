@@ -23,6 +23,7 @@ public class ContactDAOImpl implements ContactDAO {
   @Inject
   private DomainFactory domainFactory;
 
+  // The DALServices is used to get a connection to the database.
   @Inject
   private DALServices dalConn;
 
@@ -33,6 +34,7 @@ public class ContactDAOImpl implements ContactDAO {
 
     try {
 
+      // Create the prepared statement to get the contact by id
       PreparedStatement ps = dalConn.getPS(
           "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
@@ -58,21 +60,28 @@ public class ContactDAOImpl implements ContactDAO {
               + "    ON s.academic_year = a2.id_academic_year\n"
               + "WHERE c.id_contact = ?"
       );
+      // Set the id of the contact in the prepared statement
       ps.setInt(1, id);
 
+      // Execute the query
       try (ResultSet resultSet = ps.executeQuery()) {
         if (resultSet.next()) {
+          // Get the contact from the result set
+          // call the getResultSet method to get the contact in an object form
           contact = getResultSet(resultSet);
         }
 
       }
+      // close the prepared statement
       ps.close();
 
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
+      // close the connection
       dalConn.closeConnection();
     }
+    // return the contact
     return contact;
   }
 
@@ -81,6 +90,7 @@ public class ContactDAOImpl implements ContactDAO {
     Logger.logEntry("Contact DAO - getAllContacts");
     List<ContactDTO> contacts = new ArrayList<>();
     try {
+      // Create the prepared statement to get all the contacts
       PreparedStatement ps = dalConn.getPS(
           "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
@@ -106,15 +116,19 @@ public class ContactDAOImpl implements ContactDAO {
               + "    ON s.academic_year = a2.id_academic_year"
       );
 
+      // Execute the query
       try (ResultSet resultSet = ps.executeQuery()) {
         while (resultSet.next()) {
+          // Add the contact to the list
           contacts.add(getResultSet(resultSet));
         }
       }
+      // close the prepared statement
       ps.close();
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
+      // close the connection
       dalConn.closeConnection();
     }
     return contacts;
@@ -125,6 +139,7 @@ public class ContactDAOImpl implements ContactDAO {
     Logger.logEntry("Contact DAO - getContactsByEnterprise" + id);
     List<ContactDTO> contacts = new ArrayList<>();
     try {
+      // Create the prepared statement to get the contacts by enterprise id
       PreparedStatement ps = dalConn.getPS(
           "SELECT c.id_contact, c.interview_method, c.tool, c.refusal_reason, c.state_contact,\n"
               + "       c.academic_year as contact_academic_year_id,\n"
@@ -150,17 +165,23 @@ public class ContactDAOImpl implements ContactDAO {
               + "    ON s.academic_year = a2.id_academic_year\n"
               + "WHERE c.enterprise = ?"
       );
+      // Set the id of the enterprise in the prepared statement
       ps.setInt(1, id);
 
+      // Execute the query
       try (ResultSet resultSet = ps.executeQuery()) {
+        // For the amount of contacts
         while (resultSet.next()) {
+          // Add the contact to the list
           contacts.add(getResultSet(resultSet));
         }
       }
+      // close the prepared statement
       ps.close();
     } catch (SQLException e) {
       throw new FatalException(e);
     } finally {
+      // close the connection
       dalConn.closeConnection();
     }
     return contacts;
@@ -217,17 +238,21 @@ public class ContactDAOImpl implements ContactDAO {
     Logger.logEntry("Contact DAO - addContact");
     ContactDTO contact = domainFactory.getContactDTO();
     try {
+      // Create the prepared statement to add a contact
       PreparedStatement ps = dalConn.getPS(
           "INSERT INTO InternshipManagement.contacts"
               + "(state_contact, student, academic_year, enterprise, version)"
               + " VALUES ('initié', ?, ?, ?, 1)"
               + " RETURNING *"
       );
+      // Set the student id, enterprise id and academic year id in the prepared statement
       ps.setInt(1, studentID);
       ps.setInt(2, academicYearID);
       ps.setInt(3, enterpriseID);
+      // Execute the query
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
+          // Get the contact from the result set
           contact = getOneContactByid(rs.getInt("id_contact"));
         }
       }

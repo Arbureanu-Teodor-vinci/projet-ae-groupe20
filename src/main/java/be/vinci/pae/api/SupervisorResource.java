@@ -145,6 +145,7 @@ public class SupervisorResource {
     Logger.logEntry("GET /supervisors/getAll");
 
     ArrayNode supervisorsListNode = jsonMapper.createArrayNode();
+    // Iterate over all supervisors and add them to the array
     for (SupervisorDTO supervisor : supervisorUCC.getAllInternshipSupervisors()) {
       supervisorsListNode.add(toJson(supervisor));
     }
@@ -153,6 +154,7 @@ public class SupervisorResource {
 
 
   private ObjectNode toJson(SupervisorDTO supervisor) {
+    // Create the enterprise node.
     ObjectNode enterpriseNode = jsonMapper.createObjectNode();
     enterpriseNode.put("id", supervisor.getEnterprise().getId());
     enterpriseNode.put("tradeName", supervisor.getEnterprise().getTradeName());
@@ -165,12 +167,14 @@ public class SupervisorResource {
     enterpriseNode.put("blackListMotivation", supervisor.getEnterprise().getBlackListMotivation());
     enterpriseNode.put("version", supervisor.getEnterprise().getVersion());
 
+    // Create the supervisor node.
     ObjectNode node = jsonMapper.createObjectNode();
     node.put("id", supervisor.getId());
     node.put("email", supervisor.getEmail());
     node.put("firstName", supervisor.getFirstName());
     node.put("lastName", supervisor.getLastName());
     node.put("phoneNumber", supervisor.getPhoneNumber());
+    // Add the enterprise node to the supervisor node.
     node.set("enterprise", enterpriseNode);
     return node;
   }
