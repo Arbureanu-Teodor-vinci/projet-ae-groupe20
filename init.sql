@@ -484,7 +484,7 @@ VALUES ('Un ERP:Odoo', '10-10-2023',
 
 
 --***************************OUR TESTS****************************************************************************************************************************************************************************
-INSERT INTO InternshipManagement.users
+/* INSERT INTO InternshipManagement.users
 VALUES (DEFAULT, 'Erismann', 'Matteo', 'matteo@student.vinci.be', '+320470000001', CURRENT_DATE, 'Etudiant',
         '$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe', 1);
 INSERT INTO InternshipManagement.students
@@ -496,6 +496,7 @@ VALUES (DEFAULT, 'Arbureanu', 'Teodor', 'teodor@vinci.be', '+320470000002', CURR
 INSERT INTO InternshipManagement.users
 VALUES (DEFAULT, 'Admin', 'Admin', 'admin', '+32470000000', CURRENT_DATE, 'Administratif',
         '$2a$10$6Vkfvd7L5XwsLSLDj/6flug4l9z1DphKelINuGAmjuxA0xed0VkDe', 1);
+ */
 --*****************************************************************************************************************************************************************************************************************
 
 --DEMO 1
@@ -514,9 +515,83 @@ FROM InternshipManagement.contacts c
 GROUP BY c.state_contact;*/
 
 --DEMO 2
---Comptage du nombre d’utilisateurs, par rôle et par année académique.
-/*SELECT u.role_user, a.academic_year, COUNT(*) as user_count
+-- 1 Comptage du nombre d’utilisateurs, par rôle et par année académique.
+SELECT u.role_user, a.academic_year, COUNT(*) as user_count
 FROM InternshipManagement.users u
-LEFT JOIN InternshipManagement.student s ON u.id_user = s.id_user
-LEFT JOIN InternshipManagement.academic_year a ON s.academic_year = a.id_academic_year
-GROUP BY u.role_user, a.academic_year;*/
+         LEFT JOIN InternshipManagement.student s ON u.id_user = s.id_user
+         LEFT JOIN InternshipManagement.academic_year a ON s.academic_year = a.id_academic_year
+GROUP BY u.role_user, a.academic_year;
+
+-- 2 Année académique et comptage du nombre de stages par année académique.
+SELECT
+    ay.academic_year,
+    COUNT(i.id_internship) AS internships_count
+FROM
+    InternshipManagement.academic_years ay
+        LEFT JOIN
+    InternshipManagement.internships i ON ay.id_academic_year = i.academic_year
+GROUP BY
+    ay.academic_year;
+
+-- 3 Entreprise, année académique, et comptage du nombre de stages par entreprise et année académique.
+SELECT
+    e.trade_name,
+    ay.academic_year,
+    COUNT(i.id_internship) AS internships_count
+FROM
+    InternshipManagement.enterprises e
+        LEFT JOIN
+    InternshipManagement.contacts c ON e.id_enterprise = c.enterprise
+        LEFT JOIN
+    InternshipManagement.internships i ON c.id_contact = i.contact
+        LEFT JOIN
+    InternshipManagement.academic_years ay ON c.academic_year = ay.id_academic_year
+GROUP BY
+    e.trade_name,
+    ay.academic_year;
+
+-- 4 Année académique et comptage du nombre de contacts par année académique.
+SELECT
+    ay.academic_year,
+    COUNT(c.id_contact) AS contacts_count
+FROM
+    InternshipManagement.academic_years ay
+        LEFT JOIN
+    InternshipManagement.contacts c ON ay.id_academic_year = c.academic_year
+GROUP BY
+    ay.academic_year;
+
+-- 5 Etat de contact et comptage du nombre de contacts par état de contact.
+SELECT
+    c.state_contact AS contact_state,
+    COUNT(c.id_contact) AS contacts_count
+FROM
+    InternshipManagement.contacts c
+GROUP BY
+    c.state_contact;
+
+-- 6 Année académique, état de contact et comptage du nombre de contacts par année académique et état de contact.
+SELECT
+    ay.academic_year,
+    c.state_contact AS contact_state,
+    COUNT(c.id_contact) AS contacts_count
+FROM
+    InternshipManagement.academic_years ay
+        LEFT JOIN
+    InternshipManagement.contacts c ON ay.id_academic_year = c.academic_year
+GROUP BY
+    ay.academic_year,
+    c.state_contact;
+
+-- 7 Année académique, état de contact et comptage du nombre de contacts par année académique et état de contact.
+SELECT
+    e.trade_name AS enterprise,
+    c.state_contact AS contact_state,
+    COUNT(c.id_contact) AS contacts_count
+FROM
+    InternshipManagement.enterprises e
+        LEFT JOIN
+    InternshipManagement.contacts c ON e.id_enterprise = c.enterprise
+GROUP BY
+    e.trade_name,
+    c.state_contact;
