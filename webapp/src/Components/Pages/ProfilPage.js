@@ -290,7 +290,6 @@ async function renderProfilPage() {
             Navigate('/creationContact');
         });
     }
-    
   }
 }
 
