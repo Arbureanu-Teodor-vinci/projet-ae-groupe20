@@ -75,6 +75,7 @@ public class ContactResource {
       throw new WebApplicationException("Contact not found", Status.NOT_FOUND);
     }
 
+    // Create a JSON object with the contact information
     return contactNodeMaker(contact);
   }
 
@@ -128,6 +129,7 @@ public class ContactResource {
 
     // Try to get the contacts by enterprise
     ArrayNode contactsListNode = jsonMapper.createArrayNode();
+    // Try to get the contacts by enterprise id
     for (ContactDTO contact : contactUCC.getContactsByEnterprise(id)) {
       contactsListNode.add(contactNodeMaker(contact));
     }
@@ -242,11 +244,13 @@ public class ContactResource {
    */
   private ObjectNode contactNodeMaker(ContactDTO contact) {
     try {
-      // Create a JSON object with the contact information
+      // Create a JSON object with the contact information.
+      // Create a JSON object of the academic year of the student of the contact.
       ObjectNode studentAcademicYearNode = jsonMapper.createObjectNode()
           .put("id", contact.getStudent().getStudentAcademicYear().getId())
           .put("year", contact.getStudent().getStudentAcademicYear().getYear());
 
+      // Create a JSON object of the student of the contact.
       ObjectNode studentNode = jsonMapper.createObjectNode()
           .put("id", contact.getStudent().getId())
           .put("firstName", contact.getStudent().getFirstName())
@@ -258,6 +262,7 @@ public class ContactResource {
           .put("version", contact.getStudent().getVersion());
       studentNode.set("academicYear", studentAcademicYearNode);
 
+      // Create a JSON object of the enterprise of the contact.
       ObjectNode enterpriseNode = jsonMapper.createObjectNode()
           .put("id", contact.getEnterprise().getId())
           .put("tradeName", contact.getEnterprise().getTradeName())
@@ -270,10 +275,12 @@ public class ContactResource {
           .put("blackListMotivation", contact.getEnterprise().getBlackListMotivation())
           .put("version", contact.getEnterprise().getVersion());
 
+      // Create a JSON object of the academic year of the contact.
       ObjectNode contactAcademicYearNode = jsonMapper.createObjectNode()
           .put("id", contact.getAcademicYear().getId())
           .put("year", contact.getAcademicYear().getYear());
 
+      // Create a JSON object of the contact.
       ObjectNode contactNode = jsonMapper.createObjectNode()
           .put("id", contact.getId())
           .put("interviewMethod", contact.getInterviewMethod())
@@ -282,10 +289,12 @@ public class ContactResource {
           .put("stateContact", contact.getStateContact())
           .put("version", contact.getVersion());
 
+      // Set the contact fields with the JSON objects previously created.
       contactNode.set("student", studentNode);
       contactNode.set("enterprise", enterpriseNode);
       contactNode.set("academicYear", contactAcademicYearNode);
 
+      // Return the contact node.
       return contactNode;
     } catch (Exception e) {
       System.out.println("Can't create contact");

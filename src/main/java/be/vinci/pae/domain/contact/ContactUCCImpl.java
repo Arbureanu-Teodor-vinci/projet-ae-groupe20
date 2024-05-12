@@ -53,20 +53,26 @@ public class ContactUCCImpl implements ContactUCC {
   @Override
   public ContactDTO addContact(ContactDTO contactDTO) {
     try {
+      // Start transaction.
       dalServices.startTransaction();
+      // Check if contact already exists.
       List<ContactDTO> contactsExisting = contactDAO.getContactsByUser(
           contactDTO.getStudent().getId());
+      // Cast studentDTO to student to acces the business checks methods.
       Student student = (Student) contactDTO.getStudent();
       AcademicYearDTO academicYear = academicYearUCC.getOrAddActualAcademicYear();
       student.checkContactExists(contactDTO.getEnterprise(), academicYear, contactsExisting);
       student.checkContactAccepted(contactsExisting, academicYear);
+      // If the checks are good we can add the contact
       contactDTO = contactDAO.addContact(contactDTO.getStudent().getId(),
           contactDTO.getEnterprise().getId(),
           academicYear.getId());
     } catch (Throwable e) {
+      // If an error occurs we rollback the transaction.
       dalServices.rollbackTransaction();
       throw e;
     }
+    // If everything is good we commit the transaction.
     dalServices.commitTransaction();
     return contactDTO;
   }
@@ -75,8 +81,10 @@ public class ContactUCCImpl implements ContactUCC {
   public ContactDTO updateContact(ContactDTO contactDTO) {
     try {
       dalServices.startTransaction();
+      // Cast contactDTO to contact to acces the business checks methods.
       Contact contact = (Contact) contactDTO;
       Contact contactBeforeUpdate = (Contact) contactDAO.getOneContactByid(contact.getId());
+      // Multiple buisness checks on the contact.
       contact.checkContactState();
       contact.checkContactStateUpdate(contactBeforeUpdate.getStateContact());
       contact.checkInterviewMethodUpdate(contactBeforeUpdate.getInterviewMethod());
@@ -89,9 +97,11 @@ public class ContactUCCImpl implements ContactUCC {
         contactDAO.updateAllContactsOfStudentToSuspended(contactDTO.getStudent().getId());
       }
     } catch (Throwable e) {
+      // If an error occurs we rollback the transaction.
       dalServices.rollbackTransaction();
       throw e;
     }
+    // If everything is good we commit the transaction.
     dalServices.commitTransaction();
     return contactDTO;
   }
