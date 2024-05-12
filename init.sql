@@ -518,8 +518,8 @@ GROUP BY c.state_contact;*/
 -- 1 Comptage du nombre d’utilisateurs, par rôle et par année académique.
 SELECT u.role_user, a.academic_year, COUNT(*) as user_count
 FROM InternshipManagement.users u
-         LEFT JOIN InternshipManagement.student s ON u.id_user = s.id_user
-         LEFT JOIN InternshipManagement.academic_year a ON s.academic_year = a.id_academic_year
+         LEFT JOIN InternshipManagement.students s ON u.id_user = s.id_user
+         LEFT JOIN InternshipManagement.academic_years a ON s.academic_year = a.id_academic_year
 GROUP BY u.role_user, a.academic_year;
 
 -- 2 Année académique et comptage du nombre de stages par année académique.
