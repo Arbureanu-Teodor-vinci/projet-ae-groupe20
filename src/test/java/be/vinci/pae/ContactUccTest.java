@@ -165,9 +165,9 @@ public class ContactUccTest {
 
     BusinessException thrown = assertThrowsExactly(BusinessException.class, () -> {
       contactUCC.addContact(contactDTO);
-    }, "Student already has an accepted contact for this academic year");
+    }, "L'étudiant a déjà un contact accepté pour cette année académique");
 
-    assertEquals("Student already has an accepted contact for this academic year",
+    assertEquals("L'étudiant a déjà un contact accepté pour cette année académique",
         thrown.getResponse().getEntity());
 
   }
@@ -185,9 +185,9 @@ public class ContactUccTest {
 
     BusinessException thrown = assertThrowsExactly(BusinessException.class, () -> {
       contactUCC.addContact(contactDTO);
-    }, "Student already has a contact with this enterprise and academic year");
+    }, "L'étudiant a déjà un contact avec cette entreprise pour cette année académique");
 
-    assertEquals("Student already has a contact with this enterprise and academic year",
+    assertEquals("L'étudiant a déjà un contact avec cette entreprise pour cette année académique",
         thrown.getResponse().getEntity());
   }
 
